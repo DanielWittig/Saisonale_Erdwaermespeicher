@@ -26,17 +26,21 @@ Sprachwahl: Da diese Arbeit auf heliogaia.de basiert und da ich hoffe, dass ein 
 
 ## Start
 
-```{python}
+```{python mypychunk1}
+#py
 import pandas as pd
 #version from 2024-01-11
-df = pd.read_excel('/home/danielwittig/repos/Saisonale_Erdwaermespeicher/_base/jahreslauf_roebel.xlsx', sheet_name='e', header = 1)
+df = pd.read_excel(
+  '/home/danielwittig/repos/Saisonale_Erdwaermespeicher/_base/jahreslauf_roebel.xlsx'
+  , sheet_name='e', header = 1)
 print(df.shape)
 mypyvar0 = df.shape[0]
 mypyvar1 = df.shape[1]
 df.head(7)
 df.loc[:732,'Tag'].hist()
 ```
-```{r}
+```{r myrchunk1}
+#r
 myrvar= 1
 ```
 
@@ -61,3 +65,7 @@ You can add options to executable code like this
 ```
 
 The `echo: false` option disables the printing of code (only output is displayed).
+
+## Thanks to
+
+https://nrennie.rbind.io/blog/combining-r-and-python-with-reticulate-and-quarto/

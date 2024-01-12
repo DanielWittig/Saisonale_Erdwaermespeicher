@@ -31,9 +31,12 @@ der Schnelligkeit halber die deutsche Sprache.
 ## Start
 
 ``` python
+#py
 import pandas as pd
 #version from 2024-01-11
-df = pd.read_excel('/home/danielwittig/repos/Saisonale_Erdwaermespeicher/_base/jahreslauf_roebel.xlsx', sheet_name='e', header = 1)
+df = pd.read_excel(
+  '/home/danielwittig/repos/Saisonale_Erdwaermespeicher/_base/jahreslauf_roebel.xlsx'
+  , sheet_name='e', header = 1)
 print(df.shape)
 ```
 
@@ -60,9 +63,10 @@ df.head(7)
 df.loc[:732,'Tag'].hist()
 ```
 
-![](Wirtschaftlichkeit_files/figure-commonmark/unnamed-chunk-2-1.png)
+![](Wirtschaftlichkeit_files/figure-commonmark/mypychunkname-1.png)
 
 ``` r
+#r
 myrvar= 1
 ```
 
