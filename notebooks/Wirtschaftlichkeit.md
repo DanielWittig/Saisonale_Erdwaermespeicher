@@ -8,7 +8,7 @@
 # install python version = '3' #3.12
 # install.packages('reticulate')
 library(reticulate)
-# reticulate::repl_python() #say yes
+# reticulate::repl_python() #say yes to the creation of a virtual environment "r-reticulate"
 # py_install("pandas", envname = 'r-reticulate')
 # py_install("openpyxl", envname = 'r-reticulate')
 # py_install(c('matplotlib', 'seaborn'), envname = 'r-reticulate')
@@ -32,9 +32,9 @@ realisert wird, also viele deutsche Variablennamen verwenden wird, die
 auch zur Zeit noch im Entstehen sein sollten, verwende ich hier zunächst
 der Schnelligkeit halber die deutsche Sprache.
 
-Falls hier R chunks verwendet werden, beginnen sie zwecks Sichtbarkeit
-auf Github mit dem Kommentar \#r (ausser sie sind reine
-Variablenzuweisungen mit \<-) - sonstige chunks sind in Python
+Falls hier R chunks verwendet werden, sollten sie zwecks Sichtbarkeit
+auf Github mit dem Kommentar \#r beginnen, ausser sie sind reine
+Variablenzuweisungen mit dem \<- Zeichen. Sonstige chunks sind in Python
 geschrieben.
 
 Geldbetraege sind in Euro, sofern nicht anders vermerkt.
@@ -42,18 +42,21 @@ Geldbetraege sind in Euro, sofern nicht anders vermerkt.
 ## Packages
 
 ``` python
-# from IPython.display import Markdown as md
+import pandas as pd
+1+1
 ```
 
-## Start
+    2
+
+## —Start—————
 
 ``` r
 # browseURL('https://heliogaia.de/endergebnisse.html')
 # browseURL('https://heliogaia.de/tabellen.html')
-# browseURL('/home/danielwittig/repos/Saisonale_Erdwaermespeicher/_base')
+browseURL('/home/danielwittig/repos/Saisonale_Erdwaermespeicher/_base')
 ```
 
-### Rechenweg
+## Rechenweg
 
 Vorerst nur:
 
@@ -65,7 +68,7 @@ Erweiterungsmöglichkeit:
 Übergangsszenario, mit BHKW, nicht alle Einwohner leben in sanierten
 Gebäuden, drei Fernwärmeleitungen nötig
 
-#### Szenarien:
+### Szenarien:
 
 https://heliogaia.de/tabellen.html : in der Regel :
 
@@ -82,13 +85,38 @@ Zur Aufdeckung und Vermeidung systematischer Fehler und teils auch zur
 Aufwandsbegrenzung ist die Herangehensweise nicht in allen Tabellen
 analog. *ToDo: was differiert?*
 
-##### Roebel
+#### Roebel
 
 ``` python
 Quelldatei = 'jahreslauf_roebel.xlsx'
 ```
 
 ``` python
+# d199
+# D37
+# D202
+# D203
+# D204
+# D205
+# D206
+# D180
+# F180
+# E3
+# D184
+# D185
+```
+
+``` python
+# sheet t
+# D200=D199/(1-D37/100)
+# D207=SUM(D202:D206)
+# D198=D180/F180/E3
+# D203=D184/E3
+# D204=D185/E3
+```
+
+``` python
+# sheet t
 # D200
 # D207
 # D198
@@ -117,17 +145,17 @@ laufende_Kosten_pro_a_pro_Kopf_Ertrag_BHKW__Elektroenergie = -133 # D204
 library(reticulate)
 #r 
 # Formatierungstest: werden lange Variablennamen in r oder python im github markdown umgebrochen?
-jaehrliche_Gesamtkosten_pro_Kopf___fuer_Heizung_und_Warmwasser_in_allen_privat__oeffentlich_und_gewerblich_genutzten_Gebaeuden__ohne_Kapitalkosten_ <- 
+Gebaeudeenergiekosten_proKopf_proJahr_ohne_Kapitalkosten_und_Foerdermittel <- 
   py$Investition_fuer_die_gesamte_Anlage_mit_Nebenkosten +
   py$laufende_Kosten_pro_a_pro_Kopf -
   py$Investitionskosten_pro_a_pro_Kopf_BHKW__ohne_Energiekosten_ -
   py$laufende_Kosten_pro_a_pro_Kopf_Energiekosten_BHKW -
   py$laufende_Kosten_pro_a_pro_Kopf_Ertrag_BHKW__Elektroenergie
 
-# jaehrliche_Gesamtkosten_pro_Kopf___fuer_Heizung_und_Warmwasser_in_allen_privat__oeffentlich_und_gewerblich_genutzten_Gebaeuden__ohne_Kapitalkosten_ =728
+# Gebaeudeenergiekosten_proKopf_proJahr_ohne_Kapitalkosten_und_Foerdermittel =728
 
 
-jaehrliche_Gesamtkosten_pro_Kopf___fuer_Heizung_und_Warmwasser_in_allen_privat__oeffentlich_und_gewerblich_genutzten_Gebaeuden__ohne_Kapitalkosten_
+Gebaeudeenergiekosten_proKopf_proJahr_ohne_Kapitalkosten_und_Foerdermittel
 ```
 
     [1] 728.1
@@ -137,17 +165,16 @@ Summe
 ``` python
 #Quellzelle: Blatt t: D210
 #€/a/Kopf
-jaehrliche_Gesamtkosten_pro_Kopf___fuer_Heizung_und_Warmwasser_in_allen_privat__oeffentlich_und_gewerblich_genutzten_Gebaeuden__ohne_Kapitalkosten_ =\
-Investition_fuer_die_gesamte_Anlage_mit_Nebenkosten\
-+laufende_Kosten_pro_a_pro_Kopf\
--Investitionskosten_pro_a_pro_Kopf_BHKW__ohne_Energiekosten_\
--laufende_Kosten_pro_a_pro_Kopf_Energiekosten_BHKW\
--laufende_Kosten_pro_a_pro_Kopf_Ertrag_BHKW__Elektroenergie
+Gebaeudeenergiekosten_proKopf_proJahr_ohne_Kapitalkosten_und_Foerdermittel = sum([
+  Investition_fuer_die_gesamte_Anlage_mit_Nebenkosten
+  ,+laufende_Kosten_pro_a_pro_Kopf
+  ,-Investitionskosten_pro_a_pro_Kopf_BHKW__ohne_Energiekosten_
+  ,-laufende_Kosten_pro_a_pro_Kopf_Energiekosten_BHKW
+  ,-laufende_Kosten_pro_a_pro_Kopf_Ertrag_BHKW__Elektroenergie
+])
 
-# jaehrliche_Gesamtkosten_pro_Kopf___fuer_Heizung_und_Warmwasser_in_allen_privat__oeffentlich_und_gewerblich_genutzten_Gebaeuden__ohne_Kapitalkosten_ =728
 
-
-jaehrliche_Gesamtkosten_pro_Kopf___fuer_Heizung_und_Warmwasser_in_allen_privat__oeffentlich_und_gewerblich_genutzten_Gebaeuden__ohne_Kapitalkosten_
+Gebaeudeenergiekosten_proKopf_proJahr_ohne_Kapitalkosten_und_Foerdermittel #728.1
 ```
 
     728.1
@@ -163,9 +190,9 @@ Umrechnung auf monatlich
 ``` python
 #Quelldatei: endrechnung.xlsx
 #€/Monat/Kopf
-monatliche_Gesamtkosten_pro_Kopf___fuer_Heizung_und_Warmwasser_in_allen_privat__oeffentlich_und_gewerblich_genutzten_Gebaeuden__ohne_Kapitalkosten_ = jaehrliche_Gesamtkosten_pro_Kopf___fuer_Heizung_und_Warmwasser_in_allen_privat__oeffentlich_und_gewerblich_genutzten_Gebaeuden__ohne_Kapitalkosten_ / 12
+Gebaeudeenergiekosten_proKopf_proMon_ohne_Kapitalkosten_und_Foerdermittel = Gebaeudeenergiekosten_proKopf_proJahr_ohne_Kapitalkosten_und_Foerdermittel / 12
 
-monatliche_Gesamtkosten_pro_Kopf___fuer_Heizung_und_Warmwasser_in_allen_privat__oeffentlich_und_gewerblich_genutzten_Gebaeuden__ohne_Kapitalkosten_
+Gebaeudeenergiekosten_proKopf_proMon_ohne_Kapitalkosten_und_Foerdermittel
 ```
 
     60.675000000000004
@@ -179,7 +206,8 @@ min_Anschliesser_count <- 5000
 max_Einzugsradius_km <- 6
 
 #€/Monat/Kopf
-neue_Gebaeudeenergiekosten_pPpM_ohne_Kapitalkosten_und_Foerdermittel <- py$monatliche_Gesamtkosten_pro_Kopf___fuer_Heizung_und_Warmwasser_in_allen_privat__oeffentlich_und_gewerblich_genutzten_Gebaeuden__ohne_Kapitalkosten_ #nur Roebel
+Gebaeudeenergiekosten_proKopf_proMon_ohne_Kapitalkosten_und_Foerdermittel <- py$Gebaeudeenergiekosten_proKopf_proMon_ohne_Kapitalkosten_und_Foerdermittel 
+#nur Roebel
 
 #m
 max_Bohrtiefe <- 'ToDo' # ToDo
@@ -210,9 +238,77 @@ Gebäudeenergie ausgegeben
 [Dena](https://heliogaia.de/9254_Gebaeudereport_dena_kompakt_2018.pdf),
 S.7, das sind monatlich ca. 65€ pro Kopf.
 
+## —Anhang————
+
 ## Tests
 
-#### basics
+#### Basics (add above)
+
+##### Zellbezüge in Excel automatisch darstellen
+
+``` python
+import pandas as pd
+```
+
+``` python
+#%matplotlib inline
+# import basics
+# from pycel import ExcelCompiler
+# from IPython.display import FileLink
+# import matplotlib.pyplot as plt
+```
+
+##### Darstellung der chunks mit Grundrechenarten sieht mit r chunks besser aus
+
+2024-01-14: Warum werden in python chunks manche Variablen vom gfm
+Markdown orange angezeigt? Siehe hier:
+
+``` python
+#€/a/Kopf       brutto
+Investition_fuer_die_gesamte_Anlage_mit_Nebenkosten = 640 # D200
+
+#€/a/Kopf
+laufende_Kosten_pro_a_pro_Kopf = 319 # D207
+
+#€/a/Kopf
+Investitionskosten_pro_a_pro_Kopf_BHKW__ohne_Energiekosten_ = 23.9 # D198
+
+#€/a/Kopf
+laufende_Kosten_pro_a_pro_Kopf_Energiekosten_BHKW = 340 # D203
+
+#€/a/Kopf
+laufende_Kosten_pro_a_pro_Kopf_Ertrag_BHKW__Elektroenergie = -133 # D204
+```
+
+``` r
+library(reticulate)
+#r 
+# Formatierungstest: werden lange Variablennamen in r oder python im github markdown umgebrochen?
+test1 <- 
+  py$Investition_fuer_die_gesamte_Anlage_mit_Nebenkosten +
+  py$laufende_Kosten_pro_a_pro_Kopf -
+  py$Investitionskosten_pro_a_pro_Kopf_BHKW__ohne_Energiekosten_ -
+  py$laufende_Kosten_pro_a_pro_Kopf_Energiekosten_BHKW -
+  py$laufende_Kosten_pro_a_pro_Kopf_Ertrag_BHKW__Elektroenergie
+```
+
+Hir auch:
+
+``` python
+#Quellzelle: Blatt t: D210
+#€/a/Kopf
+test2 =\
+Investition_fuer_die_gesamte_Anlage_mit_Nebenkosten\
++laufende_Kosten_pro_a_pro_Kopf\
+-Investitionskosten_pro_a_pro_Kopf_BHKW__ohne_Energiekosten_\
+-laufende_Kosten_pro_a_pro_Kopf_Energiekosten_BHKW\
+-laufende_Kosten_pro_a_pro_Kopf_Ertrag_BHKW__Elektroenergie
+```
+
+Fazit 2024-01-14: Chunks mit Grundrechenarten besser als R chunks
+schreiben.
+
+##### Variablen inline im Markdown verwenden
 
 ``` python
 min_Anschliesser_count = 5000
@@ -224,9 +320,11 @@ und Wärmenetz lohnt sich überall dort, wo mindestens 5000 Anschließer
 auf einem Radius von weniger als 6 Kilomentern teilnehmen.
 ([Quelle](https://heliogaia.de/endergebnisse.html))
 
+##### Diagramme anzeigen
+
 ``` python
 #py
-import pandas as pd
+# import pandas as pd
 #version from 2024-01-11
 df = pd.read_excel(
   '/home/danielwittig/repos/Saisonale_Erdwaermespeicher/_base/jahreslauf_roebel.xlsx'
@@ -238,7 +336,6 @@ print(df.shape)
 
 ``` python
 mypyvar0 = df.shape[0]
-mypyvar1 = df.shape[1]
 df.head(7)
 ```
 
@@ -258,6 +355,9 @@ df.loc[:732,'Tag'].hist()
 ```
 
 ![](Wirtschaftlichkeit_files/figure-commonmark/mypychunk1-1.png)
+
+OK, das Diagramm wird in den Outputs angezeigt. (Nur derzeit nicht in
+RStudio unter dem chunk - warum?)
 
 ``` r
 #r
