@@ -1,25 +1,69 @@
 ---
 title: "Wirtschaftlichkeit Saisonaler Erdwärmespeicher"
-format: gfm #github flavoured mardown
+format: gfm
 editor: source
 ---
 
 ## Setup
 
+
+### in Rstudio
 ```{r}
 # RStudio 23.12.0 on Linux Mint Debian Edition 6
-# install python version = '3' #3.12
 # install.packages('reticulate')
+# install python version = '3' #3.12 (that might have been through reticulate)
 library(reticulate)
 # reticulate::repl_python() #say yes to the creation of a virtual environment "r-reticulate"
+```
+
+### for python
+```{r install miniconda}
+# # try miniconda
+# # 2024-01-15--10:00:00
+# # load from https://docs.conda.io/projects/miniconda/en/latest/
+# mkdir -p ~/miniconda3
+# wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
+# shasum -a 256 ~/miniconda3/miniconda.sh
+# # result:
+# # c9ae82568e9665b1105117b4b1e499607d2a920f0aea6f94410e417a0eff1b9c
+# # compare to hash from https://docs.conda.io/projects/miniconda/en/latest/
+# # c9ae82568e9665b1105117b4b1e499607d2a920f0aea6f94410e417a0eff1b9c
+# # ok
+# # 
+# #FOR SECURITY IN ANOTHER TERMINAL AND NOT IN RSTUDIO, BECAUSE TRYING TO PREVENT MIXTURES WITH RETICULATE
+#    bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+#    # clean up
+#    rm -rf ~/miniconda3/miniconda.sh
+#    # initialize: modify      /home/danielwittig/.bashrc
+#    ~/miniconda3/bin/conda init bash
+```
+
+```{r install python packages}
+## worked on 2024-01-16--11:12:48  in the terminal after installation of miniconda to my home folder and activation*
+# (base) danielwittig@Flugminzek:~$ conda install pandas
+# (base) danielwittig@Flugminzek:~$ conda install openpyxl
+# (base) danielwittig@Flugminzek:~$ conda install matplotlib seaborn
+
+## worked only temporarily, in Rstudio (maybe delete)
+# Anscheinend sollten die Python chunks schon im virtuellen environment 'r-reticulate' laufen. Es scheint aber etwas schiefzugehen, so dass das RETICULATE_PYTHON_FALLBACK environment genommen wird. Dort müssen dann natürlich auch die nötigen Pakete (Module) installiert sein.
+# library('reticulate')
 # py_install("pandas", envname = 'r-reticulate')
 # py_install("openpyxl", envname = 'r-reticulate')
 # py_install(c('matplotlib', 'seaborn'), envname = 'r-reticulate')
-
-# insert chunk shortcut: Ctrl+Alt+P
-# from:
-# https://stackoverflow.com/questions/62408197/editing-keyboard-shortcut-to-produce-code-chunk-in-r-studio
 ```
+
+### Nutzung
+Um python in der Console zu verwenden schreibe dort: `repl_python()`
+
+
+### Keyboard shortcuts
+
+insert python chunk shortcut
+created using:
+https://stackoverflow.com/questions/62408197/editing-keyboard-shortcut-to-produce-code-chunk-in-r-studio
+*ctrl+alt+P*
+
+see other Rstudio Shortcuts (searchable): *ctrl+shift+P*
 
 ## Readme
 
@@ -32,19 +76,53 @@ Falls hier R chunks verwendet werden, sollten sie zwecks Sichtbarkeit auf Github
 Geldbetraege sind in Euro, sofern nicht anders vermerkt.
 
 ## Packages
+```{r}
+library(reticulate)
+library(tidyverse)
+library(ggplot2)
+# open a python read-execute-print-loop (REPL)
+# repl_python()
+```
+
 ```{python}
 import pandas as pd
-1+1
+from openpyxl import load_workbook
+import webbrowser
+import re
+from re import findall
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+from openpyxl.utils import get_column_letter
+# https://openpyxl.readthedocs.io/en/stable/api/openpyxl.utils.cell.html?highlight=openpyxl.utils.cell.get_column_letter#openpyxl.utils.cell.get_column_letter
+def xlref(row, column, zero_indexed=True):
+    if zero_indexed:
+        row += 1
+        column += 1
+    return get_column_letter(column) + str(row)
+xlref(0, 0)
+xlref(0, 0)
+# or
+get_column_letter(2) #not zero indexed
+
+# opposite
+from openpyxl.utils import column_index_from_string
+column_index_from_string('B')  #not zero indexed
+
+# https://openpyxl.readthedocs.io/en/stable/api/openpyxl.utils.cell.html?highlight=openpyxl.utils.cell.get_column_letter#openpyxl.utils.cell.get_column_letter
 ```
 
 ## ---Start---------------
 ```{r}
 # browseURL('https://heliogaia.de/endergebnisse.html')
 # browseURL('https://heliogaia.de/tabellen.html')
-browseURL('/home/danielwittig/repos/Saisonale_Erdwaermespeicher/_base')
+# browseURL('/home/danielwittig/repos/Saisonale_Erdwaermespeicher/notebooks/_base')
 ```
 
-## Rechenweg
+## Kosten
+
+### Eingrenzung
 
 Vorerst nur:
 
@@ -54,7 +132,7 @@ Erweiterungsmöglichkeit:
 
 Übergangsszenario, mit BHKW, nicht alle Einwohner leben in sanierten Gebäuden, drei Fernwärmeleitungen nötig
 
-### Szenarien:
+### Ausgangspunkt
 
 https://heliogaia.de/tabellen.html : in der Regel :
 
@@ -64,17 +142,1109 @@ https://heliogaia.de/tabellen.html : in der Regel :
 
 Zur Aufdeckung und Vermeidung systematischer Fehler und teils auch zur Aufwandsbegrenzung ist die Herangehensweise nicht in allen Tabellen analog. *ToDo: was differiert?*
 
-#### Roebel
-```{python}
-Quelldatei = 'jahreslauf_roebel.xlsx'
+### Idee
+
+Anleitung: 
+* Wähle Zelle aus, deren Ergebnis nachgerechnet werden soll
+* schreibe ihren Ecxel-Namen der Form A1 in die erste Spalte des DataFrames 'Kosten'
+* schreibe die Formel der Zelle als Gleichung in einen chunk in Quarto
+* das war der erste 'step', jetzt folgt der zweite
+
+* Liste alle Zellen, die in der rechten Seite der Formel vorkommen, in einem Quarto chunk darüber untereinander auf (genannt 'raw', step-Nummer am Ende)
+* Füge diese Zellennamen auch der ersten Spalte des DataFrames 'Kosten' hinzu (darüber)
+* checke, ob Zellennamen doppelt sind und lösche sie aus dem letzten chunk
+* dupliziere den chunk nach oben (umbenennen in 'bezuege', step-Nummer am Ende)
+* schreibe in diesen chunk jetzt wieder die Formeln der Zellen
+* wenn es keine Formeln gibt, schreibe den Wert hin und dahinter #root
+* wenn es aus Spalte t!F ist, füge noch ein #abs für Abschreibungsjahre hinzu. Dann gilt der Variablenname aus Spalte t!C
+* wenn die Werte aus einer anderen Datenquelle geliefert werden sollten (statt sie wie bei der Einwohnerzahl Roebel manuell zu berechnen), schreibe #force_root
+* das war das Ende dieses Steps
+
+* analog geht es weiter, bis überall #root erreicht ist.
+
+Achtung beim kopieren von >vierstelligen Werten: Dabei können Tausender-Trennkommas aus Versehen hereinrutschen.
+Ab 2024-01-16--17:46:19 schreibe ich nur #root ohne den Wert und der Wert soll später ausgelesen werden #ToDo
+ - die Stelle im chunk, an der ich das Kopieren der Werte weglasse, ist mit #root_ohne_kopieren markiert.
+
+
+
+Idee: mittels der ersten Spalte des DataFrames 'kosten' könnten später automatisiert die Variablennamen aus Excel eine Spalte weiter links ausgelesen werden und in brauchbare Variablennamen umgewandelt werden analog zu folgendem manuellen R-Codeschnipsel:
+
+```{r build_variabe_name_from_clipboard}
+# library('stringr')
+# library('clipr')
+# raw <- clipr::read_clip()
+# str_replace_all(raw, '[\\s:(),]', '_') %>%
+#   str_replace_all(., 'ä', 'ae') %>%
+#   str_replace_all(., 'ö', 'oe') %>%
+#   str_replace_all(., 'ü', 'ue') %>%
+#   str_replace_all(., 'Ä', 'Ae') %>%
+#   str_replace_all(., 'Ö', 'Oe') %>%
+#   str_replace_all(., 'U', 'Ue') %>%
+#   str_replace_all(., 'ß', 'ss') %>%
+#   str_replace_all(., '/', '_pro_') %>%
+#   str_replace_all(., 'm²', 'm2') %>%
+#   write_clip() #aim: usable for file names, can be marked quickly with double click
 ```
 
+Damit können dann leichter lesbare Formeln in Python oder R erstellt werden.
+
+
+
+
+
+### Beispielkommune Roebel
+
+#### Datei jahreslauf_roebel.xlsx'
+
+Abgespeichert von Heliogaia.de ca am 12.01.2024. 
+Die anderen Dateien am 18.01.2024 10:14-10:17 Uhr:
+
+* alternative_fuer_rietz_holzheizung.ods
+* alternative_fuer_rietz_holzheizung.xlsx
+* cottbus_rechentabelle.ods
+* cottbus_rechentabelle.xlsx
+* durchschnittshaus.ods
+* durchschnittshaus.xlsx
+* einheiten.xlsx
+* endrechnung.ods
+* endrechnung.xlsx
+* fachbegriffe_formelsymbole.xlsx
+* jahreslauf_berlin.ods
+* jahreslauf_berlin.xlsx
+* jahreslauf_rietz.ods
+* jahreslauf_rietz.xlsx
+* jahreslauf_roebel.ods
+* kosten_und_strombedarf_der_waermepumpe.ods
+* kosten_und_strombedarf_der_waermepumpe.xlsx
+* quellen.ods
+* standardhaus002.ods
+* standardhaus002.xlsx
+* waermeverlust_hauptverteilung_im_jahr002.ods
+* waermeverlust_hauptverteilung_im_jahr002.xlsx
+* zylindermodell007.ods
+* zylindermodell007.xlsx
+
+
+
+##### Blatt e
 ```{python}
-# d199
+#| echo: false
+
+#import pandas as pd
+#import seaborn as sns
+import matplotlib.pyplot as plt
+#import re
+
+
+df = pd.read_excel(
+  '_base/jahreslauf_roebel.xlsx'
+  , sheet_name='e', header = 1)
+print(df.shape)
+
+kurven = df.iloc[1:732,:18]; kurven.head()
+einheiten = df.iloc[0,:18]
+original = kurven.copy()
+
+# pd.DataFrame(list(original)).to_clipboard(header=False, index=False)
+# pd.DataFrame(list(einheiten)).to_clipboard(header=False, index=False)
+
+# new_column_names = [re.sub(' ', '_', L) for L in list(kurven)]
+new_column_names = [re.sub('[\s:\(\),]', '_', col) for col in list(kurven)]
+new_column_names = [re.sub('ä', 'ae', col) for col in new_column_names]
+new_column_names = [re.sub('ö', 'oe', col) for col in new_column_names]
+new_column_names = [re.sub('ü', 'ue', col) for col in new_column_names]
+new_column_names = [re.sub('Ä', 'Ae', col) for col in new_column_names]
+new_column_names = [re.sub('Ö', 'Oe', col) for col in new_column_names]
+new_column_names = [re.sub('U', 'Ue', col) for col in new_column_names]
+new_column_names = [re.sub('ß', 'ss', col) for col in new_column_names]
+new_column_names = [re.sub('&', 'u', col) for col in new_column_names]
+# new_column_names = [re.sub('/', '_pro_', col) for col in new_column_names]
+# new_column_names = [re.sub('m²', 'm2', col) for col in new_column_names]
+
+kurven.columns = new_column_names
+new_column_names
+kurven
+
+# fig01, ax01 = plt.subplots(figsize=[15,8])
+# fig02, ax02 = plt.subplots(figsize=[15,8])
+# fig03, ax03 = plt.subplots(figsize=[15,8])
+# fig04, ax04 = plt.subplots(figsize=[15,8])
+# fig05, ax05 = plt.subplots(figsize=[15,8])
+# fig06, ax06 = plt.subplots(figsize=[15,8])
+# fig07, ax07 = plt.subplots(figsize=[15,8])
+# fig08, ax08 = plt.subplots(figsize=[15,8])
+# fig09, ax09 = plt.subplots(figsize=[15,8])
+# fig10, ax10 = plt.subplots(figsize=[15,8])
+# fig11, ax11 = plt.subplots(figsize=[15,8])
+# fig12, ax12 = plt.subplots(figsize=[15,8])
+# fig13, ax13 = plt.subplots(figsize=[15,8])
+# fig14, ax14 = plt.subplots(figsize=[15,8])
+# fig15, ax15 = plt.subplots(figsize=[15,8])
+# fig16, ax16 = plt.subplots(figsize=[15,8])
+# fig17, ax17 = plt.subplots(figsize=[15,8])
+# 
+# sns.scatterplot(x='Tag', y='Datum', data=kurven, ax=ax01)
+# sns.scatterplot(x='Tag', y='Endenergie__EE__Verbrauch__fuer_Heizung_u_Warmwasser', data=kurven, ax=ax02)
+# sns.scatterplot(x='Tag', y='Endenergie_Direktbezug_aus_Kollektoren__am_Saisonspeicher_vorbei', data=kurven, ax=ax03)
+# sns.scatterplot(x='Tag', y='beim_Verbraucher_verfuegbare_EE_aus_inneroertlichen_Kollektoren', data=kurven, ax=ax04)
+# sns.scatterplot(x='Tag', y='beim_Verbraucher_verfuegbare_EE_aus__externen___Kollektoren', data=kurven, ax=ax05)
+# sns.scatterplot(x='Tag', y='sofort_verbrauchter_Anteil_des_inneroertlichen_Kollektorgewinns_', data=kurven, ax=ax06)
+# sns.scatterplot(x='Tag', y='sofort_verbrauchter_Anteil_des_externen_Kollektorgewinns__als_Fernwaerme_', data=kurven, ax=ax07)
+# sns.scatterplot(x='Tag', y='am_Saisonspeicher_verfuegbare_Waerme_aus_inneroertlichen_Kollektoren', data=kurven, ax=ax08)
+# sns.scatterplot(x='Tag', y='am_Saisonspeicher_verfuegbare_Waerme_aus_externen_Kollektoren', data=kurven, ax=ax09)
+# sns.scatterplot(x='Tag', y='Deckungsgrad__allein_aus_inneroertlichen_Kollektoren', data=kurven, ax=ax10)
+# sns.scatterplot(x='Tag', y='Fernwaermebezug_aus_externem_Kollektorfeld', data=kurven, ax=ax11)
+# sns.scatterplot(x='Tag', y='Fernwaermebezug_aus_Saisonspeicher', data=kurven, ax=ax12)
+# sns.scatterplot(x='Tag', y='Saisonspeicher_Belastung', data=kurven, ax=ax13)
+# sns.scatterplot(x='Tag', y='Fernwaerme_Bezug', data=kurven, ax=ax14)
+# sns.scatterplot(x='Tag', y='Speicher_laden', data=kurven, ax=ax15)
+# sns.scatterplot(x='Tag', y='Speicher_Iinhalt', data=kurven, ax=ax16)
+# sns.scatterplot(x='Tag', y='Speicher_Temperatur', data=kurven, ax=ax17)
+# 
+# 
+# ax01.set_title('Datum')
+# ax02.set_title('Endenergie (EE) Verbrauch  für Heizung & Warmwasser [kWh/d/Kopf]')
+# ax03.set_title('Endenergie Direktbezug aus Kollektoren, am Saisonspeicher vorbei [kWh/d/Kopf]')
+# ax04.set_title('beim Verbraucher verfügbare EE aus innerörtlichen Kollektoren [kWh/d/Kopf]')
+# ax05.set_title('beim Verbraucher verfügbare EE aus  externen   Kollektoren [kWh/d/Kopf]')
+# ax06.set_title('sofort verbrauchter Anteil des innerörtlichen Kollektorgewinns  [%]')
+# ax07.set_title('sofort verbrauchter Anteil des externen Kollektorgewinns, als Fernwärme  [%]')
+# ax08.set_title('am Saisonspeicher verfügbare Wärme aus innerörtlichen Kollektoren [kWh/d/Kopf]')
+# ax09.set_title('am Saisonspeicher verfügbare Wärme aus externen Kollektoren [kWh/d/Kopf]')
+# ax10.set_title('Deckungsgrad, allein aus innerörtlichen Kollektoren [%]')
+# ax11.set_title('Fernwärmebezug aus externem Kollektorfeld [kWh/d/Kopf]')
+# ax12.set_title('Fernwärmebezug aus Saisonspeicher [kWh/d/Kopf]')
+# ax13.set_title('Saisonspeicher Belastung [kWh/d/Kopf]')
+# ax14.set_title('Fernwärme Bezug [kWh/d/Kopf]')
+# ax15.set_title('Speicher laden [kWh/d/Kopf]')
+# ax16.set_title('Speicher Iinhalt [kWh/Kopf]')
+# ax17.set_title('Speicher Temperatur [°C]')
+
+titles = [
+  'Datum'
+  ,'Endenergie (EE) Verbrauch  für Heizung & Warmwasser [kWh/d/Kopf]'
+  ,'Endenergie Direktbezug aus Kollektoren, am Saisonspeicher vorbei [kWh/d/Kopf]'
+  ,'beim Verbraucher verfügbare EE aus innerörtlichen Kollektoren [kWh/d/Kopf]'
+  ,'beim Verbraucher verfügbare EE aus  externen   Kollektoren [kWh/d/Kopf]'
+  ,'sofort verbrauchter Anteil des innerörtlichen Kollektorgewinns  [%]'
+  ,'sofort verbrauchter Anteil des externen Kollektorgewinns, als Fernwärme  [%]'
+  ,'am Saisonspeicher verfügbare Wärme aus innerörtlichen Kollektoren [kWh/d/Kopf]'
+  ,'am Saisonspeicher verfügbare Wärme aus externen Kollektoren [kWh/d/Kopf]'
+  ,'Deckungsgrad, allein aus innerörtlichen Kollektoren [%]'
+  ,'Fernwärmebezug aus externem Kollektorfeld [kWh/d/Kopf]'
+  ,'Fernwärmebezug aus Saisonspeicher [kWh/d/Kopf]'
+  ,'Saisonspeicher Belastung [kWh/d/Kopf]'
+  ,'Fernwärme Bezug [kWh/d/Kopf]'
+  ,'Speicher laden [kWh/d/Kopf]'
+  ,'Speicher Iinhalt [kWh/Kopf]'
+  ,'Speicher Temperatur [°C]'
+]
+
+
+
+
+fig, axs = plt.subplots(nrows=17, figsize=[13,80])
+for i, col in enumerate(new_column_names[1:]):
+  sns.scatterplot(x='Tag', y=col, data=kurven, ax=axs[i])
+  axs[i].set_title(titles[i])
+fig.tight_layout()
+```
+
+
+##### Blatt t
+```{python}
+current_sheet = 't'
+```
+
+
+###### stepXX
+
+o dedup
+
+###### step09
+
+o dedup
+###### Arbeitspunkt ++++++++
+```{r}
+# source("~/Spaces/Raumschiff/essentielle-Backups/Script_Backupper.R") # vor sheet umbau 2024-01-18--16:25:45
+# edit_file("~/Spaces/Raumschiff/essentielle-Backups/Script_Backupper.R")
+# browseURL("~/Spaces/Raumschiff/essentielle-Backups/Saisonale_Erdwaermespeicher")
+
+```
+.
+
+```{python dedup}
+list_of_steps = [] 
+# todo save sheetformulas here as a 2nd column, i.e. the formulas containing cell names only including the sheet prefix
+# todo iterate from_step from low to high to get all formulas right and paste them here
+
+step08 = pd.DataFrame({'sheetcell': [
+  't!D99',
+  't!D28',
+  't!D60',
+  't!D159',
+  't!D66',
+  'u!H16',
+  'u!F16',
+  'u!B8',
+  'u!H17',
+  'u!F17',
+  't!D119',
+  'h!J21',
+  'h!H21',
+  'h!D17',
+  'h!J22',
+  'h!H22',
+  'h!J23',
+  'h!H23',
+  'h!J24',
+  'h!H24',
+  'h!J25',
+  'h!H25',
+  'h!J26',
+  'h!H26',
+  'h!J27',
+  'h!H27',
+  'h!J28',
+  'h!H28',
+  'h!J29',
+  'h!H29',
+  'h!J30',
+  'h!H30',
+  'h!J31',
+  'h!H31',
+  't!D7',
+  's!O32',
+  'u!I25',
+  'h!K32',
+  'e!E4',
+  'e!F4',
+  'e!V30',
+  'e!A4',
+  'e!V12',
+  'e!V13'
+  ]}) 
+step08.loc[:, 'step'] = 8
+list_of_steps = list_of_steps + [step08]
+
+
+
+step07 = pd.DataFrame({'sheetcell': [
+  't!D103',
+  't!D64',
+  'u!I16',
+  'u!I17',
+  't!D121',
+  'h!L21',
+  'h!L22',
+  'h!L23',
+  'h!L24',
+  'h!L25',
+  'h!L26',
+  'h!L27',
+  'h!L28',
+  'h!L29',
+  'h!L30',
+  'h!L31',
+  'e!V9',
+  'e!V10',
+  'e!V14',
+  'e!V17',
+  't!D90',
+  't!D91',
+  's!O34',
+  'h!E21',
+  'h!E22',
+  'h!E23',
+  'h!E24',
+  'h!E25',
+  'h!E26',
+  'h!E27',
+  'h!E28',
+  'h!E29',
+  'h!E30',
+  'h!E31',
+  't!D129',
+  't!D135',
+  'e!V6',
+  'e!V7',
+  'e!D4', #'e!D4:D734' #hier soll vorerst eine Zelle reichen, um die df Formeln zu bekommen
+  'e!C4', #'e!C4:C734' #dann muss über die DataFrame Spalte summiert werden
+  'e!V15',
+  'e!V18',
+  'e!V33'
+  ]}) 
+step07.loc[:, 'step'] = 7
+list_of_steps = list_of_steps + [step07]
+
+
+
+step06 = pd.DataFrame({'sheetcell': [
+  't!D106',
+  't!D62',
+  't!D68',
+  't!D67',
+  't!D63',
+  't!D65',
+  't!D70',
+  't!D71',
+  't!D105',
+  't!D69',
+  't!D72',
+  't!D115',
+  't!D73',
+  'u!I18',
+  't!D122',
+  'h!L32',
+  'e!V16',
+  't!D40',
+  't!D12',
+  't!D13',
+  't!D17',
+  't!D39',
+  't!D20',
+  't!D92',
+  't!D44',
+  't!D120',
+  's!I32',
+  'h!E32',
+  't!D139',
+  't!D34',
+  't!D101',
+  'e!V5',
+  'e!V8',
+  'e!D736',
+  'e!C736',
+  't!D18',
+  't!D21',
+  't!D29'
+  ]})
+step06.loc[:, 'step'] = 6
+list_of_steps = list_of_steps + [step06]
+
+
+
+step05 = pd.DataFrame({'sheetcell': [
+  't!D166', # step05
+  't!D167',
+  't!D168',
+  't!D169',
+  't!D170',
+  't!D130',
+  't!D80',
+  't!D136',
+  't!D41',
+  't!D42',
+  't!D19',
+  't!D46',
+  't!D45',
+  't!D48',
+  't!D49',
+  't!D47',
+  't!D93',
+  't!D76',
+  't!D127',
+  't!D77',
+  't!D117',
+  't!D75',
+  't!D133',
+  't!F41',
+  't!F45',
+  't!F49',
+  't!F77',
+  't!F75',
+  't!D143',
+  't!D36',
+  't!D83',
+  'e!V20',
+  't!D8',
+  't!D11',
+  'e!D737',
+  'e!V24',
+  't!D89', #added after check
+  't!F80' #added after check
+  ]})
+step05.loc[:, 'step'] = 5
+list_of_steps = list_of_steps + [step05]
+
+step04 = pd.DataFrame({'sheetcell': [
+  't!D171', #step04
+  't!D172',
+  't!D173',
+  't!D174',
+  't!D175',
+  't!D176',
+  't!D177',
+  't!D178',
+  't!D179',
+  't!F171',
+  't!F172',
+  't!F173',
+  't!F174',
+  't!F175',
+  't!F176',
+  't!F177',
+  't!F178',
+  't!F179',
+  't!D149',
+  't!D162',
+  't!D87',
+  't!D78',
+  't!D164',
+  't!D85',
+  't!D81',
+  't!D33',
+  't!D23',
+  't!D32',
+  't!D35',
+  't!D27'
+  ]})
+step04.loc[:, 'step'] = 4
+list_of_steps = list_of_steps + [step04]
+
+step03 = pd.DataFrame({'sheetcell': [
+  't!D189', # step03
+  't!D190',
+  't!D191',
+  't!D192',
+  't!D193',
+  't!D194',
+  't!D195',
+  't!D196',
+  't!D197',
+  't!D183',
+  't!D186',
+  't!D187',
+  't!D86',
+  't!F81',
+  'e!V4',
+  't!D100',
+  't!D98',
+  't!D84',
+  't!D161',
+  't!D163'
+  ]})
+step03.loc[:, 'step'] = 3
+list_of_steps = list_of_steps + [step03]
+
+step02 = pd.DataFrame({'sheetcell': [
+  't!D199', #step02
+  't!D37',
+  't!D202',
+  't!D205',
+  't!D206',
+  't!D180',
+  't!F180',
+  't!E3',
+  't!D184',
+  't!D185'
+  ]})
+step02.loc[:, 'step'] = 2
+list_of_steps = list_of_steps + [step02]
+
+step01 = pd.DataFrame({'sheetcell': [
+  't!D200', #step01
+  't!D207',
+  't!D198',
+  't!D203',
+  't!D204'
+  ]})
+step01.loc[:, 'step'] = 1  
+list_of_steps = list_of_steps + [step01]
+
+
+dedup = pd.concat(list_of_steps, axis=0)
+dedup = dedup.reset_index(drop=True)
+
+# remove dollar sign
+dedup.loc[:, 'sheetcell'] = dedup.loc[:, 'sheetcell'].str.replace(r'$', '', regex=True)
+
+if dedup.loc[:,'sheetcell'].duplicated().sum() > 0:
+  print('Doppelt sind: ',
+    dedup.loc[dedup.duplicated(), :]
+  )
+else: print('OK, no duplicates!')
+
+```
+
+###### dedup_check --
+
+```{python formulator - separate cells and sheets and delete dollar sign}
+formulator = dedup.copy()
+
+# extract sheet
+formulator.loc[:, 'sheet'] = \
+  formulator.loc[:, 'sheetcell']\
+  .str.extract(r'^(\w{1,})\!', expand=False) #do not expand Series to DataFrame
+#check
+formulator['sheet'].value_counts() #ok
+# formulator.loc[35, :]
+
+# remove dollar sign
+formulator.loc[:, 'sheetcell'] = \
+  formulator.loc[:, 'sheetcell']\
+  .str.replace(r'$', '', regex=True)
+  
+# formulator.loc[:, 'sheetcell'] = formulator.loc[:, 'cell']
+
+#remove sheet prefix
+# formulator.loc[mask_other_sheets, 'cell'] = \
+formulator.loc[:, 'cell'] = \
+  formulator.loc[:, 'sheetcell']\
+  .str.replace(r'^(\w{1,})\!', '', regex=True)
+#check
+# formulator.loc[35, :] #ok
+
+# extract column
+formulator.loc[:, 'column'] = \
+  formulator.loc[:, 'cell']\
+  .str.extract(r'^([A-Z]{1,})\d{1,}', expand=False)
+# formulator['column'].value_counts() #ok
+  
+# extract row
+formulator.loc[:, 'row'] = \
+  formulator.loc[:, 'cell']\
+  .str.extract(r'^[A-Z]{1,}(\d{1,})', expand=False)
+formulator['row'].value_counts() #ok
+
+```
+
+
+```{python formulator  add formulas}
+# webbrowser.open('https://openpyxl.readthedocs.io/en/stable/api/openpyxl.workbook.html')
+
+# load_workbook
+wbf_workbook = load_workbook('_base/jahreslauf_roebel.xlsx') #workbook containing formulas incl constants
+wbv_workbook_values = load_workbook('_base/jahreslauf_roebel.xlsx', data_only=True)
+
+# add formulas
+for i in formulator.index:
+  # treat special cases
+  set_as_input = ['e!V4', 's!I32', 's!O32'] #set an input value instead of looking at calculation
+  if formulator.loc[i, 'sheetcell'] in set_as_input:
+    formulator.loc[i, 'formula'] = wbv_workbook_values[formulator.loc[i,'sheet']][formulator.loc[i,'cell']].internal_value
+  else:
+    formulator.loc[i, 'formula'] =\
+    wbf_workbook[formulator.loc[i,'sheet']][formulator.loc[i,'cell']].internal_value
+
+
+# formulator.iloc[75:, :]
+
+# r.View(formulator, 'formulator')
+
+```
+
+###### regex
+
+```{python formulator - regex for }
+
+# from re import findall
+# todo replace {0,1} where possible in the below regex
+regex_cell_extraction = r'\b([A-Za-z]{0,}\!{0,1}[A-Z]{1,2}\${0,1}\d{1,}\:{0,1}[A-Za-z]{0,}\!{0,1}[A-Z]{0,2}\${0,1}\d{0,})\b'
+#checks
+# formulator.loc[[0, 9, 35, 10, 67, 80, 97],'formula'] #example cases
+# formulator.loc[:,'formula']\
+# formulator.loc[[0, 9, 35, 10, 67, 80, 97],'formula']\
+  # .str.findall(regex_cell_extraction)
+
+```
+
+```{python formulator  whole check}
+formulator.loc[:,'next_cells'] = \
+  formulator.loc[:,'formula']\
+    .str.findall(regex_cell_extraction)
+
+# # refurbish with sheet
+# mask_other_sheets = (~formulator.loc[:, 'sheet'] == current_sheet) & (~formulator.loc[:, 'formula'].str.contains(r'\!'))
+# formulator.loc[mask_other_sheets, 'next_cells'] = formulator.loc[mask_other_sheets, 'next_cells'].str.replace(r'[A-Z]{1,2}',)
+
+#check    
+# formulator.loc[[0, 9, 35, 10, 80, 97],:] #example cases
+# # overlong cases
+# formulator.loc[82,'formula']
+# formulator.loc[82,'next_cells']
+# formulator.loc[11,'formula']
+# formulator.loc[11,'next_cells']
+
+# todo implement d22:d33 resolution: cell ranges into single cells
+
+# formulator.head(6)
+# r.View(formulator, 'formulator')
+```
+
+```{python clipboarder}
+from_step=1
+mask_for_clipboard = (formulator.loc[:,'step']==from_step)\
+  &(~formulator.loc[:,'next_cells'].isna())
+sum(mask_for_clipboard)
+
+# mask_for_clipboard.head(9)
+stacked = formulator.loc[mask_for_clipboard, ['sheetcell', 'sheet', 'formula', 'next_cells']]
+
+new_for_dedup = []
+for i in stacked.index:
+  for k in stacked.loc[i, 'next_cells']:
+    # type(k) #str
+    if '!' in k:
+      new_for_dedup.append([stacked.loc[i, 'sheetcell'], stacked.loc[i, 'formula'], k])
+      # new_for_dedup.append(k)
+    else:
+      new_for_dedup.append([stacked.loc[i, 'sheetcell'], stacked.loc[i, 'formula'],  stacked.loc[i, 'sheet'] + '!' + k])
+    
+# to DataFrame
+new_for_dedup = pd.DataFrame(new_for_dedup, columns=['sheetcell', 'formula', 'influencer_cell'])
+# new_for_dedup = pd.DataFrame(new_for_dedup, columns=['cell'])
+
+# remove dollar sign
+new_for_dedup.loc[:, 'influencer_sheetcell'] = new_for_dedup.loc[:, 'influencer_cell'].str.replace(r'\$', '', regex=True)
+new_for_dedup = new_for_dedup.drop_duplicates('influencer_sheetcell')
+
+# refurnish with sheet info  -> sheetcell
+mask_no_sheet = ~new_for_dedup.loc[:,'influencer_sheetcell'].str.contains(r'\!')
+sum(mask_no_sheet)
+new_for_dedup.loc[mask_no_sheet, 'influencer_sheetcell'] =\
+  current_sheet + '!' + new_for_dedup.loc[mask_no_sheet, 'influencer_sheetcell']
+  
+# generate one column without sheet prefix
+new_for_dedup.loc[:, 'influencer_cell'] = \
+  new_for_dedup.loc[:, 'influencer_sheetcell'].str.replace(r'^(\w{1,})\!', '', regex=True)
+
+# nice to have:
+# #expand ranges
+# mask_ranges = new_for_dedup.loc[:,'cell'].str.contains(r'\:', na=False)
+# # sum(mask_ranges)
+# new_for_dedup.loc[mask_ranges, 'cell']
+
+# deduplication
+mask_history = dedup.loc[:,'step'] <= from_step
+print(
+  'Ratio of df "dedup" currently in history: ', sum(mask_history)/len(mask_history))
+mask_new =\
+  ~new_for_dedup.loc[:,'influencer_sheetcell'].isin(dedup.loc[mask_history,'sheetcell'])
+print(
+  'Ratio of really new influncer cells compared to \
+  influencer cells in the current step: ', sum(mask_history)/len(mask_history))
+sum(mask_new)/len(mask_new)
+
+new_for_check = new_for_dedup.loc[mask_new,:]
+# new_for_check.to_clipboard(index=False, header=False)
+
+# # check for missing cells in manual parts (intermezzo)
+# mask_missing = ~new_for_check.loc[:,'sheetcell'].isin(step05.loc[:,'sheetcell'])
+# # mask_missing = ~new_for_check.loc[:,'sheetcell'].isin(step04.loc[:,'sheetcell'])
+# # mask_missing = ~new_for_check.loc[:,'sheetcell'].isin(step03.loc[:,'sheetcell'])
+# # mask_missing = ~new_for_check.loc[:,'sheetcell'].isin(step02.loc[:,'sheetcell'])
+# sum(mask_missing)
+# new_for_check.loc[mask_missing,'sheetcell']
+
+# prepare for clip board
+list_of_new_cells = list(new_for_check.loc[:,'influencer_sheetcell'])
+# nice to have: use format:
+# for_clipboard = ["step0{} = pd.DataFrame(\{'sheetcell': [".format(from_step+1)]
+for_clipboard = ["stepXX = pd.DataFrame({'sheetcell': ["]
+for k in list_of_new_cells:
+  # type(k) #str
+  for_clipboard.append("  '"+k+"',")
+for_clipboard.append("  ]}) # o todo remove last comma")
+for_clipboard.append("stepXX.loc[:, 'step'] = XX")
+for_clipboard.append("list_of_steps = list_of_steps + [stepXX]")
+
+# pd.DataFrame(for_clipboard).to_clipboard(index=False, header=False)
+# r.View(formulator, 'formulator')
+
+```
+
+
+
+```{python  staff formulas with sheet prefix}
+
+#todo: do this before dedup
+
+# remove dollar sign
+new_for_dedup['sheetformula'] = new_for_dedup['formula'].str.replace(r'\$', '', regex=True)
+new_for_dedup
+# keep some time
+# - if used - rewrite it to new_for_dedup
+# new_for_check['sheetformula'] = new_for_check['formula'].str.replace(r'\$', '', regex=True)
+# new_for_check.loc[:, 'sheetformula'] = new_for_check.loc[:, 'formula'].str.replace(r'\$', '', regex=True)
+
+# insert sheet prefix
+unique_sheetcells = new_for_dedup.loc[:, 'sheetcell'].drop_duplicates()
+type(unique_sheetcells) #pd Series
+# unique_sheetcells.shape
+for u in unique_sheetcells:
+  mask_u = new_for_dedup.loc[:, 'sheetcell'] == u
+  for h in new_for_dedup.loc[mask_u, :].index:
+    if new_for_dedup.loc[h, 'influencer_sheetcell'] in new_for_dedup.loc[h, 'sheetformula']:
+      1+1
+      #do nothing
+    else:
+      new_for_dedup.loc[h, 'sheetformula'] = \
+      new_for_dedup.loc[h, 'sheetformula'].replace(
+        new_for_dedup.loc[h, 'influencer_cell'],
+        new_for_dedup.loc[h, 'influencer_sheetcell'],
+        )
+      new_for_dedup.loc[mask_u, 'sheetformula'] = new_for_dedup.loc[h, 'sheetformula']
+
+# r.View(new_for_dedup, 'with_sheetformulas')
+
+
+```
+####### which cell ranges are most frequent?
+
+```{r cell map 1}
+# live eda
+# esquisse::esquisser(py$formulator)
+
+# library(tidyverse)
+library(magrittr)
+f <- py$formulator
+# which cell ranges are most frequent?
+# py$formulator %>% 
+ggplot(f) +
+  aes(x = column, y = row, fill = sheet) +
+  geom_tile() +
+  scale_fill_hue(direction = 1) +
+  theme_minimal()
+
+```
+
+
+####### evolution by step (nice to see)
+
+```{r cell map 2}
+# py$formulator %>%
+#   ggplot(.) +
+#   aes(x = column, y = row, fill = sheet) +
+#   geom_tile() +
+#   scale_fill_hue(direction = 1) +
+#   theme_minimal() +
+#   facet_wrap(vars(step))
+
+```
+
+
+
+```{python   get variable names}
+
+
+def get_var_name(sheetcell):
+  """
+  Gets in most cases the variable name for a given sheetcell from a Excel sheet like jahreslauf_roebel.xlsx
+  in most cases, because mostly the desired info is placed one cell to the right from the value
+  example usage: get_var_name(sheetcell='t!A42')
+  """
+  
+  #testcode begin
+  # sheetcell = 't!D99' #example
+  # sheetcell = 't!DA99' #example
+  #testcode end
+  sheet = re.search(r'^(\w{1,})\!', sheetcell).groups()[0]
+  col = re.search(r'^\w{1,}\!([A-Z]{1,})\d{1,}', sheetcell).groups()[0]
+  row = int(re.search(r'^\w{1,}\![A-Z]{1,}(\d{1,})', sheetcell).groups()[0])
+  sheetcol = re.search(r'(^\w{1,}\![A-Z]{1,})\d{1,}', sheetcell).groups()[0]
+  
+  #build delta rules
+  # = read out the variable name by looking at a different cell position - different by delta
+  # formulator['sheetcell'].str.slice(0,1).value_counts() #for overview of columns and sheets
+  # t    142
+  # h     48
+  # e     26
+  # u      9
+  # s      3
+  # formulator['sheetcell'].str.slice(0,3).value_counts() #for overview of columns and sheets
+  # formulator['sheetcell'].str.slice(0,3)\
+  #   .value_counts().to_clipboard(header=False, index=True)
+  delta_row_col = {
+    't!D':   [[0,-2], [0,-1], [0, 1]] # 124
+    ,'e!V':  [[0, 4], [0,-1], [0, 1]]	# 18
+    ,'t!F':  [[0, 5], [0,-3], [0, 6]]	# 17
+    }
+    # ,'h!L':  	# 12
+    # ,'h!E':  	# 12
+    # ,'h!J':  	# 11
+    # ,'h!H':  	# 11
+    # ,'u!I':  	# 4
+    # ,'e!D':  	# 3
+    # ,'u!F':  	# 2
+    # ,'s!O':  	# 2
+    # ,'e!C':  	# 2
+    # ,'u!H':  	# 2
+    # ,'s!I':  	# 1
+    # ,'e!E':  	# 1
+    # ,'e!A':  	# 1
+    # ,'e!F':  	# 1
+    # ,'h!K':  	# 1
+    # ,'h!D':  	# 1
+    # ,'u!B':  	# 1
+    # ,'t!E':  	# 1
+  
+  
+  cell_1 = get_column_letter(
+    column_index_from_string(col) + delta_row_col[sheetcol][0][1]
+    ) + str(row + delta_row_col[sheetcol][0][0])
+  cell_2 = get_column_letter(
+    column_index_from_string(col) + delta_row_col[sheetcol][1][1]
+    ) + str(row + delta_row_col[sheetcol][1][0])
+  cell_3 = get_column_letter(
+    column_index_from_string(col) + delta_row_col[sheetcol][2][1]
+    ) + str(row + delta_row_col[sheetcol][2][0])
+    
+  result =\
+  wbf_workbook[sheet][cell_1].internal_value \
+  + " " + wbf_workbook[sheet][cell_2].internal_value \
+  + " " + wbf_workbook[sheet][cell_3].internal_value
+  
+  return re.sub(r'\s+', ' ', result).strip()
+
+#test
+get_var_name('t!D99')
+
+
+new_for_dedup['var_description'] = new_for_dedup.loc[:, 'sheetcell'].apply(get_var_name)
+
+# r.View(new_for_dedup, 'with_var_names')
+```
+
+
+
+
+
+###### step08
+
+v dedup
+
+###### step07
+
+v dedup
+###### step06
+
+v dedup
+###### step05
+
+
+```{r bezuege05}
+# D166=PI()/4*(D106+D62*2)^2*(D68+D67*D63)
+# D167=D65*D70*(1-D71/100)
+# D168=PI()*D106*D105*D69
+# D169=D72*D115*2
+# D170=D73
+# D130=u!I18*D122
+# D80=216 #root
+# D136=h!L32
+# D41=360 #root
+# D42=124 #root
+# D19=e!V16
+# D46=20 #root
+# D45=188 #root
+# D48=D40*D12*D13/100*D17/D39*D20/100*3600/4.2/40*18/24 #warum ist das null?
+# D49=4.2 #root
+# D47=0.5 #root
+# D93=D92*E3*D44/1000000
+# D76=222 #root
+# D127=D120*D122/1000
+# D77=3171 #root 
+# D117=s!I32
+# D75=1347 #root #force_root
+# D133=h!E32/1000
+# F41=25 #root #abs
+# F45=40 #root #abs
+# F49=25 #root #abs
+# F77=25 #root #abs
+# F75=25 #root #abs
+# D143=D139*24*180
+# D36=(D32-D34*6/12)/180/24*2
+# D83=D101
+# e!V20=9 #root
+# D8=e!V5
+# D11=e!V8
+# e!D737=D736/C736*100
+# e!V24=23 #root
+```
+
+o dedup
+
+```{r raw05}
+# D166
+# D167
+# D168
+# D169
+# D170
+# D130
+# D80
+# D136
+# D41
+# D42
+# D19
+# D46
+# D45
+# D48
+# D49
+# D47
+# D93
+# D76
+# D127
+# D77
+# D117
+# D75
+# D133
+# F41
+# F45
+# F49
+# F77
+# F75
+# D143
+# D36
+# D83
+# e!V20
+# D8
+# D11
+# e!D737
+# e!V24
+```
+
+###### step04
+```{r bezuege04}
+# D171=SUM(D166:D170)
+# D172=D130*D80
+# D173=D136*D80
+# D174=D89*(D41*D19/100+D42*(1-D19/100))*(1-D46/100)
+# D175=D89*D45*(1-D46/100)
+# D176=D48*D49*E3
+# D177=D47*D93*1000000
+# D178=(D76*D127*1000)+D77*D117
+# D179=D75*D133*1000
+# D180=D86*1000000
+
+# F171=50 #root
+# F172=F80
+# F173=F80
+# F174=F41
+# F175=F45
+# F176=F49
+# F177=100 #root
+# F178=F77
+# F179=F75
+
+# D149=D143*1.3
+# D162=0.220 #root
+# D87=D36*E3
+# D78=1 #root
+# D164=160 #root
+# D85=D83/(100-D84)*D84
+# D81=585 #root
+# D33=10641 #root
+# D23=e!V20
+# D32=D8*D11
+# D35=e!D737
+# D27=e!V24
+```
+
+```{r raw04}
+# D171
+# D172
+# D173
+# D174
+# D175
+# D176
+# D177
+# D178
+# D179
+# D180
+
+# F171
+# F172
+# F173
+# F174
+# F175
+# F176
+# F177
+# F178
+# F179
+
+# D149
+# D162
+# D87
+# D78
+# D164
+# D85
+# D81
+# D33
+# D23
+# D32
+# D35
+# D27
+```
+
+###### step03
+
+```{r bezuege03}
+# D189=D171/F171/E3
+# D190=D172/F172/E3
+# D191=D173/F173/E3
+# D192=D174/F174/E3
+# D193=D175/F175/E3
+# D194=D176/F176/E3
+# D195=D177/F177/E3
+# D196=D178/F178/E3
+# D197=D179/F179/E3
+
+# D183=D149*D162
+# D100=D33*E3/(1-D23/100)
+# D186=D87*D78
+# D187=D164/1.97*E3
+# D86=D85*1000*D81/1000000
+# F81=30 #root #abs
+# e!V4=7518 #root #force_root s!D32=SUM(s!D2:s!D31)
+# D98=E3*D32/(1-D23/100)*((1-D35/100)/(1-D27/100)+D35/100)
+# D84=39 #root
+# D161=0.050 #root
+# D163=0.050 #root
+```
+
+```{r raw03}
+# D189
+# D190
+# D191
+# D192
+# D193
+# D194
+# D195
+# D196
+# D197
+# D183
+# D186
+# D187
+# D86
+# F81
+# e!V4
+# D100
+# D98
+# D84
+# D161
+# D163
+```
+
+###### step02
+
+```{r bezuege02}
+# D199=SUM(D189:D198)
+# D37=20 #root
+# D202=D183/E3
+# D205=D186/E3
+# D206=D187/E3
+# D180=D86*1000000
+# F180=F81
+# E3=e!V4
+# D184=(D100-D98)*(100/(100-D84))*D161
+# D185=-(D100-D98)*(D84/(100-D84))*D163
+```
+
+```{r raw02}
+# D199
 # D37
 # D202
-# D203
-# D204
 # D205
 # D206
 # D180
@@ -84,9 +1254,10 @@ Quelldatei = 'jahreslauf_roebel.xlsx'
 # D185
 ```
 
+###### step01
 
-```{python}
-# sheet t
+
+```{r bezuege01}
 # D200=D199/(1-D37/100)
 # D207=SUM(D202:D206)
 # D198=D180/F180/E3
@@ -94,8 +1265,7 @@ Quelldatei = 'jahreslauf_roebel.xlsx'
 # D204=D185/E3
 ```
 
-```{python}
-# sheet t
+```{r raw01}
 # D200
 # D207
 # D198
@@ -103,70 +1273,75 @@ Quelldatei = 'jahreslauf_roebel.xlsx'
 # D204
 ```
 
-```{python}
-#€/a/Kopf		brutto
-Investition_fuer_die_gesamte_Anlage_mit_Nebenkosten = 640 # D200
+###### step00
 
-#€/a/Kopf
-laufende_Kosten_pro_a_pro_Kopf = 319 # D207
-
-#€/a/Kopf
-Investitionskosten_pro_a_pro_Kopf_BHKW__ohne_Energiekosten_ = 23.9 # D198
-
-#€/a/Kopf
-laufende_Kosten_pro_a_pro_Kopf_Energiekosten_BHKW = 340 # D203
-
-#€/a/Kopf
-laufende_Kosten_pro_a_pro_Kopf_Ertrag_BHKW__Elektroenergie = -133 # D204
+```{r bezuege00}
+# D210=D200+D207-D198-D203-D204
 ```
 
+```{r raw00}
+# D210
+```
+
+
+
+###### Rechenstart (Kletterhaken)
+
+Im nächsten chunk wurden feste Werte eingegeben aus den entsprechenden Zellen, weil die Vorgeschichte der Berechnung derzeit noch implementiert wird.
 
 ```{r}
-library(reticulate)
-#r 
-# Formatierungstest: werden lange Variablennamen in r oder python im github markdown umgebrochen?
-Gebaeudeenergiekosten_proKopf_proJahr_ohne_Kapitalkosten_und_Foerdermittel <- 
-  py$Investition_fuer_die_gesamte_Anlage_mit_Nebenkosten +
-  py$laufende_Kosten_pro_a_pro_Kopf -
-  py$Investitionskosten_pro_a_pro_Kopf_BHKW__ohne_Energiekosten_ -
-  py$laufende_Kosten_pro_a_pro_Kopf_Energiekosten_BHKW -
-  py$laufende_Kosten_pro_a_pro_Kopf_Ertrag_BHKW__Elektroenergie
+#€/a/Kopf		brutto
+Investition_fuer_die_gesamte_Anlage_mit_Nebenkosten <- 640 # D200
 
-# Gebaeudeenergiekosten_proKopf_proJahr_ohne_Kapitalkosten_und_Foerdermittel =728
+#€/a/Kopf
+laufende_Kosten_pro_a_pro_Kopf <- 319 # D207
 
+#€/a/Kopf
+Investitionskosten_pro_a_pro_Kopf_BHKW__ohne_Energiekosten_ <- 23.9 # D198
 
-Gebaeudeenergiekosten_proKopf_proJahr_ohne_Kapitalkosten_und_Foerdermittel
+#€/a/Kopf
+laufende_Kosten_pro_a_pro_Kopf_Energiekosten_BHKW <- 340 # D203
 
+#€/a/Kopf
+laufende_Kosten_pro_a_pro_Kopf_Ertrag_BHKW__Elektroenergie <- -133 # D204
 ```
 
+Summe:
+```{r}
+#r 
+Gebaeudeenergiekosten_proKopf_proJahr_ohne_Kapitalkosten_und_Foerdermittel <- 
+  sum(c(
+      Investition_fuer_die_gesamte_Anlage_mit_Nebenkosten
+    ,+laufende_Kosten_pro_a_pro_Kopf
+    ,-Investitionskosten_pro_a_pro_Kopf_BHKW__ohne_Energiekosten_
+    ,-laufende_Kosten_pro_a_pro_Kopf_Energiekosten_BHKW
+    ,-laufende_Kosten_pro_a_pro_Kopf_Ertrag_BHKW__Elektroenergie
+  ))
 
-Summe
-```{python}
-#Quellzelle: Blatt t: D210
-#€/a/Kopf
-Gebaeudeenergiekosten_proKopf_proJahr_ohne_Kapitalkosten_und_Foerdermittel = sum([
-  Investition_fuer_die_gesamte_Anlage_mit_Nebenkosten
-  ,+laufende_Kosten_pro_a_pro_Kopf
-  ,-Investitionskosten_pro_a_pro_Kopf_BHKW__ohne_Energiekosten_
-  ,-laufende_Kosten_pro_a_pro_Kopf_Energiekosten_BHKW
-  ,-laufende_Kosten_pro_a_pro_Kopf_Ertrag_BHKW__Elektroenergie
-])
+# Gebaeudeenergiekosten_proKopf_proJahr_ohne_Kapitalkosten_und_Foerdermittel =728
+round(
+  Gebaeudeenergiekosten_proKopf_proJahr_ohne_Kapitalkosten_und_Foerdermittel
+  ,1
+)
 
-
-Gebaeudeenergiekosten_proKopf_proJahr_ohne_Kapitalkosten_und_Foerdermittel #728.1
-
-#mögliche Nebenrechnung:
+# mögliche Nebenrechnung:
 # bei eingepreistem Fremdenergieeinsatz von nur noch	2.16%
 ```
 
 
+
 Umrechnung auf monatlich
-```{python}
+```{r}
 #Quelldatei: endrechnung.xlsx
 #€/Monat/Kopf
-Gebaeudeenergiekosten_proKopf_proMon_ohne_Kapitalkosten_und_Foerdermittel = Gebaeudeenergiekosten_proKopf_proJahr_ohne_Kapitalkosten_und_Foerdermittel / 12
+Gebaeudeenergiekosten_proKopf_proMon_ohne_Kapitalkosten_und_Foerdermittel <-
+  1/12 *
+  Gebaeudeenergiekosten_proKopf_proJahr_ohne_Kapitalkosten_und_Foerdermittel
 
-Gebaeudeenergiekosten_proKopf_proMon_ohne_Kapitalkosten_und_Foerdermittel
+round(
+  Gebaeudeenergiekosten_proKopf_proMon_ohne_Kapitalkosten_und_Foerdermittel
+  ,0
+)
 ```
 
 
@@ -180,8 +1355,8 @@ min_Anschliesser_count <- 5000
 max_Einzugsradius_km <- 6
 
 #€/Monat/Kopf
-Gebaeudeenergiekosten_proKopf_proMon_ohne_Kapitalkosten_und_Foerdermittel <- py$Gebaeudeenergiekosten_proKopf_proMon_ohne_Kapitalkosten_und_Foerdermittel 
-#nur Roebel
+# Gebaeudeenergiekosten_proKopf_proMon_ohne_Kapitalkosten_und_Foerdermittel #61
+# nur Roebel
 
 #m
 max_Bohrtiefe <- 'ToDo' # ToDo
@@ -208,6 +1383,158 @@ Bisher wurden in Deutschland jährlich 65 Milliarden Euro für Gebäudeenergie a
 ## Tests
 
 #### Basics (add above)
+
+##### readout excel
+https://python-tools-for-excel.readthedocs.io/en/latest/software_calculation.html
+
+https://github.com/vinci1it2000/formulas #202311
+compiles Excel workbooks to python and executes without using the Excel COM server. Hence, Excel is not needed.
+
+difficult to install formulas 2024-01-17
+
+```{python try openpyxl, successful}
+# from openpyxl import load_workbook
+# wb = load_workbook('_base/jahreslauf_roebel.xlsx')
+# type(wb)
+# sheet_ranges = wb['range names']
+# ws = wb.active
+# x = ws['A1']
+# x.internal_value #'Szenario für Röbel und Umgebung'
+# x.col_idx #1
+# x.column #1
+# x.column_letter #'A'
+# x.row #1
+# # numeric adressing:
+# ws.cell(1,1).internal_value
+# 
+# # value or formula?
+# y = ws['F3']
+# y.internal_value #'=s!Q32/1000000'
+# y.value
+# 
+# #try to read values (v)
+# vb = load_workbook('_base/jahreslauf_roebel.xlsx', data_only=True)
+# vws = vb.active
+# vws['A1'].internal_value #roebel...
+# b = vws['F3']
+# b.internal_value #8.1 :)
+# b.value
+# 
+# # difference between cell.value and cell.internal_value
+# # - cell.value #get or set the value held in the cell
+# # - cell.internal_value #Always returns the value for excel.
+# # https://openpyxl.readthedocs.io/en/stable/api/openpyxl.cell.cell.html?highlight=internal_value#openpyxl.cell.cell.Cell.internal_value
+# 
+# # test, ob Tausendertrennzeichen ignoriert werden
+# vws['D7'].internal_value #7518 #ok, ja :)
+# 
+# # DataFrame from sheet
+# mdf = pd.DataFrame(ws.values)
+# print(mdf.iloc[0,0]) #F3
+# print(mdf.iloc[0,2]) #F3
+# print(mdf.iloc[2,5]) #F3 #attention: zero-based #fazit: gives formula
+# #values instead of formulae:
+# mdv = pd.DataFrame(vws.values)
+# print(mdv.iloc[2,5]) #F3 #fazit: gives value
+# 
+# # also possible: dataframe_to_rows
+# from openpyxl.utils.dataframe import dataframe_to_rows
+# wb = Workbook()
+# ws = wb.active
+# for r in dataframe_to_rows(df, index=True, header=True):
+#     ws.append(r)
+#     
+```
+
+
+
+##### Beispiel für Duplikat-Fortpflanzung
+```{python}
+kosten = pd.DataFrame({'cells': [
+  'D171', #step04
+  'D172',
+  'D173',
+  'D174',
+  'D175',
+  'D176',
+  'D177',
+  'D178',
+  'D179',
+  # 'D180',
+  'F171',
+  'F172',
+  'F173',
+  'F174',
+  'F175',
+  'F176',
+  'F177',
+  'F178',
+  'F179',
+  # 'F180',
+  'D149',
+  'D162',
+  # 'D98',
+  # 'D84',
+  # 'D161',
+  # 'D163',
+  'D87',
+  'D78',
+  'D164',
+  'D85',
+  'D81',
+  'D33',
+  'D23',
+  'D32',
+  'D35',
+  'D27',
+  'D189', # step03
+  'D190',
+  'D191',
+  'D192',
+  'D193',
+  'D194',
+  'D195',
+  'D196',
+  'D197',
+  # 'D198',
+  'D183',
+  # 'D184',
+  # 'D185',
+  'D186',
+  'D187',
+  'D86',
+  'F81',
+  'e!V4',
+  'D100',
+  'D98',
+  'D84',
+  'D161',
+  'D163',
+  'D199', #step02
+  'D37',
+  'D202',
+  'D205',
+  'D206',
+  'D180',
+  'F180',
+  'E3',
+  'D184',
+  'D185',
+  # 'D203',
+  # 'D204',
+  'D200', #step01
+  'D207',
+  'D198',
+  'D203',
+  'D204'
+  ]})
+
+if kosten.duplicated().sum() > 0:
+  print('Doppelt sind: ',
+    kosten.loc[kosten.duplicated(), :]
+  )
+else: print('OK, no duplicates!')
+```
 
 ##### Zellbezüge in Excel automatisch darstellen
 ```{python}
@@ -260,7 +1587,7 @@ test1 <-
 ```
 
 
-Hir auch: 
+Hier auch: 
 
 ```{python}
 #Quellzelle: Blatt t: D210
@@ -291,9 +1618,10 @@ wo mindestens `r py$min_Anschliesser_count` Anschließer auf einem Radius von we
 ```{python mypychunk1}
 #py
 # import pandas as pd
+# import matplotlib.pyplot as plt
 #version from 2024-01-11
 df = pd.read_excel(
-  '/home/danielwittig/repos/Saisonale_Erdwaermespeicher/_base/jahreslauf_roebel.xlsx'
+  '_base/jahreslauf_roebel.xlsx'
   , sheet_name='e', header = 1)
 print(df.shape)
 mypyvar0 = df.shape[0]
@@ -318,6 +1646,112 @@ When you click the **Render** button a document will be generated that includes 
 
 #### if needed
 
+```{python sicherheitskopie dedup05}
+# dedup = pd.DataFrame({'cell': [
+#   'D166', # step05
+#   'D167',
+#   'D168',
+#   'D169',
+#   'D170',
+#   'D130',
+#   'D80',
+#   'D136',
+#   'D41',
+#   'D42',
+#   'D19',
+#   'D46',
+#   'D45',
+#   'D48',
+#   'D49',
+#   'D47',
+#   'D93',
+#   'D76',
+#   'D127',
+#   'D77',
+#   'D117',
+#   'D75',
+#   'D133',
+#   'F41',
+#   'F45',
+#   'F49',
+#   'F77',
+#   'F75',
+#   'D143',
+#   'D36',
+#   'D83',
+#   'e!V20',
+#   'D8',
+#   'D11',
+#   'e!D737',
+#   'e!V24',
+#   'D171', #step04
+#   'D172',
+#   'D173',
+#   'D174',
+#   'D175',
+#   'D176',
+#   'D177',
+#   'D178',
+#   'D179',
+#   'F171',
+#   'F172',
+#   'F173',
+#   'F174',
+#   'F175',
+#   'F176',
+#   'F177',
+#   'F178',
+#   'F179',
+#   'D149',
+#   'D162',
+#   'D87',
+#   'D78',
+#   'D164',
+#   'D85',
+#   'D81',
+#   'D33',
+#   'D23',
+#   'D32',
+#   'D35',
+#   'D27',
+#   'D189', # step03
+#   'D190',
+#   'D191',
+#   'D192',
+#   'D193',
+#   'D194',
+#   'D195',
+#   'D196',
+#   'D197',
+#   'D183',
+#   'D186',
+#   'D187',
+#   'D86',
+#   'F81',
+#   'e!V4',
+#   'D100',
+#   'D98',
+#   'D84',
+#   'D161',
+#   'D163',
+#   'D199', #step02
+#   'D37',
+#   'D202',
+#   'D205',
+#   'D206',
+#   'D180',
+#   'F180',
+#   'E3',
+#   'D184',
+#   'D185',
+#   'D200', #step01
+#   'D207',
+#   'D198',
+#   'D203',
+#   'D204'
+#   ]})
+```
+
 ```{python}
 # from IPython.display import Markdown as md
 # 
@@ -338,14 +1772,21 @@ The `echo: false` option disables the printing of code (only output is displayed
 
 ## ToDos
 ### Prio 1
-qqq backup
-- get formulae overview 2024-01-12
+
+o get formulas overview
+o generate variable names automatic from excel
+o make charts https://campus.datacamp.com/courses/python-for-spreadsheet-users/plotting-data?ex=8
+
+v use openpyxl
+v pycel diagram
+v backup script
+
 ### Prio 2
-- Berücksichtigung von Kapitalkosten und Fördermitteln
+o Berücksichtigung von Kapitalkosten und Fördermitteln
 
 ### nice to have
-- put bash chunks for setup at the beginning
-- Wegen ihrer annähernd gleichen Wichtung liefert die Mittlung der gefundenen Zahlen Anhaltspunkte für den Bedarf bei einem bundesweiten Ausbau der Heliogaia-Netze:
+o put bash chunks for setup at the beginning
+o Wegen ihrer annähernd gleichen Wichtung liefert die Mittlung der gefundenen Zahlen Anhaltspunkte für den Bedarf bei einem bundesweiten Ausbau der Heliogaia-Netze:
 
     0,03% des Territoriums für Speicher, maximal 1,5% für Kollektorfelder *)
     Der Anteil der Verkehrsflächen beträgt zwischen 3 und 5%, je nachdem, was alles mitgezählt wird.
