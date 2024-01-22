@@ -249,18 +249,26 @@ original = kurven.copy()
 # pd.DataFrame(list(original)).to_clipboard(header=False, index=False)
 # pd.DataFrame(list(einheiten)).to_clipboard(header=False, index=False)
 
-# new_column_names = [re.sub(' ', '_', L) for L in list(kurven)]
-new_column_names = [re.sub('[\s:\(\),]', '_', col) for col in list(kurven)]
-new_column_names = [re.sub('ä', 'ae', col) for col in new_column_names]
-new_column_names = [re.sub('ö', 'oe', col) for col in new_column_names]
-new_column_names = [re.sub('ü', 'ue', col) for col in new_column_names]
-new_column_names = [re.sub('Ä', 'Ae', col) for col in new_column_names]
-new_column_names = [re.sub('Ö', 'Oe', col) for col in new_column_names]
-new_column_names = [re.sub('U', 'Ue', col) for col in new_column_names]
-new_column_names = [re.sub('ß', 'ss', col) for col in new_column_names]
-new_column_names = [re.sub('&', 'u', col) for col in new_column_names]
-# new_column_names = [re.sub('/', '_pro_', col) for col in new_column_names]
-# new_column_names = [re.sub('m²', 'm2', col) for col in new_column_names]
+#make_var_name
+def make_var_name(input_string):
+  """
+  Generate a python object name from a variable description
+  """
+  inter = input_string
+  inter = re.sub('[\s:\(\),]', '_', inter)
+  inter = re.sub('ä', 'ae', inter)
+  inter = re.sub('ö', 'oe', inter)
+  inter = re.sub('ü', 'ue', inter)
+  inter = re.sub('Ä', 'Ae', inter)
+  inter = re.sub('Ö', 'Oe', inter)
+  inter = re.sub('U', 'Ue', inter)
+  inter = re.sub('ß', 'ss', inter)
+  inter = re.sub('&', 'u' , inter)
+  inter = re.sub('/', '_pro_', inter)
+  inter = re.sub('m²', 'm2', inter)
+  return inter
+
+new_column_names = [make_var_name(col) for col in list(original)]
 
 kurven.columns = new_column_names
 new_column_names
@@ -361,13 +369,39 @@ current_sheet = 't'
 ###### stepXX
 
 o dedup
+o expand ranges
 
-###### step09
+###### step14v - not existent
 
-o dedup
+v dedup
+v expand ranges
+###### step13v
+
+v dedup
+v expand ranges
+###### step12v
+
+v dedup
+v expand ranges
+###### step11v
+
+v dedup
+v expand ranges
+
+###### step10v
+
+v dedup
+v expand ranges
+
+
+###### step09v
+
+v dedup
+v expand ranges
+
 ###### Arbeitspunkt ++++++++
 ```{r}
-# source("~/Spaces/Raumschiff/essentielle-Backups/Script_Backupper.R") # vor sheet umbau 2024-01-18--16:25:45
+source("~/Spaces/Raumschiff/essentielle-Backups/Script_Backupper.R") # vor sheet umbau 2024-01-18--16:25:45
 # edit_file("~/Spaces/Raumschiff/essentielle-Backups/Script_Backupper.R")
 # browseURL("~/Spaces/Raumschiff/essentielle-Backups/Saisonale_Erdwaermespeicher")
 
@@ -376,8 +410,155 @@ o dedup
 
 ```{python dedup}
 list_of_steps = [] 
-# todo save sheetformulas here as a 2nd column, i.e. the formulas containing cell names only including the sheet prefix
-# todo iterate from_step from low to high to get all formulas right and paste them here
+
+
+# step14 = pd.DataFrame({'sheetcell': [
+#   't!D52',
+#   't!D56',
+#   'u!L25',
+#   's!G20',
+#   's!G24',
+#   's!G12',
+#   's!G10',
+#   's!G22',
+#   's!G14',
+#   's!G7',
+#   's!G2',
+#   ]}) # o todo remove last comma
+# step14.loc[:, 'step'] = 14
+# list_of_steps = list_of_steps + [step14]
+
+
+step13 = pd.DataFrame({'sheetcell': [
+  't!D52',
+  't!D56',
+  'u!L25',
+  's!G20',
+  's!G24',
+  's!G12',
+  's!G10',
+  's!G22',
+  's!G14',
+  's!G7',
+  's!G2',
+  ]}) # o todo remove last comma
+step13.loc[:, 'step'] = 13
+list_of_steps = list_of_steps + [step13]
+
+
+step12 = pd.DataFrame({'sheetcell': [
+  't!D109', #für hohe Genauigkeitsansprüche bei jeder Parameteränderung extern mit zylindermodell007.ods neu berechnen
+  't!D110',
+  't!D111',
+  't!D112',
+  't!D113',
+  't!D131',
+  # 's!Q2:Q31',
+  'h!D11',
+  'h!D13',
+  'h!D9',
+  'h!D8',
+  'h!D12',
+  'h!D10',
+  'h!D6',
+  'h!D5',
+  ]}) # o todo remove last comma
+step12.loc[:, 'step'] = 12
+list_of_steps = list_of_steps + [step12]
+
+
+step11 = pd.DataFrame({'sheetcell': [
+  't!D114',
+  't!D145',
+  # 's!Q32',
+  'h!D21',
+  'h!D22',
+  'h!D23',
+  'h!D24',
+  'h!D25',
+  'h!D26',
+  'h!D27',
+  'h!D28',
+  'h!D29',
+  'h!D30',
+  'h!D31',
+  'u!G24',
+  'u!G23'
+  ]}) 
+step11.loc[:, 'step'] = 11
+list_of_steps = list_of_steps + [step11]
+
+
+step10 = pd.DataFrame({'sheetcell': [
+  't!D153',
+  't!D154',
+  't!D31',
+  'h!F21',
+  'h!F22',
+  'h!F23',
+  'h!F24',
+  'h!F25',
+  'h!F26',
+  'h!F27',
+  'h!F28',
+  'h!F29',
+  'h!F30',
+  'h!F31',
+  'u!H24',
+  'u!H23',
+  'h!I21',
+  'h!I22',
+  'h!I23',
+  'h!I24',
+  'h!I25',
+  'h!I26',
+  'h!I27',
+  'h!I28',
+  'h!I29',
+  'h!I30',
+  'h!I31'
+  ]})
+step10.loc[:, 'step'] =10
+list_of_steps = list_of_steps + [step10]
+
+step09 = pd.DataFrame({'sheetcell': [
+  'e!V25',
+  't!D155',
+  'u!G16',
+  'u!E16',
+  'u!B7',
+  'u!G17',
+  'u!E17',
+  't!D118',
+  'h!G21',
+  'h!G22',
+  'h!G23',
+  'h!G24',
+  'h!G25',
+  'h!G26',
+  'h!G27',
+  'h!G28',
+  'h!G29',
+  'h!G30',
+  'h!G31',
+  'u!I24',
+  'u!I23',
+  'h!K21',
+  'h!K22',
+  'h!K23',
+  'h!K24',
+  'h!K25',
+  'h!K26',
+  'h!K27',
+  'h!K28',
+  'h!K29',
+  'h!K30',
+  'h!K31',
+  'e!V27'
+  ]}) 
+step09.loc[:, 'step'] = 9
+list_of_steps = list_of_steps + [step09]
+
 
 step08 = pd.DataFrame({'sheetcell': [
   't!D99',
@@ -660,6 +841,16 @@ dedup = dedup.reset_index(drop=True)
 # remove dollar sign
 dedup.loc[:, 'sheetcell'] = dedup.loc[:, 'sheetcell'].str.replace(r'$', '', regex=True)
 
+#keep for a later step
+pure_dedup = dedup.copy()
+
+## merge old dna
+old_dna = pd.read_csv('workbook_dna.csv')
+dedup = dedup.merge(old_dna, on='sheetcell', how='left')
+dedup = dedup.iloc[:, [0,1,4]]
+dedup.columns = ['sheetcell', 'step', 'sheetformula']
+old_dna = dedup.copy() #important, otherwise old_dna.update below deletes floor
+
 if dedup.loc[:,'sheetcell'].duplicated().sum() > 0:
   print('Doppelt sind: ',
     dedup.loc[dedup.duplicated(), :]
@@ -721,7 +912,7 @@ wbv_workbook_values = load_workbook('_base/jahreslauf_roebel.xlsx', data_only=Tr
 # add formulas
 for i in formulator.index:
   # treat special cases
-  set_as_input = ['e!V4', 's!I32', 's!O32'] #set an input value instead of looking at calculation
+  set_as_input = ['e!V4', 's!I32', 's!O32', 't!D31'] #set an input value instead of looking at calculation
   if formulator.loc[i, 'sheetcell'] in set_as_input:
     formulator.loc[i, 'formula'] = wbv_workbook_values[formulator.loc[i,'sheet']][formulator.loc[i,'cell']].internal_value
   else:
@@ -773,8 +964,10 @@ formulator.loc[:,'next_cells'] = \
 # r.View(formulator, 'formulator')
 ```
 
+###### from_step corner
+
 ```{python clipboarder}
-from_step=1
+from_step=13
 mask_for_clipboard = (formulator.loc[:,'step']==from_step)\
   &(~formulator.loc[:,'next_cells'].isna())
 sum(mask_for_clipboard)
@@ -782,11 +975,13 @@ sum(mask_for_clipboard)
 # mask_for_clipboard.head(9)
 stacked = formulator.loc[mask_for_clipboard, ['sheetcell', 'sheet', 'formula', 'next_cells']]
 
+# unstack next_cells (put each in a separate row)
 new_for_dedup = []
 for i in stacked.index:
   for k in stacked.loc[i, 'next_cells']:
     # type(k) #str
     if '!' in k:
+      # take them as they are
       new_for_dedup.append([stacked.loc[i, 'sheetcell'], stacked.loc[i, 'formula'], k])
       # new_for_dedup.append(k)
     else:
@@ -797,61 +992,27 @@ new_for_dedup = pd.DataFrame(new_for_dedup, columns=['sheetcell', 'formula', 'in
 # new_for_dedup = pd.DataFrame(new_for_dedup, columns=['cell'])
 
 # remove dollar sign
+# also already create influencer_sheetcell for later alteration
 new_for_dedup.loc[:, 'influencer_sheetcell'] = new_for_dedup.loc[:, 'influencer_cell'].str.replace(r'\$', '', regex=True)
-new_for_dedup = new_for_dedup.drop_duplicates('influencer_sheetcell')
+new_for_dedup.loc[:, 'influencer_cell'] = new_for_dedup.loc[:, 'influencer_cell'].str.replace(r'\$', '', regex=True)
+new_for_dedup.loc[:, 'formula'] = new_for_dedup.loc[:, 'formula'].str.replace(r'\$', '', regex=True)
 
-# refurnish with sheet info  -> sheetcell
+
+# refurnish influencer_sheetcell with sheet to justify the 'sheet' in its name
 mask_no_sheet = ~new_for_dedup.loc[:,'influencer_sheetcell'].str.contains(r'\!')
 sum(mask_no_sheet)
 new_for_dedup.loc[mask_no_sheet, 'influencer_sheetcell'] =\
-  current_sheet + '!' + new_for_dedup.loc[mask_no_sheet, 'influencer_sheetcell']
+  new_for_dedup.loc[:, 'sheetcell'].str.extract(r'^(\w{1,})\!', expand=False) \
+  + '!' + new_for_dedup.loc[mask_no_sheet, 'influencer_sheetcell']
   
-# generate one column without sheet prefix
+# generate one column without sheet prefix for use in openpyxl
 new_for_dedup.loc[:, 'influencer_cell'] = \
   new_for_dedup.loc[:, 'influencer_sheetcell'].str.replace(r'^(\w{1,})\!', '', regex=True)
 
-# nice to have:
-# #expand ranges
+# nice to have: expand ranges
 # mask_ranges = new_for_dedup.loc[:,'cell'].str.contains(r'\:', na=False)
 # # sum(mask_ranges)
 # new_for_dedup.loc[mask_ranges, 'cell']
-
-# deduplication
-mask_history = dedup.loc[:,'step'] <= from_step
-print(
-  'Ratio of df "dedup" currently in history: ', sum(mask_history)/len(mask_history))
-mask_new =\
-  ~new_for_dedup.loc[:,'influencer_sheetcell'].isin(dedup.loc[mask_history,'sheetcell'])
-print(
-  'Ratio of really new influncer cells compared to \
-  influencer cells in the current step: ', sum(mask_history)/len(mask_history))
-sum(mask_new)/len(mask_new)
-
-new_for_check = new_for_dedup.loc[mask_new,:]
-# new_for_check.to_clipboard(index=False, header=False)
-
-# # check for missing cells in manual parts (intermezzo)
-# mask_missing = ~new_for_check.loc[:,'sheetcell'].isin(step05.loc[:,'sheetcell'])
-# # mask_missing = ~new_for_check.loc[:,'sheetcell'].isin(step04.loc[:,'sheetcell'])
-# # mask_missing = ~new_for_check.loc[:,'sheetcell'].isin(step03.loc[:,'sheetcell'])
-# # mask_missing = ~new_for_check.loc[:,'sheetcell'].isin(step02.loc[:,'sheetcell'])
-# sum(mask_missing)
-# new_for_check.loc[mask_missing,'sheetcell']
-
-# prepare for clip board
-list_of_new_cells = list(new_for_check.loc[:,'influencer_sheetcell'])
-# nice to have: use format:
-# for_clipboard = ["step0{} = pd.DataFrame(\{'sheetcell': [".format(from_step+1)]
-for_clipboard = ["stepXX = pd.DataFrame({'sheetcell': ["]
-for k in list_of_new_cells:
-  # type(k) #str
-  for_clipboard.append("  '"+k+"',")
-for_clipboard.append("  ]}) # o todo remove last comma")
-for_clipboard.append("stepXX.loc[:, 'step'] = XX")
-for_clipboard.append("list_of_steps = list_of_steps + [stepXX]")
-
-# pd.DataFrame(for_clipboard).to_clipboard(index=False, header=False)
-# r.View(formulator, 'formulator')
 
 ```
 
@@ -859,19 +1020,15 @@ for_clipboard.append("list_of_steps = list_of_steps + [stepXX]")
 
 ```{python  staff formulas with sheet prefix}
 
-#todo: do this before dedup
+#done this way because replacing parts of a regex match seems difficult:
+# https://stackoverflow.com/questions/4489074/python-regular-expression-replacing-part-of-a-matched-string
 
-# remove dollar sign
-new_for_dedup['sheetformula'] = new_for_dedup['formula'].str.replace(r'\$', '', regex=True)
-new_for_dedup
-# keep some time
-# - if used - rewrite it to new_for_dedup
-# new_for_check['sheetformula'] = new_for_check['formula'].str.replace(r'\$', '', regex=True)
-# new_for_check.loc[:, 'sheetformula'] = new_for_check.loc[:, 'formula'].str.replace(r'\$', '', regex=True)
+#generate column sheetformula upfront, in case it's needed
+new_for_dedup.loc[:, 'sheetformula'] = new_for_dedup.loc[:, 'formula']
 
 # insert sheet prefix
 unique_sheetcells = new_for_dedup.loc[:, 'sheetcell'].drop_duplicates()
-type(unique_sheetcells) #pd Series
+# type(unique_sheetcells) #pd Series
 # unique_sheetcells.shape
 for u in unique_sheetcells:
   mask_u = new_for_dedup.loc[:, 'sheetcell'] == u
@@ -887,26 +1044,115 @@ for u in unique_sheetcells:
         )
       new_for_dedup.loc[mask_u, 'sheetformula'] = new_for_dedup.loc[h, 'sheetformula']
 
-# r.View(new_for_dedup, 'with_sheetformulas')
+# r.View(new_for_dedup, 'new_for_dedup')
 
 
 ```
+
+
+```{python  merge to complete the from_step in the dedup chunk above}
+#unique
+new_for_dedup = new_for_dedup.drop_duplicates('sheetcell')
+
+#new dna
+new_dna = pure_dedup.merge(
+  new_for_dedup.loc[:,['sheetcell', 'sheetformula']]
+  , on='sheetcell', how='left'
+  )
+  
+# new_dna.value_counts('sheetcell', sort=True)
+
+# run only for from_step==1 when workbook_dna.csv is no yet present:
+# old_dna = new_dna.copy()
+
+#check, why new_dna has 304 rows and old_dna only 288
+# mask_overnew = ~new_dna.loc[:,'sheetcell'].isin(old_dna.loc[:,'sheetcell'])
+# new_dna.loc[mask_overnew,'sheetcell']
+
+#update dna
+old_dna.update(new_dna)
+
+old_dna = old_dna.loc[:,['sheetcell', 'step', 'sheetformula']]
+
+# save dna
+old_dna.to_csv('workbook_dna.csv')
+
+```
+
+
+```{python  clipboard to paste next step in the dedup chunk above}
+
+
+# deduplication
+mask_history = dedup.loc[:,'step'] <= from_step
+if len(mask_history)>0:
+  print(
+    'Ratio of df "dedup" currently in history: '
+    , sum(mask_history)/len(mask_history))
+
+mask_new =\
+  ~new_for_dedup.loc[:,'influencer_sheetcell']\
+  .isin(dedup.loc[mask_history,'sheetcell'])
+
+if len(mask_new)>0:
+  print(
+    'Ratio of really new influencer cells compared to \
+    influencer cells in the current step: '
+    , sum(mask_new)/len(mask_new))
+
+# the mentioned check in new_for_check was a step during debugging just below
+new_for_check = new_for_dedup.loc[mask_new,:]
+
+# new_for_check.to_clipboard(index=False, header=False)
+
+# # check for missing cells in manual parts (intermezzo)
+# mask_missing = ~new_for_check.loc[:,'sheetcell'].isin(step05.loc[:,'sheetcell'])
+# # mask_missing = ~new_for_check.loc[:,'sheetcell'].isin(step04.loc[:,'sheetcell'])
+# # mask_missing = ~new_for_check.loc[:,'sheetcell'].isin(step03.loc[:,'sheetcell'])
+# # mask_missing = ~new_for_check.loc[:,'sheetcell'].isin(step02.loc[:,'sheetcell'])
+# sum(mask_missing)
+# new_for_check.loc[mask_missing,'sheetcell']
+
+
+new_for_check = new_for_check.drop_duplicates('influencer_sheetcell')
+
+# prepare for clipboard
+list_of_new_cells = list(new_for_check.loc[:,'influencer_sheetcell'])
+# nice to have: use format:
+# for_clipboard = ["step0{} = pd.DataFrame(\{'sheetcell': [".format(from_step+1)]
+for_clipboard = ["stepXX = pd.DataFrame({'sheetcell': ["]
+for k in list_of_new_cells:
+  # type(k) #str
+  for_clipboard.append("  '"+k+"',")
+for_clipboard.append("  ]}) # o todo remove last comma")
+for_clipboard.append("stepXX.loc[:, 'step'] = XX")
+for_clipboard.append("list_of_steps = list_of_steps + [stepXX]")
+
+# pd.DataFrame(for_clipboard).to_clipboard(index=False, header=False)
+# r.View(formulator, 'formulator')
+# r.View(dna, 'dna')
+# r.View(for_clipboard, 'for_clipboard')
+```
+
+###### clipboard corner
+
+
 ####### which cell ranges are most frequent?
 
 ```{r cell map 1}
-# live eda
-# esquisse::esquisser(py$formulator)
-
-# library(tidyverse)
-library(magrittr)
-f <- py$formulator
-# which cell ranges are most frequent?
-# py$formulator %>% 
-ggplot(f) +
-  aes(x = column, y = row, fill = sheet) +
-  geom_tile() +
-  scale_fill_hue(direction = 1) +
-  theme_minimal()
+# # live eda
+# # esquisse::esquisser(py$formulator)
+# 
+# # library(tidyverse)
+# library(magrittr)
+# f <- py$formulator
+# # which cell ranges are most frequent?
+# 
+# ggplot(f) +
+#   aes(x = column, y = row, fill = sheet) +
+#   geom_tile() +
+#   scale_fill_hue(direction = 1) +
+#   theme_minimal()
 
 ```
 
@@ -914,8 +1160,8 @@ ggplot(f) +
 ####### evolution by step (nice to see)
 
 ```{r cell map 2}
-# py$formulator %>%
-#   ggplot(.) +
+# 
+# ggplot(f) +
 #   aes(x = column, y = row, fill = sheet) +
 #   geom_tile() +
 #   scale_fill_hue(direction = 1) +
@@ -929,16 +1175,19 @@ ggplot(f) +
 ```{python   get variable names}
 
 
-def get_var_name(sheetcell):
+def get_var_description(sheetcell):
   """
   Gets in most cases the variable name for a given sheetcell from a Excel sheet like jahreslauf_roebel.xlsx
   in most cases, because mostly the desired info is placed one cell to the right from the value
-  example usage: get_var_name(sheetcell='t!A42')
+  example usage: get_var_description(sheetcell='t!A42')
   """
   
-  #testcode begin
+  #testcases begin
+  # sheetcell = 'e!A4' #example
+  # sheetcell = 'e!V30' #example
   # sheetcell = 't!D99' #example
   # sheetcell = 't!DA99' #example
+  # sheetcell = 'h!E21' #example
   #testcode end
   sheet = re.search(r'^(\w{1,})\!', sheetcell).groups()[0]
   col = re.search(r'^\w{1,}\!([A-Z]{1,})\d{1,}', sheetcell).groups()[0]
@@ -956,55 +1205,106 @@ def get_var_name(sheetcell):
   # formulator['sheetcell'].str.slice(0,3).value_counts() #for overview of columns and sheets
   # formulator['sheetcell'].str.slice(0,3)\
   #   .value_counts().to_clipboard(header=False, index=True)
-  delta_row_col = {
-    't!D':   [[0,-2], [0,-1], [0, 1]] # 124
-    ,'e!V':  [[0, 4], [0,-1], [0, 1]]	# 18
-    ,'t!F':  [[0, 5], [0,-3], [0, 6]]	# 17
-    }
-    # ,'h!L':  	# 12
-    # ,'h!E':  	# 12
-    # ,'h!J':  	# 11
-    # ,'h!H':  	# 11
-    # ,'u!I':  	# 4
-    # ,'e!D':  	# 3
-    # ,'u!F':  	# 2
-    # ,'s!O':  	# 2
-    # ,'e!C':  	# 2
-    # ,'u!H':  	# 2
-    # ,'s!I':  	# 1
-    # ,'e!E':  	# 1
-    # ,'e!A':  	# 1
-    # ,'e!F':  	# 1
-    # ,'h!K':  	# 1
-    # ,'h!D':  	# 1
-    # ,'u!B':  	# 1
-    # ,'t!E':  	# 1
   
-  
-  cell_1 = get_column_letter(
-    column_index_from_string(col) + delta_row_col[sheetcol][0][1]
-    ) + str(row + delta_row_col[sheetcol][0][0])
-  cell_2 = get_column_letter(
-    column_index_from_string(col) + delta_row_col[sheetcol][1][1]
-    ) + str(row + delta_row_col[sheetcol][1][0])
-  cell_3 = get_column_letter(
-    column_index_from_string(col) + delta_row_col[sheetcol][2][1]
-    ) + str(row + delta_row_col[sheetcol][2][0])
+  if sheetcol in ['t!D','e!V','t!F']:
     
-  result =\
-  wbf_workbook[sheet][cell_1].internal_value \
-  + " " + wbf_workbook[sheet][cell_2].internal_value \
-  + " " + wbf_workbook[sheet][cell_3].internal_value
+    delta_row_col = {
+      't!D':   [[0,-2], [0,-1], [0, 1]] # 124 #col B must contain at least a ' '
+      ,'e!V':  [[0, 4], [0,-1], [0, 1]]	# 18  #col Z must contain ' ' (1 space)
+      ,'t!F':  [[0, 5], [0,-3], [0, 6]]	# 17  #todo: put above instructions in the description somewhere
+      }
+        
+    cell_1 = get_column_letter(
+      column_index_from_string(col) + delta_row_col[sheetcol][0][1]
+      ) + str(row + delta_row_col[sheetcol][0][0])
+      
+    cell_2 = get_column_letter(
+      column_index_from_string(col) + delta_row_col[sheetcol][1][1]
+      ) + str(row + delta_row_col[sheetcol][1][0])
+      
+    cell_3 = get_column_letter(
+      column_index_from_string(col) + delta_row_col[sheetcol][2][1]
+      ) + str(row + delta_row_col[sheetcol][2][0])
+              
+    result =\
+    str(wbf_workbook[sheet][cell_1].internal_value or "") \
+    + " " + str(wbf_workbook[sheet][cell_2].internal_value or "") \
+    + "  " + str(wbf_workbook[sheet][cell_3].internal_value or "")
+  
+  #h
+  elif (sheet=='h') & (col>='D') & (col<='S') & (row>=21) & (row<=32):
+    cell_1 = col + '19' #name
+    cell_2 = 'C' + str(row) #lead
+    cell_3 = col + '20' #unit
+      
+    result = \
+    str(wbf_workbook[sheet][cell_1].internal_value or "") \
+    + " Leitung " \
+    + str(wbf_workbook[sheet][cell_2].internal_value or "") \
+    + "  " + str(wbf_workbook[sheet][cell_3].internal_value or "")
+  
+  #u
+  elif (sheet=='u') & (col>='B') & (col<='M') & (row>=16) & (row<=17):
+    cell_1 = col + '14' #name
+    cell_2 = 'B' + str(row) #lead
+    cell_3 = col + '15' #unit
+      
+    result = \
+    str(wbf_workbook[sheet][cell_1].internal_value or "") \
+    + " Zweigabschnitt " \
+    + str(wbf_workbook[sheet][cell_2].internal_value or "") \
+    + "  bei Auslegungsleistung  " + str(wbf_workbook[sheet][cell_3].internal_value or "")
+    
+  elif (sheet=='u') & (col>='B') & (col<='M') & (row>=23) & (row<=24):
+    cell_1 = col + '21' #name
+    cell_2 = 'B' + str(row) #lead
+    cell_3 = col + '22' #unit
+      
+    result = \
+    str(wbf_workbook[sheet][cell_1].internal_value or "") \
+    + " Zweigabschnitt " \
+    + str(wbf_workbook[sheet][cell_2].internal_value or "") \
+    + "  bei Normleistung  " + str(wbf_workbook[sheet][cell_3].internal_value or "")
+    
+  #e  
+  elif (sheet=='e') & (col>='A') & (col<='R') & (row>=4) & (row<=734):
+    cell_1 = col + '2' #name
+    # cell_2 = 'B' + str(row) #lead
+    cell_3 = col + '3' #unit
+      
+    result = \
+    str(wbf_workbook[sheet][cell_1].internal_value or "") \
+    + "  " + str(wbf_workbook[sheet][cell_3].internal_value or "")
+  
+  else:
+    # manual_var_names = {
+    #   
+    #   }
+    result = 'tbd'
+    # result = manual_varnames[sheetcol]
   
   return re.sub(r'\s+', ' ', result).strip()
 
-#test
-get_var_name('t!D99')
 
+new_for_dedup['var_description'] = new_for_dedup.loc[:, 'sheetcell'].apply(get_var_description)
+new_for_dedup['var_name'] = new_for_dedup.loc[:, 'var_description'].apply(make_var_name)
 
-new_for_dedup['var_description'] = new_for_dedup.loc[:, 'sheetcell'].apply(get_var_name)
+formulator['var_description'] = formulator.loc[:, 'sheetcell'].apply(get_var_description)
 
-# r.View(new_for_dedup, 'with_var_names')
+#checks
+# get_var_description('h!E21')
+# get_var_description('t!D99')
+# new_for_dedup
+# formulator
+# #debugger:
+# for i in formulator.loc[:, 'sheetcell']:
+#   print(i)
+#   get_var_description(i)
+#
+# formulator.loc[:, 'sheetcell'][1]
+# get_var_description(formulator.loc[:, 'sheetcell'][1])
+# get_var_description('e!E4')
+# r.View(new_for_dedup, 'new_for_dedup')
 ```
 
 
@@ -1774,7 +2074,8 @@ The `echo: false` option disables the printing of code (only output is displayed
 ### Prio 1
 
 o get formulas overview
-o generate variable names automatic from excel
+o put sheetformulas into dedup
+o generate variable names - based based on rules (where efficient) from excel
 o make charts https://campus.datacamp.com/courses/python-for-spreadsheet-users/plotting-data?ex=8
 
 v use openpyxl

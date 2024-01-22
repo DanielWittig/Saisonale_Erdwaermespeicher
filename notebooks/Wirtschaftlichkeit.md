@@ -1,5 +1,6 @@
 # Wirtschaftlichkeit Saisonaler Erdwärmespeicher
 
+
 ## Setup
 
 ### in Rstudio
@@ -90,7 +91,7 @@ library(tidyverse)
 ```
 
     ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-    ✔ dplyr     1.1.4     ✔ readr     2.1.5
+    ✔ dplyr     1.1.4     ✔ readr     2.1.4
     ✔ forcats   1.0.0     ✔ stringr   1.5.1
     ✔ ggplot2   3.4.4     ✔ tibble    3.2.1
     ✔ lubridate 1.9.3     ✔ tidyr     1.3.0
@@ -714,8 +715,8 @@ formulator['row'].value_counts() #ok
 wbf_workbook = load_workbook('_base/jahreslauf_roebel.xlsx') #workbook containing formulas incl constants
 ```
 
-    /cloud/project/r-reticulate/lib/python3.11/site-packages/openpyxl/worksheet/_reader.py:329: UserWarning: Conditional Formatting extension is not supported and will be removed
-      warn(msg)
+    /home/danielwittig/miniconda3/lib/python3.11/site-packages/openpyxl/reader/excel.py:228: UserWarning: Conditional Formatting extension is not supported and will be removed
+      ws_parser.bind_all()
 
 ``` python
 wbv_workbook_values = load_workbook('_base/jahreslauf_roebel.xlsx', data_only=True)
@@ -933,42 +934,26 @@ for u in unique_sheetcells:
 ####### which cell ranges are most frequent?
 
 ``` r
-# live eda
-# esquisse::esquisser(py$formulator)
-
-# library(tidyverse)
-library(magrittr)
+# # live eda
+# # esquisse::esquisser(py$formulator)
+# 
+# # library(tidyverse)
+# library(magrittr)
+# f <- py$formulator
+# # which cell ranges are most frequent?
+# 
+# ggplot(f) +
+#   aes(x = column, y = row, fill = sheet) +
+#   geom_tile() +
+#   scale_fill_hue(direction = 1) +
+#   theme_minimal()
 ```
-
-
-    Attaching package: 'magrittr'
-
-    The following object is masked from 'package:purrr':
-
-        set_names
-
-    The following object is masked from 'package:tidyr':
-
-        extract
-
-``` r
-f <- py$formulator
-# which cell ranges are most frequent?
-# py$formulator %>% 
-ggplot(f) +
-  aes(x = column, y = row, fill = sheet) +
-  geom_tile() +
-  scale_fill_hue(direction = 1) +
-  theme_minimal()
-```
-
-![](Wirtschaftlichkeit_files/figure-commonmark/cell%20map%201-1.png)
 
 ####### evolution by step (nice to see)
 
 ``` r
-# py$formulator %>%
-#   ggplot(.) +
+# 
+# ggplot(f) +
 #   aes(x = column, y = row, fill = sheet) +
 #   geom_tile() +
 #   scale_fill_hue(direction = 1) +
@@ -977,16 +962,21 @@ ggplot(f) +
 ```
 
 ``` python
-def get_var_name(sheetcell):
+
+
+def get_var_description(sheetcell):
   """
   Gets in most cases the variable name for a given sheetcell from a Excel sheet like jahreslauf_roebel.xlsx
   in most cases, because mostly the desired info is placed one cell to the right from the value
-  example usage: get_var_name(sheetcell='t!A42')
+  example usage: get_var_description(sheetcell='t!A42')
   """
   
-  #testcode begin
+  #testcases begin
+  # sheetcell = 'e!A4' #example
+  # sheetcell = 'e!V30' #example
   # sheetcell = 't!D99' #example
   # sheetcell = 't!DA99' #example
+  # sheetcell = 'h!E21' #example
   #testcode end
   sheet = re.search(r'^(\w{1,})\!', sheetcell).groups()[0]
   col = re.search(r'^\w{1,}\!([A-Z]{1,})\d{1,}', sheetcell).groups()[0]
@@ -1004,59 +994,105 @@ def get_var_name(sheetcell):
   # formulator['sheetcell'].str.slice(0,3).value_counts() #for overview of columns and sheets
   # formulator['sheetcell'].str.slice(0,3)\
   #   .value_counts().to_clipboard(header=False, index=True)
-  delta_row_col = {
-    't!D':   [[0,-2], [0,-1], [0, 1]] # 124
-    ,'e!V':  [[0, 4], [0,-1], [0, 1]]   # 18
-    ,'t!F':  [[0, 5], [0,-3], [0, 6]]   # 17
-    }
-    # ,'h!L':   # 12
-    # ,'h!E':   # 12
-    # ,'h!J':   # 11
-    # ,'h!H':   # 11
-    # ,'u!I':   # 4
-    # ,'e!D':   # 3
-    # ,'u!F':   # 2
-    # ,'s!O':   # 2
-    # ,'e!C':   # 2
-    # ,'u!H':   # 2
-    # ,'s!I':   # 1
-    # ,'e!E':   # 1
-    # ,'e!A':   # 1
-    # ,'e!F':   # 1
-    # ,'h!K':   # 1
-    # ,'h!D':   # 1
-    # ,'u!B':   # 1
-    # ,'t!E':   # 1
   
-  
-  cell_1 = get_column_letter(
-    column_index_from_string(col) + delta_row_col[sheetcol][0][1]
-    ) + str(row + delta_row_col[sheetcol][0][0])
-  cell_2 = get_column_letter(
-    column_index_from_string(col) + delta_row_col[sheetcol][1][1]
-    ) + str(row + delta_row_col[sheetcol][1][0])
-  cell_3 = get_column_letter(
-    column_index_from_string(col) + delta_row_col[sheetcol][2][1]
-    ) + str(row + delta_row_col[sheetcol][2][0])
+  if sheetcol in ['t!D','e!V','t!F']:
     
-  result =\
-  wbf_workbook[sheet][cell_1].internal_value \
-  + " " + wbf_workbook[sheet][cell_2].internal_value \
-  + " " + wbf_workbook[sheet][cell_3].internal_value
+    delta_row_col = {
+      't!D':   [[0,-2], [0,-1], [0, 1]] # 124 #col B must contain at least a ' '
+      ,'e!V':  [[0, 4], [0,-1], [0, 1]] # 18  #col Z must contain ' ' (1 space)
+      ,'t!F':  [[0, 5], [0,-3], [0, 6]] # 17  #todo: put above instructions in the description somewhere
+      }
+        
+    cell_1 = get_column_letter(
+      column_index_from_string(col) + delta_row_col[sheetcol][0][1]
+      ) + str(row + delta_row_col[sheetcol][0][0])
+      
+    cell_2 = get_column_letter(
+      column_index_from_string(col) + delta_row_col[sheetcol][1][1]
+      ) + str(row + delta_row_col[sheetcol][1][0])
+      
+    cell_3 = get_column_letter(
+      column_index_from_string(col) + delta_row_col[sheetcol][2][1]
+      ) + str(row + delta_row_col[sheetcol][2][0])
+              
+    result =\
+    str(wbf_workbook[sheet][cell_1].internal_value or "") \
+    + " " + str(wbf_workbook[sheet][cell_2].internal_value or "") \
+    + "  " + str(wbf_workbook[sheet][cell_3].internal_value or "")
+  
+  #h
+  elif (sheet=='h') & (col>='D') & (col<='S') & (row>=21) & (row<=32):
+    cell_1 = col + '19' #name
+    cell_2 = 'C' + str(row) #lead
+    cell_3 = col + '20' #unit
+      
+    result = \
+    str(wbf_workbook[sheet][cell_1].internal_value or "") \
+    + " Leitung " \
+    + str(wbf_workbook[sheet][cell_2].internal_value or "") \
+    + "  " + str(wbf_workbook[sheet][cell_3].internal_value or "")
+  
+  #u
+  elif (sheet=='u') & (col>='B') & (col<='M') & (row>=16) & (row<=17):
+    cell_1 = col + '14' #name
+    cell_2 = 'B' + str(row) #lead
+    cell_3 = col + '15' #unit
+      
+    result = \
+    str(wbf_workbook[sheet][cell_1].internal_value or "") \
+    + " Zweigabschnitt " \
+    + str(wbf_workbook[sheet][cell_2].internal_value or "") \
+    + "  bei Auslegungsleistung  " + str(wbf_workbook[sheet][cell_3].internal_value or "")
+    
+  elif (sheet=='u') & (col>='B') & (col<='M') & (row>=23) & (row<=24):
+    cell_1 = col + '21' #name
+    cell_2 = 'B' + str(row) #lead
+    cell_3 = col + '22' #unit
+      
+    result = \
+    str(wbf_workbook[sheet][cell_1].internal_value or "") \
+    + " Zweigabschnitt " \
+    + str(wbf_workbook[sheet][cell_2].internal_value or "") \
+    + "  bei Normleistung  " + str(wbf_workbook[sheet][cell_3].internal_value or "")
+    
+  #e  
+  elif (sheet=='e') & (col>='A') & (col<='R') & (row>=4) & (row<=734):
+    cell_1 = col + '2' #name
+    # cell_2 = 'B' + str(row) #lead
+    cell_3 = col + '3' #unit
+      
+    result = \
+    str(wbf_workbook[sheet][cell_1].internal_value or "") \
+    + "  " + str(wbf_workbook[sheet][cell_3].internal_value or "")
+  
+  else:
+    # manual_var_names = {
+    #   
+    #   }
+    result = 'tbd'
+    # result = manual_varnames[sheetcol]
   
   return re.sub(r'\s+', ' ', result).strip()
 
-#test
-get_var_name('t!D99')
-```
 
-    'Vom Jahreswärmebedarf JWBwnhwsv müssen gespeichert werden kWh/a'
+new_for_dedup['var_description'] = new_for_dedup.loc[:, 'sheetcell'].apply(get_var_description)
+new_for_dedup['var_name'] = new_for_dedup.loc[:, 'var_description'].apply(make_var_name)
 
-``` python
+# formulator['var_description'] = formulator.loc[:, 'sheetcell'].apply(get_var_description)
 
-
-new_for_dedup['var_description'] = new_for_dedup.loc[:, 'sheetcell'].apply(get_var_name)
-
+#checks
+# get_var_description('h!E21')
+# get_var_description('t!D99')
+# new_for_dedup
+# formulator
+# #debugger:
+# for i in formulator.loc[:, 'sheetcell']:
+#   print(i)
+#   get_var_description(i)
+#
+# formulator.loc[:, 'sheetcell'][1]
+# get_var_description(formulator.loc[:, 'sheetcell'][1])
+# get_var_description('e!E4')
 # r.View(new_for_dedup, 'with_var_names')
 ```
 
@@ -1853,7 +1889,8 @@ displayed).
 
 ### Prio 1
 
-o get formulas overview o generate variable names automatic from excel o
+o get formulas overview o put sheetformulas into dedup o generate
+variable names - based based on rules (where efficient) from excel o
 make charts
 https://campus.datacamp.com/courses/python-for-spreadsheet-users/plotting-data?ex=8
 
