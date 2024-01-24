@@ -16,28 +16,28 @@ Leitwert_Rohr_Daemmung__Unterverteilung_erdverlegt__W_pro_m_pro_K=\
   \
   0.035
 
-Leitwert_Rohr_Daemmung__Unterverteilung_erdverlegt__W_pro_m_pro_K
+round(Leitwert_Rohr_Daemmung__Unterverteilung_erdverlegt__W_pro_m_pro_K, 2)
 
 
 Rohr_Daemmung_Staerke__Unterverteilung_erdverlegt__m=\
   \
   0.1
 
-Rohr_Daemmung_Staerke__Unterverteilung_erdverlegt__m
+round(Rohr_Daemmung_Staerke__Unterverteilung_erdverlegt__m, 2)
 
 
 Leitwert_Rohr_Daemmung__Hauptverteilung_erdverlegt__W_pro_m_pro_K=\
   \
   0.035
 
-Leitwert_Rohr_Daemmung__Hauptverteilung_erdverlegt__W_pro_m_pro_K
+round(Leitwert_Rohr_Daemmung__Hauptverteilung_erdverlegt__W_pro_m_pro_K, 2)
 
 
 Rohr_Daemmung_Staerke__Hauptverteilung_erdverlegt__m=\
   \
   0.07
 
-Rohr_Daemmung_Staerke__Hauptverteilung_erdverlegt__m
+round(Rohr_Daemmung_Staerke__Hauptverteilung_erdverlegt__m, 2)
 
 
 Leistungsverlust_Vor_u__Ruecklauf_Zweigabschnitt_1_bei_Normleistung__kW=\
@@ -50,7 +50,7 @@ Leistungsverlust_Vor_u__Ruecklauf_Zweigabschnitt_1_bei_Normleistung__kW=\
   *2/Leitungsinnendurchmesser_Zweigabschnitt_1_bei_Normleistung__m\
   )/1000
 
-Leistungsverlust_Vor_u__Ruecklauf_Zweigabschnitt_1_bei_Normleistung__kW
+round(Leistungsverlust_Vor_u__Ruecklauf_Zweigabschnitt_1_bei_Normleistung__kW, 2)
 
 
 Leistungsverlust_Vor_u__Ruecklauf_Zweigabschnitt_2_bei_Normleistung__kW=\
@@ -63,7 +63,7 @@ Leistungsverlust_Vor_u__Ruecklauf_Zweigabschnitt_2_bei_Normleistung__kW=\
   *2/Leitungsinnendurchmesser_Zweigabschnitt_2_bei_Normleistung__m\
   )/1000
 
-Leistungsverlust_Vor_u__Ruecklauf_Zweigabschnitt_2_bei_Normleistung__kW
+round(Leistungsverlust_Vor_u__Ruecklauf_Zweigabschnitt_2_bei_Normleistung__kW, 2)
 
 
 Leistungsverlust_Vor_u__Ruecklauf_Leitung_1__kW=\
@@ -76,7 +76,7 @@ Leistungsverlust_Vor_u__Ruecklauf_Leitung_1__kW=\
   *2/Leitungsdurchmesser_innen_Leitung_1__m\
   )/1000
 
-Leistungsverlust_Vor_u__Ruecklauf_Leitung_1__kW
+round(Leistungsverlust_Vor_u__Ruecklauf_Leitung_1__kW, 2)
 ```
 
-    0.11748460767070047
+    0.12
