@@ -1,0 +1,90 @@
+---
+title: "Setup"
+format: html
+editor: visual
+---
+
+## Setup
+
+because https://posit.cloud/learn/guide said
+
+    Python-based Quarto documents published from the RStudio IDE and rendered on the server require jupyter to be installed from the terminal: python3 -m pip install jupyter.
+    
+therefore I did
+
+```{bash}
+python3 -m pip install jupyter
+# said a whole lot of things below the chunk, beginning with
+
+<!-- Defaulting to user installation because normal site-packages is not writeable -->
+<!-- Collecting jupyter -->
+<!--   Downloading jupyter-1.0.0-py2.py3-none-any.whl (2.7 kB) -->
+<!-- Collecting qtconsole -->
+<!--   Downloading qtconsole-5.5.1-py3-none-any.whl (123 kB) -->
+<!--      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 123.4/123.4 kB 3.3 MB/s eta 0:00:00 -->
+<!-- Collecting ipykernel -->
+<!--   Downloading ipykernel-6.29.0-py3-none-any.whl (116 kB) -->
+
+```
+
+
+2024-01-21--07:42:46
+
+I ran the following from an r file:
+
+```{r}
+
+install.packages(c(
+"openxlsx"
+,"tidyverse" # view(tidyverse_deps(recursive = FALSE)) # was ist alles drin in tidyverse?
+,"readr"
+,"lubridate"
+,"clipr"
+# ,"utils" # sollte normalerweise von vornherein geladen sein
+,"Hmisc" # für capitalize(Vorname) etc.
+,"sjmisc" # for move_columns()
+,"readxl"
+,"usethis" #for edit_file
+,"esquisse" 
+))
+install.packages(c(
+  "reticulate"
+))
+
+library(reticulate)
+py_install("seaborn")
+# restart RStudio (in the cloud upper right 3 dots 'Relaunch Project') before running
+use_virtualenv("r-reticulate")
+```
+
+```{python}
+import pandas as pd
+#worked
+```
+
+```{python}
+from openpyxl import load_workbook
+#failed at first: 
+# ModuleNotFoundError: No module named 'openpyxl'
+```
+
+```{r}
+py_install("openpyxl")
+#worked, used venv 'r-reticulate' automatically
+```
+
+
+```{python}
+from openpyxl import load_workbook
+# worked now
+import webbrowser
+# ok
+import re
+from re import findall
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+#ok
+```
+
+
