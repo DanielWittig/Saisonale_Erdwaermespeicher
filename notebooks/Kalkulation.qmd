@@ -4,7 +4,8 @@ format: gfm
 editor: source
 ---
 
-moin..
+Hier entsteht gerade die Kette der Rechnungen in Python, als deren Ergebnis die 61 EUR/a/Kopf Heizkosten erwartet werden. 
+
 
 ```{python}
 import numpy as np
@@ -132,15 +133,15 @@ round(Bevoelkerung_Bollewick__Personen, 1)
 ```{python}
 Einwohner_aus_Quelle__Personen=\
   \
-  Bevoelkerung_Gross_Kelle__Personen\
-  + Bevoelkerung_Ludorf__Personen\
-  + Bevoelkerung_Roebel__Personen\
-  + Bevoelkerung_Gotthun__Personen\
-  + Bevoelkerung_Minzow__Personen\
-  + Bevoelkerung_Leizen__Personen\
-  + Bevoelkerung_Buetow__Personen\
-  + Bevoelkerung_Dambeck__Personen\
-  + Bevoelkerung_Bollewick__Personen
+    Bevoelkerung_Gross_Kelle__Personen\
+    + Bevoelkerung_Ludorf__Personen\
+    + Bevoelkerung_Roebel__Personen\
+    + Bevoelkerung_Gotthun__Personen\
+    + Bevoelkerung_Minzow__Personen\
+    + Bevoelkerung_Leizen__Personen\
+    + Bevoelkerung_Buetow__Personen\
+    + Bevoelkerung_Dambeck__Personen\
+    + Bevoelkerung_Bollewick__Personen
 ```
 
 ```{python}
@@ -151,8 +152,8 @@ round(Einwohner_aus_Quelle__Personen, 1)
 ```{python}
 Flaeche_pro_Wohngebaeude__m2=\
   \
-  Flaeche_Summe__m2\
-  /Summe_Anzahl_Wohngebaeude
+    Flaeche_Summe__m2\
+    /Summe_Anzahl_Wohngebaeude
 ```
 
 ```{python}
@@ -176,175 +177,14 @@ round(Grundstueckslaenge__m, 1)
 ```{python}
 Bewohner_pro_Wohngebaeude=\
   \
-  Einwohner_aus_Quelle__Personen\
-  /Summe_Anzahl_Wohngebaeude
+    Einwohner_aus_Quelle__Personen\
+    /Summe_Anzahl_Wohngebaeude
 ```
 
 ```{python}
 #| echo: false
 round(Bewohner_pro_Wohngebaeude, 1)
 ```
-
-## Verteilung
-
-
-```{python}
-versorgte_Bewohner_Leitung_1_=\
-  \
-  Bevoelkerung_Ludorf__Personen\
-  +Bevoelkerung_Roebel__Personen
-```
-
-```{python}
-#| echo: false
-round(versorgte_Bewohner_Leitung_1_, 1)
-```
-
-```{python}
-versorgte_Bewohner_Leitung_2_=\
-  \
-  Bevoelkerung_Ludorf__Personen
-```
-
-```{python}
-#| echo: false
-round(versorgte_Bewohner_Leitung_2_, 1)
-```
-
-```{python}
-versorgte_Bewohner_Leitung_3_=\
-  \
-  Bevoelkerung_Roebel__Personen\
-  /3
-```
-
-```{python}
-#| echo: false
-round(versorgte_Bewohner_Leitung_3_, 1)
-```
-
-```{python}
-versorgte_Bewohner_Leitung_4_=\
-  \
-  Bevoelkerung_Gross_Kelle__Personen\
-  +Bevoelkerung_Gotthun__Personen
-```
-
-```{python}
-#| echo: false
-round(versorgte_Bewohner_Leitung_4_, 1)
-```
-
-```{python}
-versorgte_Bewohner_Leitung_5_=\
-  \
-  Bevoelkerung_Gotthun__Personen
-```
-
-```{python}
-#| echo: false
-round(versorgte_Bewohner_Leitung_5_, 1)
-```
-
-```{python}
-versorgte_Bewohner_Leitung_6_=\
-  \
-  Bevoelkerung_Gross_Kelle__Personen
-```
-
-```{python}
-#| echo: false
-round(versorgte_Bewohner_Leitung_6_, 1)
-```
-
-```{python}
-versorgte_Bewohner_Leitung_7_=\
-  \
-  Bevoelkerung_Minzow__Personen
-```
-
-```{python}
-#| echo: false
-round(versorgte_Bewohner_Leitung_7_, 1)
-```
-
-```{python}
-versorgte_Bewohner_Leitung_8_=\
-  \
-  Bevoelkerung_Leizen__Personen
-```
-
-```{python}
-#| echo: false
-round(versorgte_Bewohner_Leitung_8_, 1)
-```
-
-```{python}
-versorgte_Bewohner_Leitung_9_=\
-  \
-  Bevoelkerung_Buetow__Personen
-```
-
-```{python}
-#| echo: false
-round(versorgte_Bewohner_Leitung_9_, 1)
-```
-
-```{python}
-versorgte_Bewohner_Leitung_10_=\
-  \
-  Bevoelkerung_Buetow__Personen\
-  +Bevoelkerung_Leizen__Personen\
-  +Bevoelkerung_Dambeck__Personen\
-  +Bevoelkerung_Minzow__Personen
-```
-
-```{python}
-#| echo: false
-round(versorgte_Bewohner_Leitung_10_, 1)
-```
-
-```{python}
-versorgte_Bewohner_Leitung_11_=\
-  \
-  Bevoelkerung_Bollewick__Personen
-```
-
-```{python}
-#| echo: false
-round(versorgte_Bewohner_Leitung_11_, 1)
-```
-
-
-
-```{python}
-komplett_mit_Waerme_versorgte_Geschossflaeche_pro_Kopf__Wohnung_u_Gewerbe___m2=\
-  \
-  durchschnittliche_Wohnflaeche_pro_Kopf__m2_pro_Kopf\
-  /(1-Anteil_der_Nichtwohngebaeude_am_Endenergieverbrauch__Prozent\
-  /100)
-```
-
-```{python}
-#| echo: false
-round(komplett_mit_Waerme_versorgte_Geschossflaeche_pro_Kopf__Wohnung_u_Gewerbe___m2, 1)
-```
-
-
-
-```{python}
-Endenergie_fuer_Heizung_u_WW__Wohn_uNichtwohngebaeude__nach_moderater_Sanierung__kWh_pro_a_pro_Kopf=\
-  \
-  benoetigte_Endenergie_fuer_Heizung_u_Warmwasser_WW___sanierte_Gebaeude__kWh_pro_a_pro_m2\
-  *komplett_mit_Waerme_versorgte_Geschossflaeche_pro_Kopf__Wohnung_u_Gewerbe___m2
-```
-
-```{python}
-#| echo: false
-round(Endenergie_fuer_Heizung_u_WW__Wohn_uNichtwohngebaeude__nach_moderater_Sanierung__kWh_pro_a_pro_Kopf, 1)
-```
-
-
 
 ```{python}
 mittlere_Zweiglaenge__Unterverteilung_erdverlegt__m=\
@@ -356,116 +196,6 @@ mittlere_Zweiglaenge__Unterverteilung_erdverlegt__m=\
 #| echo: false
 round(mittlere_Zweiglaenge__Unterverteilung_erdverlegt__m, 1)
 ```
-
-
-
-
-```{python}
-Auslegungsleistung__Maximal_noetige_Heizleistung_saniert___kW_pro_Kopf=\
-  \
-  (Endenergie_fuer_Heizung_u_WW__Wohn_uNichtwohngebaeude__nach_moderater_Sanierung__kWh_pro_a_pro_Kopf\
-  -Endenergie_nur_fuer_Warmwasser_WW__fuer_alle_Gebaeude_pro_Kopf__kWh_pro_a_pro_Kopf\
-  *6/12)/180/24*2
-```
-
-```{python}
-#| echo: false
-round(Auslegungsleistung__Maximal_noetige_Heizleistung_saniert___kW_pro_Kopf, 1)
-```
-
-
-
-```{python}
-Gebaeudeanzahl_bis_Abschnittende_Zweigabschnitt_1_bei_Auslegungsleistung_=\
-  \
-  mittlere_Zweiglaenge__Unterverteilung_erdverlegt__m\
-  /Grundstueckslaenge__m\
-  /2
-```
-
-```{python}
-#| echo: false
-round(Gebaeudeanzahl_bis_Abschnittende_Zweigabschnitt_1_bei_Auslegungsleistung_, 1)
-```
-
-
-
-```{python}
-Auslegungsleistung_zu_Beginn_des_Abschnittes_Zweigabschnitt_1_bei_Auslegungsleistung__kW=\
-  \
-  Auslegungsleistung__Maximal_noetige_Heizleistung_saniert___kW_pro_Kopf\
-  *Gebaeudeanzahl_bis_Abschnittende_Zweigabschnitt_1_bei_Auslegungsleistung_\
-  *Bewohner_pro_Wohngebaeude\
-  *2/(1-Transportverluste_Fernheizung__Prozent\
-  /2/100)
-```
-
-```{python}
-#| echo: false
-round(Auslegungsleistung_zu_Beginn_des_Abschnittes_Zweigabschnitt_1_bei_Auslegungsleistung__kW, 1)
-```
-
-
-```{python}
-Geschwindigkeit_des_Waermetraegers_bei_Auslegungsleistung_in_UV__m_pro_s=\
-  \
-  2*Norm_Geschwindigkeit_des_Waermetraegers_in_Unterverteilung__UV___m_pro_s
-```
-
-```{python}
-#| echo: false
-round(Geschwindigkeit_des_Waermetraegers_bei_Auslegungsleistung_in_UV__m_pro_s, 1)
-```
-
-
-
-```{python}
-Leitungsinnendurchmesser_Zweigabschnitt_1_bei_Normleistung__m=\
-  \
-  (Auslegungsleistung_zu_Beginn_des_Abschnittes_Zweigabschnitt_1_bei_Auslegungsleistung__kW\
-  *4/np.pi\
-  /4.2/(60-30)/1000/Geschwindigkeit_des_Waermetraegers_bei_Auslegungsleistung_in_UV__m_pro_s\
-  )**\
-  0.5
-```
-
-```{python}
-#| echo: false
-round(Leitungsinnendurchmesser_Zweigabschnitt_1_bei_Normleistung__m, 1)
-```
-
-
-```{python}
-Auslegungsleistung_zu_Beginn_des_Abschnittes_Zweigabschnitt_2_bei_Auslegungsleistung__kW=\
-  \
-  Auslegungsleistung__Maximal_noetige_Heizleistung_saniert___kW_pro_Kopf\
-  *Gebaeudeanzahl_bis_Abschnittende_Zweigabschnitt_1_bei_Auslegungsleistung_\
-  *Bewohner_pro_Wohngebaeude\
-  /(1-Transportverluste_Fernheizung__Prozent\
-  /2/100)
-```
-
-```{python}
-#| echo: false
-round(Auslegungsleistung_zu_Beginn_des_Abschnittes_Zweigabschnitt_2_bei_Auslegungsleistung__kW, 1)
-```
-
-
-```{python}
-Leitungsinnendurchmesser_Zweigabschnitt_2_bei_Normleistung__m=\
-  \
-  (Auslegungsleistung_zu_Beginn_des_Abschnittes_Zweigabschnitt_2_bei_Auslegungsleistung__kW\
-  *4/np.pi\
-  /4.2/(60-30)/1000/Geschwindigkeit_des_Waermetraegers_bei_Auslegungsleistung_in_UV__m_pro_s\
-  )**\
-  0.5
-```
-
-```{python}
-#| echo: false
-round(Leitungsinnendurchmesser_Zweigabschnitt_2_bei_Normleistung__m, 1)
-```
-
 
 ```{python}
 Leistungsverlust_Vor_u__Ruecklauf_Zweigabschnitt_1_bei_Normleistung__kW=\
@@ -501,52 +231,6 @@ Leistungsverlust_Vor_u__Ruecklauf_Zweigabschnitt_2_bei_Normleistung__kW=\
 round(Leistungsverlust_Vor_u__Ruecklauf_Zweigabschnitt_2_bei_Normleistung__kW, 1)
 ```
 
-
-```{python}
-Normalleistung_Leitung_1__kW=\
-  \
-  versorgte_Bewohner_Leitung_1_\
-  *Auslegungsleistung__Maximal_noetige_Heizleistung_saniert___kW_pro_Kopf\
-  /2/(1-Transportverluste_Fernheizung__Prozent\
-  /2/100)
-```
-
-```{python}
-#| echo: false
-round(Normalleistung_Leitung_1__kW, 1)
-```
-
-
-```{python}
-Auslegungsleistung_Leitung_1__kW=\
-  \
-  Normalleistung_Leitung_1__kW\
-  *2
-```
-
-```{python}
-#| echo: false
-round(Auslegungsleistung_Leitung_1__kW, 1)
-```
-
-
-
-```{python}
-Leitungsdurchmesser_innen_Leitung_1__m=\
-  \
-  (Auslegungsleistung_Leitung_1__kW\
-  /4200/(2*Normgeschwindigkeit_in_Hauptverteilung__m_pro_s\
-  )/(60-30)*4/np.pi\
-  )**\
-  0.5
-```
-
-```{python}
-#| echo: false
-round(Leitungsdurchmesser_innen_Leitung_1__m, 1)
-```
-
-
 ```{python}
 Leistungsverlust_Vor_u__Ruecklauf_Leitung_1__kW=\
   \
@@ -563,287 +247,6 @@ Leistungsverlust_Vor_u__Ruecklauf_Leitung_1__kW=\
 #| echo: false
 round(Leistungsverlust_Vor_u__Ruecklauf_Leitung_1__kW, 1)
 ```
-
-
-```{python}
-Normalleistung_Leitung_2__kW=\
-  \
-  versorgte_Bewohner_Leitung_2_\
-  *Auslegungsleistung__Maximal_noetige_Heizleistung_saniert___kW_pro_Kopf\
-  /2/(1-Transportverluste_Fernheizung__Prozent\
-  /2/100)
-```
-
-```{python}
-#| echo: false
-round(Normalleistung_Leitung_2__kW, 1)
-```
-
-```{python}
-Normalleistung_Leitung_3__kW=\
-  \
-  versorgte_Bewohner_Leitung_3_\
-  *Auslegungsleistung__Maximal_noetige_Heizleistung_saniert___kW_pro_Kopf\
-  /2/(1-Transportverluste_Fernheizung__Prozent\
-  /2/100)
-```
-
-```{python}
-#| echo: false
-round(Normalleistung_Leitung_3__kW, 1)
-```
-
-```{python}
-Normalleistung_Leitung_4__kW=\
-  \
-  versorgte_Bewohner_Leitung_4_\
-  *Auslegungsleistung__Maximal_noetige_Heizleistung_saniert___kW_pro_Kopf\
-  /2/(1-Transportverluste_Fernheizung__Prozent\
-  /2/100)
-```
-
-```{python}
-#| echo: false
-round(Normalleistung_Leitung_4__kW, 1)
-```
-
-```{python}
-Normalleistung_Leitung_5__kW=\
-  \
-  versorgte_Bewohner_Leitung_5_\
-  *Auslegungsleistung__Maximal_noetige_Heizleistung_saniert___kW_pro_Kopf\
-  /2/(1-Transportverluste_Fernheizung__Prozent\
-  /2/100)
-```
-
-```{python}
-#| echo: false
-round(Normalleistung_Leitung_5__kW, 1)
-```
-
-```{python}
-Normalleistung_Leitung_6__kW=\
-  \
-  versorgte_Bewohner_Leitung_6_\
-  *Auslegungsleistung__Maximal_noetige_Heizleistung_saniert___kW_pro_Kopf\
-  /2/(1-Transportverluste_Fernheizung__Prozent\
-  /2/100)
-```
-
-```{python}
-#| echo: false
-round(Normalleistung_Leitung_6__kW, 1)
-```
-
-```{python}
-Normalleistung_Leitung_7__kW=\
-  \
-  versorgte_Bewohner_Leitung_7_\
-  *Auslegungsleistung__Maximal_noetige_Heizleistung_saniert___kW_pro_Kopf\
-  /2/(1-Transportverluste_Fernheizung__Prozent\
-  /2/100)
-```
-
-```{python}
-#| echo: false
-round(Normalleistung_Leitung_7__kW, 1)
-```
-
-```{python}
-Normalleistung_Leitung_8__kW=\
-  \
-  versorgte_Bewohner_Leitung_8_\
-  *Auslegungsleistung__Maximal_noetige_Heizleistung_saniert___kW_pro_Kopf\
-  /2/(1-Transportverluste_Fernheizung__Prozent\
-  /2/100)
-```
-
-```{python}
-#| echo: false
-round(Normalleistung_Leitung_8__kW, 1)
-```
-
-```{python}
-Normalleistung_Leitung_9__kW=\
-  \
-  versorgte_Bewohner_Leitung_9_\
-  *Auslegungsleistung__Maximal_noetige_Heizleistung_saniert___kW_pro_Kopf\
-  /2/(1-Transportverluste_Fernheizung__Prozent\
-  /2/100)
-```
-
-```{python}
-#| echo: false
-round(Normalleistung_Leitung_9__kW, 1)
-```
-
-```{python}
-Normalleistung_Leitung_10__kW=\
-  \
-  versorgte_Bewohner_Leitung_10_\
-  *Auslegungsleistung__Maximal_noetige_Heizleistung_saniert___kW_pro_Kopf\
-  /2/(1-Transportverluste_Fernheizung__Prozent\
-  /2/100)
-```
-
-```{python}
-#| echo: false
-round(Normalleistung_Leitung_10__kW, 1)
-```
-
-```{python}
-Normalleistung_Leitung_11__kW=\
-  \
-  versorgte_Bewohner_Leitung_11_\
-  *Auslegungsleistung__Maximal_noetige_Heizleistung_saniert___kW_pro_Kopf\
-  /2/(1-Transportverluste_Fernheizung__Prozent\
-  /2/100)
-```
-
-```{python}
-#| echo: false
-round(Normalleistung_Leitung_11__kW, 1)
-```
-
-
-
-```{python}
-Auslegungsleistung_Leitung_2__kW=\
-  \
-  Normalleistung_Leitung_2__kW\
-  *2
-```
-
-```{python}
-#| echo: false
-round(Auslegungsleistung_Leitung_2__kW, 1)
-```
-
-```{python}
-Auslegungsleistung_Leitung_3__kW=\
-  \
-  Normalleistung_Leitung_3__kW\
-  *2
-```
-
-```{python}
-#| echo: false
-round(Auslegungsleistung_Leitung_3__kW, 1)
-```
-
-```{python}
-Auslegungsleistung_Leitung_4__kW=\
-  \
-  Normalleistung_Leitung_4__kW\
-  *2
-```
-
-```{python}
-#| echo: false
-round(Auslegungsleistung_Leitung_4__kW, 1)
-```
-
-```{python}
-Auslegungsleistung_Leitung_5__kW=\
-  \
-  Normalleistung_Leitung_5__kW\
-  *2
-```
-
-```{python}
-#| echo: false
-round(Auslegungsleistung_Leitung_5__kW, 1)
-```
-
-```{python}
-Auslegungsleistung_Leitung_6__kW=\
-  \
-  Normalleistung_Leitung_6__kW\
-  *2
-```
-
-```{python}
-#| echo: false
-round(Auslegungsleistung_Leitung_6__kW, 1)
-```
-
-```{python}
-Auslegungsleistung_Leitung_7__kW=\
-  \
-  Normalleistung_Leitung_7__kW\
-  *2
-```
-
-```{python}
-#| echo: false
-round(Auslegungsleistung_Leitung_7__kW, 1)
-```
-
-```{python}
-Auslegungsleistung_Leitung_8__kW=\
-  \
-  Normalleistung_Leitung_8__kW\
-  *2
-```
-
-```{python}
-#| echo: false
-round(Auslegungsleistung_Leitung_8__kW, 1)
-```
-
-```{python}
-Auslegungsleistung_Leitung_9__kW=\
-  \
-  Normalleistung_Leitung_9__kW\
-  *2
-```
-
-```{python}
-#| echo: false
-round(Auslegungsleistung_Leitung_9__kW, 1)
-```
-
-```{python}
-Auslegungsleistung_Leitung_10__kW=\
-  \
-  Normalleistung_Leitung_10__kW\
-  *2
-```
-
-```{python}
-#| echo: false
-round(Auslegungsleistung_Leitung_10__kW, 1)
-```
-
-```{python}
-Auslegungsleistung_Leitung_11__kW=\
-  \
-  Normalleistung_Leitung_11__kW\
-  *2
-```
-
-```{python}
-#| echo: false
-round(Auslegungsleistung_Leitung_11__kW, 1)
-```
-
-
-```{python}
-Leitungsdurchmesser_innen_Leitung_2__m=\
-  \
-  (Auslegungsleistung_Leitung_2__kW\
-  /4200/(2*Normgeschwindigkeit_in_Hauptverteilung__m_pro_s\
-  )/(60-30)*4/np.pi\
-  )**\
-  0.5
-```
-
-```{python}
-#| echo: false
-round(Leitungsdurchmesser_innen_Leitung_2__m, 1)
-```
-
-
 
 ```{python}
 Leistungsverlust_Vor_u__Ruecklauf_Leitung_2__kW=\
@@ -1291,6 +694,93 @@ Unterverteilung_Jahreswaermeverluste_der_Unterverteilung__kWh_pro_a=\
 round(Unterverteilung_Jahreswaermeverluste_der_Unterverteilung__kWh_pro_a, 1)
 ```
 
+```{python}
+Bevoelkerung_Ludorf__Personen=\
+  \
+  Bevoelkerung_Ludorf__Personen
+```
+
+```{python}
+#| echo: false
+round(Bevoelkerung_Ludorf__Personen, 1)
+```
+
+```{python}
+Bevoelkerung_Roebel__Personen=\
+  \
+  Bevoelkerung_Roebel__Personen
+```
+
+```{python}
+#| echo: false
+round(Bevoelkerung_Roebel__Personen, 1)
+```
+
+```{python}
+Bevoelkerung_Gross_Kelle__Personen=\
+  \
+  Bevoelkerung_Gross_Kelle__Personen
+```
+
+```{python}
+#| echo: false
+round(Bevoelkerung_Gross_Kelle__Personen, 1)
+```
+
+```{python}
+Bevoelkerung_Gotthun__Personen=\
+  \
+  Bevoelkerung_Gotthun__Personen
+```
+
+```{python}
+#| echo: false
+round(Bevoelkerung_Gotthun__Personen, 1)
+```
+
+```{python}
+Bevoelkerung_Minzow__Personen=\
+  \
+  Bevoelkerung_Minzow__Personen
+```
+
+```{python}
+#| echo: false
+round(Bevoelkerung_Minzow__Personen, 1)
+```
+
+```{python}
+Bevoelkerung_Leizen__Personen=\
+  \
+  Bevoelkerung_Leizen__Personen
+```
+
+```{python}
+#| echo: false
+round(Bevoelkerung_Leizen__Personen, 1)
+```
+
+```{python}
+Bevoelkerung_Buetow__Personen=\
+  \
+  Bevoelkerung_Buetow__Personen
+```
+
+```{python}
+#| echo: false
+round(Bevoelkerung_Buetow__Personen, 1)
+```
+
+```{python}
+Bevoelkerung_Dambeck__Personen=\
+  \
+  Bevoelkerung_Dambeck__Personen
+```
+
+```{python}
+#| echo: false
+round(Bevoelkerung_Dambeck__Personen, 1)
+```
 
 ```{python}
 Hauptverteilung_Jahreswaermeverluste_der_Hauptverteilung__kWh_pro_a=\
@@ -1303,6 +793,16 @@ Hauptverteilung_Jahreswaermeverluste_der_Hauptverteilung__kWh_pro_a=\
 round(Hauptverteilung_Jahreswaermeverluste_der_Hauptverteilung__kWh_pro_a, 1)
 ```
 
+```{python}
+Bevoelkerung_Bollewick__Personen=\
+  \
+  Bevoelkerung_Bollewick__Personen
+```
+
+```{python}
+#| echo: false
+round(Bevoelkerung_Bollewick__Personen, 1)
+```
 
 ```{python}
 Gesamtverlust_Saisonspeicher__kWh_pro_a=\
@@ -1326,6 +826,133 @@ Verteilung_gesamt_Jahreswaermeverlust_im_Fernwaermenetz__kWh_pro_a=\
 ```{python}
 #| echo: false
 round(Verteilung_gesamt_Jahreswaermeverlust_im_Fernwaermenetz__kWh_pro_a, 1)
+```
+
+```{python}
+versorgte_Bewohner_Leitung_1_=\
+  \
+  Bevoelkerung_Ludorf__Personen\
+  +Bevoelkerung_Roebel__Personen
+```
+
+```{python}
+#| echo: false
+round(versorgte_Bewohner_Leitung_1_, 1)
+```
+
+```{python}
+versorgte_Bewohner_Leitung_2_=\
+  \
+  Bevoelkerung_Ludorf__Personen
+```
+
+```{python}
+#| echo: false
+round(versorgte_Bewohner_Leitung_2_, 1)
+```
+
+```{python}
+versorgte_Bewohner_Leitung_3_=\
+  \
+  Bevoelkerung_Roebel__Personen\
+  /3
+```
+
+```{python}
+#| echo: false
+round(versorgte_Bewohner_Leitung_3_, 1)
+```
+
+```{python}
+versorgte_Bewohner_Leitung_4_=\
+  \
+  Bevoelkerung_Gross_Kelle__Personen\
+  +Bevoelkerung_Gotthun__Personen
+```
+
+```{python}
+#| echo: false
+round(versorgte_Bewohner_Leitung_4_, 1)
+```
+
+```{python}
+versorgte_Bewohner_Leitung_5_=\
+  \
+  Bevoelkerung_Gotthun__Personen
+```
+
+```{python}
+#| echo: false
+round(versorgte_Bewohner_Leitung_5_, 1)
+```
+
+```{python}
+versorgte_Bewohner_Leitung_6_=\
+  \
+  Bevoelkerung_Gross_Kelle__Personen
+```
+
+```{python}
+#| echo: false
+round(versorgte_Bewohner_Leitung_6_, 1)
+```
+
+```{python}
+versorgte_Bewohner_Leitung_7_=\
+  \
+  Bevoelkerung_Minzow__Personen
+```
+
+```{python}
+#| echo: false
+round(versorgte_Bewohner_Leitung_7_, 1)
+```
+
+```{python}
+versorgte_Bewohner_Leitung_8_=\
+  \
+  Bevoelkerung_Leizen__Personen
+```
+
+```{python}
+#| echo: false
+round(versorgte_Bewohner_Leitung_8_, 1)
+```
+
+```{python}
+versorgte_Bewohner_Leitung_9_=\
+  \
+  Bevoelkerung_Buetow__Personen
+```
+
+```{python}
+#| echo: false
+round(versorgte_Bewohner_Leitung_9_, 1)
+```
+
+```{python}
+versorgte_Bewohner_Leitung_10_=\
+  \
+  Bevoelkerung_Buetow__Personen\
+  +Bevoelkerung_Leizen__Personen\
+  +Bevoelkerung_Dambeck__Personen\
+  +Bevoelkerung_Minzow__Personen
+```
+
+```{python}
+#| echo: false
+round(versorgte_Bewohner_Leitung_10_, 1)
+```
+
+```{python}
+versorgte_Bewohner_Leitung_11_=\
+  \
+  Bevoelkerung_Bollewick__Personen
+```
+
+```{python}
+#| echo: false
+round(versorgte_Bewohner_Leitung_11_, 1)
 ```
 
 ```{python}
@@ -1394,6 +1021,159 @@ Jahreswaermeverlust_im_Fernwaermenetz__kWh_pro_a=\
 round(Jahreswaermeverlust_im_Fernwaermenetz__kWh_pro_a, 1)
 ```
 
+```{python}
+Normalleistung_Leitung_1__kW=\
+  \
+  versorgte_Bewohner_Leitung_1_\
+  *Auslegungsleistung__Maximal_noetige_Heizleistung_saniert___kW_pro_Kopf\
+  /2/(1-Transportverluste_Fernheizung__Prozent\
+  /2/100)
+```
+
+```{python}
+#| echo: false
+round(Normalleistung_Leitung_1__kW, 1)
+```
+
+```{python}
+Normalleistung_Leitung_2__kW=\
+  \
+  versorgte_Bewohner_Leitung_2_\
+  *Auslegungsleistung__Maximal_noetige_Heizleistung_saniert___kW_pro_Kopf\
+  /2/(1-Transportverluste_Fernheizung__Prozent\
+  /2/100)
+```
+
+```{python}
+#| echo: false
+round(Normalleistung_Leitung_2__kW, 1)
+```
+
+```{python}
+Normalleistung_Leitung_3__kW=\
+  \
+  versorgte_Bewohner_Leitung_3_\
+  *Auslegungsleistung__Maximal_noetige_Heizleistung_saniert___kW_pro_Kopf\
+  /2/(1-Transportverluste_Fernheizung__Prozent\
+  /2/100)
+```
+
+```{python}
+#| echo: false
+round(Normalleistung_Leitung_3__kW, 1)
+```
+
+```{python}
+Normalleistung_Leitung_4__kW=\
+  \
+  versorgte_Bewohner_Leitung_4_\
+  *Auslegungsleistung__Maximal_noetige_Heizleistung_saniert___kW_pro_Kopf\
+  /2/(1-Transportverluste_Fernheizung__Prozent\
+  /2/100)
+```
+
+```{python}
+#| echo: false
+round(Normalleistung_Leitung_4__kW, 1)
+```
+
+```{python}
+Normalleistung_Leitung_5__kW=\
+  \
+  versorgte_Bewohner_Leitung_5_\
+  *Auslegungsleistung__Maximal_noetige_Heizleistung_saniert___kW_pro_Kopf\
+  /2/(1-Transportverluste_Fernheizung__Prozent\
+  /2/100)
+```
+
+```{python}
+#| echo: false
+round(Normalleistung_Leitung_5__kW, 1)
+```
+
+```{python}
+Normalleistung_Leitung_6__kW=\
+  \
+  versorgte_Bewohner_Leitung_6_\
+  *Auslegungsleistung__Maximal_noetige_Heizleistung_saniert___kW_pro_Kopf\
+  /2/(1-Transportverluste_Fernheizung__Prozent\
+  /2/100)
+```
+
+```{python}
+#| echo: false
+round(Normalleistung_Leitung_6__kW, 1)
+```
+
+```{python}
+Normalleistung_Leitung_7__kW=\
+  \
+  versorgte_Bewohner_Leitung_7_\
+  *Auslegungsleistung__Maximal_noetige_Heizleistung_saniert___kW_pro_Kopf\
+  /2/(1-Transportverluste_Fernheizung__Prozent\
+  /2/100)
+```
+
+```{python}
+#| echo: false
+round(Normalleistung_Leitung_7__kW, 1)
+```
+
+```{python}
+Normalleistung_Leitung_8__kW=\
+  \
+  versorgte_Bewohner_Leitung_8_\
+  *Auslegungsleistung__Maximal_noetige_Heizleistung_saniert___kW_pro_Kopf\
+  /2/(1-Transportverluste_Fernheizung__Prozent\
+  /2/100)
+```
+
+```{python}
+#| echo: false
+round(Normalleistung_Leitung_8__kW, 1)
+```
+
+```{python}
+Normalleistung_Leitung_9__kW=\
+  \
+  versorgte_Bewohner_Leitung_9_\
+  *Auslegungsleistung__Maximal_noetige_Heizleistung_saniert___kW_pro_Kopf\
+  /2/(1-Transportverluste_Fernheizung__Prozent\
+  /2/100)
+```
+
+```{python}
+#| echo: false
+round(Normalleistung_Leitung_9__kW, 1)
+```
+
+```{python}
+Normalleistung_Leitung_10__kW=\
+  \
+  versorgte_Bewohner_Leitung_10_\
+  *Auslegungsleistung__Maximal_noetige_Heizleistung_saniert___kW_pro_Kopf\
+  /2/(1-Transportverluste_Fernheizung__Prozent\
+  /2/100)
+```
+
+```{python}
+#| echo: false
+round(Normalleistung_Leitung_10__kW, 1)
+```
+
+```{python}
+Normalleistung_Leitung_11__kW=\
+  \
+  versorgte_Bewohner_Leitung_11_\
+  *Auslegungsleistung__Maximal_noetige_Heizleistung_saniert___kW_pro_Kopf\
+  /2/(1-Transportverluste_Fernheizung__Prozent\
+  /2/100)
+```
+
+```{python}
+#| echo: false
+round(Normalleistung_Leitung_11__kW, 1)
+```
 
 ```{python}
 Druckabfall_am_Abschnitt_Doppelleitung_Zweigabschnitt_2_bei_Normleistung__bar=\
@@ -1586,7 +1366,48 @@ Druckverlust_auf_Vorlaufleitung_bei_Normalleistung_Leitung_11__bar=\
 round(Druckverlust_auf_Vorlaufleitung_bei_Normalleistung_Leitung_11__bar, 1)
 ```
 
+```{python}
+Gebaeudeanzahl_bis_Abschnittende_Zweigabschnitt_1_bei_Auslegungsleistung_=\
+  \
+  mittlere_Zweiglaenge__Unterverteilung_erdverlegt__m\
+  /Grundstueckslaenge___m\
+  /2
+```
 
+```{python}
+#| echo: false
+round(Gebaeudeanzahl_bis_Abschnittende_Zweigabschnitt_1_bei_Auslegungsleistung_, 1)
+```
+
+```{python}
+Leitungsinnendurchmesser_Zweigabschnitt_2_bei_Normleistung__m=\
+  \
+  (Auslegungsleistung_zu_Beginn_des_Abschnittes_Zweigabschnitt_2_bei_Auslegungsleistung__kW\
+  *4/np.pi\
+  /4.2/(60-30)/1000/Geschwindigkeit_des_Waermetraegers_bei_Auslegungsleistung_in_UV__m_pro_s\
+  )**\
+  0.5
+```
+
+```{python}
+#| echo: false
+round(Leitungsinnendurchmesser_Zweigabschnitt_2_bei_Normleistung__m, 1)
+```
+
+```{python}
+Leitungsinnendurchmesser_Zweigabschnitt_1_bei_Normleistung__m=\
+  \
+  (Auslegungsleistung_zu_Beginn_des_Abschnittes_Zweigabschnitt_1_bei_Auslegungsleistung__kW\
+  *4/np.pi\
+  /4.2/(60-30)/1000/Geschwindigkeit_des_Waermetraegers_bei_Auslegungsleistung_in_UV__m_pro_s\
+  )**\
+  0.5
+```
+
+```{python}
+#| echo: false
+round(Leitungsinnendurchmesser_Zweigabschnitt_1_bei_Normleistung__m, 1)
+```
 
 ```{python}
 Gesamtverluste_durch_Speicherung_und_Verteilung__kWh_pro_a=\
@@ -1623,6 +1444,21 @@ round(Druckabfall_pro_m_Zweigabschnitt_1_bei_Auslegungsleistung__bar, 1)
 ```
 
 ```{python}
+Auslegungsleistung_zu_Beginn_des_Abschnittes_Zweigabschnitt_1_bei_Auslegungsleistung__kW=\
+  \
+  Auslegungsleistung__Maximal_noetige_Heizleistung_saniert___kW_pro_Kopf\
+  *Gebaeudeanzahl_bis_Abschnittende_Zweigabschnitt_1_bei_Auslegungsleistung_\
+  *Bewohner_pro_Wohngebaeude\
+  *2/(1-Transportverluste_Fernheizung__Prozent\
+  /2/100)
+```
+
+```{python}
+#| echo: false
+round(Auslegungsleistung_zu_Beginn_des_Abschnittes_Zweigabschnitt_1_bei_Auslegungsleistung__kW, 1)
+```
+
+```{python}
 Druckabfall_pro_m_Zweigabschnitt_2_bei_Auslegungsleistung__bar=\
   \
   0.216/(Geschwindigkeit_des_Waermetraegers_bei_Auslegungsleistung_in_UV__m_pro_s\
@@ -1644,6 +1480,20 @@ Druckabfall_pro_m_Zweigabschnitt_2_bei_Auslegungsleistung__bar=\
 round(Druckabfall_pro_m_Zweigabschnitt_2_bei_Auslegungsleistung__bar, 1)
 ```
 
+```{python}
+Auslegungsleistung_zu_Beginn_des_Abschnittes_Zweigabschnitt_2_bei_Auslegungsleistung__kW=\
+  \
+  Auslegungsleistung__Maximal_noetige_Heizleistung_saniert___kW_pro_Kopf\
+  *Gebaeudeanzahl_bis_Abschnittende_Zweigabschnitt_1_bei_Auslegungsleistung_\
+  *Bewohner_pro_Wohngebaeude\
+  /(1-Transportverluste_Fernheizung__Prozent\
+  /2/100)
+```
+
+```{python}
+#| echo: false
+round(Auslegungsleistung_zu_Beginn_des_Abschnittes_Zweigabschnitt_2_bei_Auslegungsleistung__kW, 1)
+```
 
 ```{python}
 Verteilung_mittlere_zu_einem_Gebaeude_gehoerige_Siedlungsflaeche__m2=\
@@ -1657,6 +1507,137 @@ Verteilung_mittlere_zu_einem_Gebaeude_gehoerige_Siedlungsflaeche__m2=\
 round(Verteilung_mittlere_zu_einem_Gebaeude_gehoerige_Siedlungsflaeche__m2, 1)
 ```
 
+```{python}
+Auslegungsleistung_Leitung_1__kW=\
+  \
+  Normalleistung_Leitung_1__kW\
+  *2
+```
+
+```{python}
+#| echo: false
+round(Auslegungsleistung_Leitung_1__kW, 1)
+```
+
+```{python}
+Auslegungsleistung_Leitung_2__kW=\
+  \
+  Normalleistung_Leitung_2__kW\
+  *2
+```
+
+```{python}
+#| echo: false
+round(Auslegungsleistung_Leitung_2__kW, 1)
+```
+
+```{python}
+Auslegungsleistung_Leitung_3__kW=\
+  \
+  Normalleistung_Leitung_3__kW\
+  *2
+```
+
+```{python}
+#| echo: false
+round(Auslegungsleistung_Leitung_3__kW, 1)
+```
+
+```{python}
+Auslegungsleistung_Leitung_4__kW=\
+  \
+  Normalleistung_Leitung_4__kW\
+  *2
+```
+
+```{python}
+#| echo: false
+round(Auslegungsleistung_Leitung_4__kW, 1)
+```
+
+```{python}
+Auslegungsleistung_Leitung_5__kW=\
+  \
+  Normalleistung_Leitung_5__kW\
+  *2
+```
+
+```{python}
+#| echo: false
+round(Auslegungsleistung_Leitung_5__kW, 1)
+```
+
+```{python}
+Auslegungsleistung_Leitung_6__kW=\
+  \
+  Normalleistung_Leitung_6__kW\
+  *2
+```
+
+```{python}
+#| echo: false
+round(Auslegungsleistung_Leitung_6__kW, 1)
+```
+
+```{python}
+Auslegungsleistung_Leitung_7__kW=\
+  \
+  Normalleistung_Leitung_7__kW\
+  *2
+```
+
+```{python}
+#| echo: false
+round(Auslegungsleistung_Leitung_7__kW, 1)
+```
+
+```{python}
+Auslegungsleistung_Leitung_8__kW=\
+  \
+  Normalleistung_Leitung_8__kW\
+  *2
+```
+
+```{python}
+#| echo: false
+round(Auslegungsleistung_Leitung_8__kW, 1)
+```
+
+```{python}
+Auslegungsleistung_Leitung_9__kW=\
+  \
+  Normalleistung_Leitung_9__kW\
+  *2
+```
+
+```{python}
+#| echo: false
+round(Auslegungsleistung_Leitung_9__kW, 1)
+```
+
+```{python}
+Auslegungsleistung_Leitung_10__kW=\
+  \
+  Normalleistung_Leitung_10__kW\
+  *2
+```
+
+```{python}
+#| echo: false
+round(Auslegungsleistung_Leitung_10__kW, 1)
+```
+
+```{python}
+Auslegungsleistung_Leitung_11__kW=\
+  \
+  Normalleistung_Leitung_11__kW\
+  *2
+```
+
+```{python}
+#| echo: false
+round(Auslegungsleistung_Leitung_11__kW, 1)
+```
 
 ```{python}
 Leistungsaufnahme_der_Pumpen__Vor__und_Ruecklauf_Zweigabschnitt_2_bei_Normleistung__kW=\
@@ -1985,6 +1966,16 @@ Leitungsinnendurchmesser_Zweigabschnitt_1_bei_Auslegungsleistung__m=\
 round(Leitungsinnendurchmesser_Zweigabschnitt_1_bei_Auslegungsleistung__m, 1)
 ```
 
+```{python}
+Geschwindigkeit_des_Waermetraegers_bei_Auslegungsleistung_in_UV__m_pro_s=\
+  \
+  2*Norm_Geschwindigkeit_des_Waermetraegers_in_Unterverteilung__UV___m_pro_s
+```
+
+```{python}
+#| echo: false
+round(Geschwindigkeit_des_Waermetraegers_bei_Auslegungsleistung_in_UV__m_pro_s, 1)
+```
 
 ```{python}
 Druckabfall_am_Abschnitt__Doppelleitung_Zweigabschnitt_2_bei_Auslegungsleistung__bar=\
@@ -2042,6 +2033,20 @@ Druckverlust_auf_Vorlaufleitung_bei_Auslegungsleistung_Leitung_1__bar=\
 round(Druckverlust_auf_Vorlaufleitung_bei_Auslegungsleistung_Leitung_1__bar, 1)
 ```
 
+```{python}
+Leitungsdurchmesser_innen_Leitung_1__m=\
+  \
+  (Auslegungsleistung_Leitung_1__kW\
+  /4200/(2*Normgeschwindigkeit_in_Hauptverteilung__m_pro_s\
+  )/(60-30)*4/np.pi\
+  )**\
+  0.5
+```
+
+```{python}
+#| echo: false
+round(Leitungsdurchmesser_innen_Leitung_1__m, 1)
+```
 
 ```{python}
 Druckverlust_auf_Vorlaufleitung_bei_Auslegungsleistung_Leitung_2__bar=\
@@ -2058,6 +2063,20 @@ Druckverlust_auf_Vorlaufleitung_bei_Auslegungsleistung_Leitung_2__bar=\
 round(Druckverlust_auf_Vorlaufleitung_bei_Auslegungsleistung_Leitung_2__bar, 1)
 ```
 
+```{python}
+Leitungsdurchmesser_innen_Leitung_2__m=\
+  \
+  (Auslegungsleistung_Leitung_2__kW\
+  /4200/(2*Normgeschwindigkeit_in_Hauptverteilung__m_pro_s\
+  )/(60-30)*4/np.pi\
+  )**\
+  0.5
+```
+
+```{python}
+#| echo: false
+round(Leitungsdurchmesser_innen_Leitung_2__m, 1)
+```
 
 ```{python}
 Druckverlust_auf_Vorlaufleitung_bei_Auslegungsleistung_Leitung_3__bar=\
@@ -2467,8 +2486,8 @@ round(Leistungsaufnahme_der_Pumpen__Vor__und_Ruecklauf_Zweigabschnitt_2_bei_Ausl
 ```{python}
 Verteilung_mittlere_Anzahl_der_Grundstuecke_an_einem_Unterverteilungszweig__Grundst_pro_Zw=\
   \
-  inneroertliche_Dach__und_Fassadenflaechen_fuer_Kollektoren_pro_Kopf__m2_pro_Kopf\
-  0/Verteilung_mittlere_Seitenlaenge_des_einem_Gebaeude_zugeordneten_Flaechenstueckes__m
+  Verteilung_mittlere_Laenge_eines_Unterverteilungszweiges__m\
+  /Verteilung_mittlere_Seitenlaenge_des_einem_Gebaeude_zugeordneten_Flaechenstueckes__m
 ```
 
 ```{python}
@@ -2666,8 +2685,8 @@ round(Leistungsaufnahme_der_Pumpen_bei_Auslegungsleistung__Vor__und_Ruecklauf_Le
 ```{python}
 Kollektorflaeche_brutto_pro_Kopf__m2_pro_Kopf=\
   \
-  benoetigte_Endenergie_fuer_Heizung_u_Warmwasser_WW___sanierte_Gebaeude__kWh_pro_a_pro_m2\
-  9/Bevoelkerung__Personen
+  Kollektorflaeche_brutto__optimal_orientiert__ohne_Aufstellungsumgebung__m2\
+  /Bevoelkerung__Personen
 ```
 
 ```{python}
@@ -2902,6 +2921,19 @@ round(thermische_Auslegungsleistung_Blockheizkraftwerk__MW_thermisch, 1)
 ```
 
 ```{python}
+komplett_mit_Waerme_versorgte_Geschossflaeche_pro_Kopf__Wohnung_u_Gewerbe___m2=\
+  \
+  durchschnittliche_Wohnflaeche_pro_Kopf__m2_pro_Kopf\
+  /(1-Anteil_der_Nichtwohngebaeude_am_Endenergieverbrauch__Prozent\
+  /100)
+```
+
+```{python}
+#| echo: false
+round(komplett_mit_Waerme_versorgte_Geschossflaeche_pro_Kopf__Wohnung_u_Gewerbe___m2, 1)
+```
+
+```{python}
 Endenergie_Direktbezug_aus_Kollektoren__am_Saisonspeicher_vorbei__Jahressumme__kWh_pro_d_pro_Kopf=\
   \
   SUM(Endenergie_Direktbezug_aus_Kollektoren__am_Saisonspeicher_vorbei__kWh_pro_d_pro_Kopf\
@@ -2958,9 +2990,9 @@ round(Investition_Saisonspeicher__Abdeckung___Euro_, 1)
 Investition_Saisonspeicher__Bohrungen___Euro_=\
   \
   Saisonspeicher_Laenge_aller_Bohrungen__m\
-  *Bevoelkerung__Personen\
-  0*(1-Bevoelkerung__Personen\
-  1/100)
+  *Saisonspeicher_Kosten_fuer_Bohrungen_pro_m___Euro__pro_m\
+  *(1-Saisonspeicher_Mengenrabatt_Bohren__Prozent\
+  /100)
 ```
 
 ```{python}
@@ -2985,8 +3017,8 @@ round(Investition_Saisonspeicher__Schlitzwand___Euro_, 1)
 ```{python}
 Investition_Saisonspeicher__zwei_Pufferspeicher___Euro_=\
   \
-  Bevoelkerung__Personen\
-  2*Groesse_der_Pufferspeicher_je__m3\
+  Saisonspeicher_Kosten_fuer_Pufferspeicher_am_Saisonspeicher_pro_m3___Euro__pro_m3\
+  *Groesse_der_Pufferspeicher_je__m3\
   *2
 ```
 
@@ -2998,8 +3030,7 @@ round(Investition_Saisonspeicher__zwei_Pufferspeicher___Euro_, 1)
 ```{python}
 Investition_Technikgebaeude_am_Speicherrand__geschaetzt___Euro_=\
   \
-  Bevoelkerung__Personen\
-  3
+  Saisonspeicher_Kosten_Technikgebaeude_am_Speicherrand___Euro_
 ```
 
 ```{python}
@@ -3064,8 +3095,8 @@ round(externe_Kollektorfeldflaeche__brutto_u__Aufstellungsumgebung___km2, 1)
 ```{python}
 Unterverteilung_Gesamtlaenge_aller_Unterverteilungszweige__jeweils_3_Leitungen___km=\
   \
-  inneroertliche_Dach__und_Fassadenflaechen_fuer_Kollektoren_pro_Kopf__m2_pro_Kopf\
-  0*Verteilung_Anzahl_der_Unterverteilungszweige__Zweige\
+  Verteilung_mittlere_Laenge_eines_Unterverteilungszweiges__m\
+  *Verteilung_Anzahl_der_Unterverteilungszweige__Zweige\
   /1000
 ```
 
@@ -3100,13 +3131,26 @@ round(Hauptverteilung_Gesamtlaenge_aller_Hauptverteilungstrassen__jeweils_3_Leit
 ```{python}
 Verteilung_gesamt_Jahresenergieverbrauch_der_Verteilerpumpen__kWh_pro_a=\
   \
-  dazu_die_moegliche_Ausnutzung_dieser_inneroertlichen_Flaechen_fuer_Kollektoren__Prozent\
-  9*24*180
+  Verteilung_gesamt_mittlere_Leistungsaufnahme_aller_Pumpen_der_gesamten_Verteilung__kW\
+  *24*180
 ```
 
 ```{python}
 #| echo: false
 round(Verteilung_gesamt_Jahresenergieverbrauch_der_Verteilerpumpen__kWh_pro_a, 1)
+```
+
+```{python}
+Auslegungsleistung__Maximal_noetige_Heizleistung_saniert___kW_pro_Kopf=\
+  \
+  (Endenergie_fuer_Heizung_u_WW__Wohn_uNichtwohngebaeude__nach_moderater_Sanierung__kWh_pro_a_pro_Kopf\
+  -Endenergie_nur_fuer_Warmwasser_WW__fuer_alle_Gebaeude_pro_Kopf__kWh_pro_a_pro_Kopf\
+  *6/12)/180/24*2
+```
+
+```{python}
+#| echo: false
+round(Auslegungsleistung__Maximal_noetige_Heizleistung_saniert___kW_pro_Kopf, 1)
 ```
 
 ```{python}
@@ -3179,8 +3223,8 @@ round(Investition_Saisonspeicher__gesamt___Euro_, 1)
 ```{python}
 Investition_Umwaelzpumpen_Unterverteilung___Euro_=\
   \
-  dazu_die_moegliche_Ausnutzung_dieser_inneroertlichen_Flaechen_fuer_Kollektoren__Prozent\
-  0*Verteilung_Kosten_der_Umwaelzpumpen___Euro__pro_kW
+  Unterverteilung_Auslegungsleistung_aller_Pumpen_der_Unterverteilung__kW\
+  *Verteilung_Kosten_der_Umwaelzpumpen___Euro__pro_kW
 ```
 
 ```{python}
@@ -3191,8 +3235,8 @@ round(Investition_Umwaelzpumpen_Unterverteilung___Euro_, 1)
 ```{python}
 Investition_Umwaelzpumpen_Hauptverteilung___Euro_=\
   \
-  dazu_die_moegliche_Ausnutzung_dieser_inneroertlichen_Flaechen_fuer_Kollektoren__Prozent\
-  6*Verteilung_Kosten_der_Umwaelzpumpen___Euro__pro_kW
+  Hauptverteilung_Auslegungsleistung_aller_Pumpen_der_Hauptverteilung__kW\
+  *Verteilung_Kosten_der_Umwaelzpumpen___Euro__pro_kW
 ```
 
 ```{python}
@@ -3203,8 +3247,8 @@ round(Investition_Umwaelzpumpen_Hauptverteilung___Euro_, 1)
 ```{python}
 Investition_Kollektoren___Euro_=\
   \
-  benoetigte_Endenergie_fuer_Heizung_u_Warmwasser_WW___sanierte_Gebaeude__kWh_pro_a_pro_m2\
-  9*(Kollektoren_Bruttopreis_der_eingesetzten_Roehrenkollektoren__Ritter_CPC_XL_1921___Euro__pro_m2\
+  Kollektorflaeche_brutto__optimal_orientiert__ohne_Aufstellungsumgebung__m2\
+  *(Kollektoren_Bruttopreis_der_eingesetzten_Roehrenkollektoren__Ritter_CPC_XL_1921___Euro__pro_m2\
   *Anteil_an_Roehrenkollektoren__Prozent\
   /100+Kollektoren_Bruttopreis_der_eingesetzten_Flachkollektoren__SUNEX_SA_AMP_20___Euro__pro_m2\
   *(1-Anteil_an_Roehrenkollektoren__Prozent\
@@ -3220,8 +3264,8 @@ round(Investition_Kollektoren___Euro_, 1)
 ```{python}
 Investition_Aufstellung__Installation_der_Kollektoren___Euro_=\
   \
-  benoetigte_Endenergie_fuer_Heizung_u_Warmwasser_WW___sanierte_Gebaeude__kWh_pro_a_pro_m2\
-  9*Kollektoren_Brutto_Kosten_fuer_Montage_und_Installationsmaterial_Kollektorfeld___Euro__pro_m2\
+  Kollektorflaeche_brutto__optimal_orientiert__ohne_Aufstellungsumgebung__m2\
+  *Kollektoren_Brutto_Kosten_fuer_Montage_und_Installationsmaterial_Kollektorfeld___Euro__pro_m2\
   *(1-Kollektoren_Mengenrabatt_Kollektoren_und_Installation__Prozent\
   /100)
 ```
@@ -3260,10 +3304,10 @@ round(Investition_Bodenpreis_fuer_externes_Kollektorfeld___Euro_, 1)
 ```{python}
 Investition_Fernwaermeleitungen_fuer_Unterverteilung_und_Hausanschluesse___Euro_=\
   \
-  (Bevoelkerung__Personen\
-  6*inneroertliche_Dach__und_Fassadenflaechen_fuer_Kollektoren_pro_Kopf__m2_pro_Kopf\
-  7*1000)+Bevoelkerung__Personen\
-  7*Verteilung_Anzahl_der_Wohngebaeude_im_Plangebiet_dieser_Tabelle__Gebaeude
+  (Verteilung_Kosten_Unterverteilung_Kanal_mit_Rohren___Euro__pro_m\
+  *Unterverteilung_Gesamtlaenge_aller_Unterverteilungszweige__jeweils_3_Leitungen___km\
+  *1000)+Verteilung_Kosten_Hausanschluss___Euro_\
+  *Verteilung_Anzahl_der_Wohngebaeude_im_Plangebiet_dieser_Tabelle__Gebaeude
 ```
 
 ```{python}
@@ -3274,9 +3318,9 @@ round(Investition_Fernwaermeleitungen_fuer_Unterverteilung_und_Hausanschluesse__
 ```{python}
 Investition_Fernwaermeleitungen_fuer_Hauptverteilung___Euro_=\
   \
-  Bevoelkerung__Personen\
-  5*dazu_die_moegliche_Ausnutzung_dieser_inneroertlichen_Flaechen_fuer_Kollektoren__Prozent\
-  3*1000
+  Verteilung_Kosten_Hauptverteilung_Kanal_mit_Rohren___Euro__pro_m\
+  *Hauptverteilung_Gesamtlaenge_aller_Hauptverteilungstrassen__jeweils_3_Leitungen___km\
+  *1000
 ```
 
 ```{python}
@@ -3389,9 +3433,8 @@ round(Leistung_Waermetauscher_am_Saisonspeicher__kW, 1)
 BHKW_elektrische_Leistung__MW_elektrisch=\
   \
   erforderliche_Zusatzleistung_Blockheizkraftwerk__BHKW__thermisch__MW_thermisch\
-  /(100-benoetigte_Endenergie_fuer_Heizung_u_Warmwasser_WW___sanierte_Gebaeude__kWh_pro_a_pro_m2\
-  4)*benoetigte_Endenergie_fuer_Heizung_u_Warmwasser_WW___sanierte_Gebaeude__kWh_pro_a_pro_m2\
-  4
+  /(100-Wirkungsgrad_BHKW__Prozent\
+  )*Wirkungsgrad_BHKW__Prozent
 ```
 
 ```{python}
@@ -3399,6 +3442,17 @@ BHKW_elektrische_Leistung__MW_elektrisch=\
 round(BHKW_elektrische_Leistung__MW_elektrisch, 1)
 ```
 
+```{python}
+Endenergie_fuer_Heizung_u_WW__Wohn_uNichtwohngebaeude__nach_moderater_Sanierung__kWh_pro_a_pro_Kopf=\
+  \
+  benoetigte_Endenergie_fuer_Heizung_u_Warmwasser_WW___sanierte_Gebaeude__kWh_pro_a_pro_m2\
+  *komplett_mit_Waerme_versorgte_Geschossflaeche_pro_Kopf__Wohnung_u_Gewerbe___m2
+```
+
+```{python}
+#| echo: false
+round(Endenergie_fuer_Heizung_u_WW__Wohn_uNichtwohngebaeude__nach_moderater_Sanierung__kWh_pro_a_pro_Kopf, 1)
+```
 
 ```{python}
 moeglicher_Anteil_an_direkter_Waermeversorgung__am_Speicher_vorbei__Prozent=\
@@ -3425,8 +3479,8 @@ round(mittlere_Speicherverluste_pro_Jahr__Prozent, 1)
 ```{python}
 Investitionskosten_Saisonspeicher__gesamt___Euro__pro_a_pro_Kopf=\
   \
-  Jahresertrag_der_Roehrenkollektoren__Wuerzburg_bei_T_gleich_75_Grad_C__Ritter_CPC_XL_1921__kWh_pro_a_pro_m2\
-  1/Abschreibungsjahre_fuer_Saisonspeicher__gesamt_\
+  Investition_Saisonspeicher__gesamt___Euro_\
+  /Abschreibungsjahre_fuer_Saisonspeicher__gesamt_\
   /Bevoelkerung__Personen
 ```
 
@@ -3438,8 +3492,8 @@ round(Investitionskosten_Saisonspeicher__gesamt___Euro__pro_a_pro_Kopf, 1)
 ```{python}
 Investitionskosten_Umwaelzpumpen_Unterverteilung___Euro__pro_a_pro_Kopf=\
   \
-  Jahresertrag_der_Roehrenkollektoren__Wuerzburg_bei_T_gleich_75_Grad_C__Ritter_CPC_XL_1921__kWh_pro_a_pro_m2\
-  2/Abschreibungsjahre_fuer_Umwaelzpumpen_Unterverteilung_\
+  Investition_Umwaelzpumpen_Unterverteilung___Euro_\
+  /Abschreibungsjahre_fuer_Umwaelzpumpen_Unterverteilung_\
   /Bevoelkerung__Personen
 ```
 
@@ -3451,8 +3505,8 @@ round(Investitionskosten_Umwaelzpumpen_Unterverteilung___Euro__pro_a_pro_Kopf, 1
 ```{python}
 Investitionskosten_Umwaelzpumpen_Hauptverteilung___Euro__pro_a_pro_Kopf=\
   \
-  Jahresertrag_der_Roehrenkollektoren__Wuerzburg_bei_T_gleich_75_Grad_C__Ritter_CPC_XL_1921__kWh_pro_a_pro_m2\
-  3/Abschreibungsjahre_fuer_Umwaelzpumpen_Hauptverteilung_\
+  Investition_Umwaelzpumpen_Hauptverteilung___Euro_\
+  /Abschreibungsjahre_fuer_Umwaelzpumpen_Hauptverteilung_\
   /Bevoelkerung__Personen
 ```
 
@@ -3464,8 +3518,8 @@ round(Investitionskosten_Umwaelzpumpen_Hauptverteilung___Euro__pro_a_pro_Kopf, 1
 ```{python}
 Investitionskosten_Kollektoren___Euro__pro_a_pro_Kopf=\
   \
-  Jahresertrag_der_Roehrenkollektoren__Wuerzburg_bei_T_gleich_75_Grad_C__Ritter_CPC_XL_1921__kWh_pro_a_pro_m2\
-  4/Abschreibungsjahre_fuer_Kollektoren_\
+  Investition_Kollektoren___Euro_\
+  /Abschreibungsjahre_fuer_Kollektoren_\
   /Bevoelkerung__Personen
 ```
 
@@ -3477,8 +3531,8 @@ round(Investitionskosten_Kollektoren___Euro__pro_a_pro_Kopf, 1)
 ```{python}
 Investitionskosten_Aufstellung__Installation_der_Kollektoren___Euro__pro_a_pro_Kopf=\
   \
-  Jahresertrag_der_Roehrenkollektoren__Wuerzburg_bei_T_gleich_75_Grad_C__Ritter_CPC_XL_1921__kWh_pro_a_pro_m2\
-  5/Abschreibungsjahre_fuer_Aufstellung__Installation_der_Kollektoren_\
+  Investition_Aufstellung__Installation_der_Kollektoren___Euro_\
+  /Abschreibungsjahre_fuer_Aufstellung__Installation_der_Kollektoren_\
   /Bevoelkerung__Personen
 ```
 
@@ -3490,8 +3544,8 @@ round(Investitionskosten_Aufstellung__Installation_der_Kollektoren___Euro__pro_a
 ```{python}
 Investitionskosten_Waermespeicher_in_den_Gebaeuden___Euro__pro_a_pro_Kopf=\
   \
-  Jahresertrag_der_Roehrenkollektoren__Wuerzburg_bei_T_gleich_75_Grad_C__Ritter_CPC_XL_1921__kWh_pro_a_pro_m2\
-  6/Abschreibungsjahre_fuer_Waermespeicher_in_den_Gebaeuden_\
+  Investition_Waermespeicher_in_den_Gebaeuden___Euro_\
+  /Abschreibungsjahre_fuer_Waermespeicher_in_den_Gebaeuden_\
   /Bevoelkerung__Personen
 ```
 
@@ -3503,8 +3557,8 @@ round(Investitionskosten_Waermespeicher_in_den_Gebaeuden___Euro__pro_a_pro_Kopf,
 ```{python}
 Investitionskosten_Bodenpreis_fuer_externes_Kollektorfeld___Euro__pro_a_pro_Kopf=\
   \
-  Jahresertrag_der_Roehrenkollektoren__Wuerzburg_bei_T_gleich_75_Grad_C__Ritter_CPC_XL_1921__kWh_pro_a_pro_m2\
-  7/Abschreibungsjahre_fuer_Bodenpreis_fuer_externes_Kollektorfeld_\
+  Investition_Bodenpreis_fuer_externes_Kollektorfeld___Euro_\
+  /Abschreibungsjahre_fuer_Bodenpreis_fuer_externes_Kollektorfeld_\
   /Bevoelkerung__Personen
 ```
 
@@ -3516,8 +3570,8 @@ round(Investitionskosten_Bodenpreis_fuer_externes_Kollektorfeld___Euro__pro_a_pr
 ```{python}
 Investitionskosten_Fernwaermeleitungen_fuer_Unterverteilung_und_Hausanschluesse___Euro__pro_a_pro_Kopf=\
   \
-  Jahresertrag_der_Roehrenkollektoren__Wuerzburg_bei_T_gleich_75_Grad_C__Ritter_CPC_XL_1921__kWh_pro_a_pro_m2\
-  8/Abschreibungsjahre_fuer_Fernwaermeleitungen_fuer_Unterverteilung_und_Hausanschluesse_\
+  Investition_Fernwaermeleitungen_fuer_Unterverteilung_und_Hausanschluesse___Euro_\
+  /Abschreibungsjahre_fuer_Fernwaermeleitungen_fuer_Unterverteilung_und_Hausanschluesse_\
   /Bevoelkerung__Personen
 ```
 
@@ -3529,8 +3583,8 @@ round(Investitionskosten_Fernwaermeleitungen_fuer_Unterverteilung_und_Hausanschl
 ```{python}
 Investitionskosten_Fernwaermeleitungen_fuer_Hauptverteilung___Euro__pro_a_pro_Kopf=\
   \
-  Jahresertrag_der_Roehrenkollektoren__Wuerzburg_bei_T_gleich_75_Grad_C__Ritter_CPC_XL_1921__kWh_pro_a_pro_m2\
-  9/Abschreibungsjahre_fuer_Fernwaermeleitungen_fuer_Hauptverteilung_\
+  Investition_Fernwaermeleitungen_fuer_Hauptverteilung___Euro_\
+  /Abschreibungsjahre_fuer_Fernwaermeleitungen_fuer_Hauptverteilung_\
   /Bevoelkerung__Personen
 ```
 
@@ -3554,9 +3608,8 @@ round(laufende_Kosten_E_Antrieb_der_Pumpen__Stromkosten___Euro__pro_a, 1)
 ```{python}
 laufende_Kosten_Waermetauscher_wechseln___Euro__pro_a=\
   \
-  benoetigte_Endenergie_fuer_Heizung_u_Warmwasser_WW___sanierte_Gebaeude__kWh_pro_a_pro_m2\
-  7*Bevoelkerung__Personen\
-  8
+  Leistung_Waermetauscher_am_Saisonspeicher__kW\
+  *Verteilung_Kosten_Waermetauscher__DoppelnutzgSpeicher_Fernwaerme_Kollektoren_Speicher____Euro__pro_kW
 ```
 
 ```{python}
@@ -3579,9 +3632,9 @@ round(laufende_Kosten_Betrieb__Wartung___Euro__pro_a, 1)
 ```{python}
 Kosten_fuer_Blockheizkraftwerke_zur_Temperaturanhebung_in_der_dritten_Leitung__Millionen__Euro_=\
   \
-  benoetigte_Endenergie_fuer_Heizung_u_Warmwasser_WW___sanierte_Gebaeude__kWh_pro_a_pro_m2\
-  5*1000*benoetigte_Endenergie_fuer_Heizung_u_Warmwasser_WW___sanierte_Gebaeude__kWh_pro_a_pro_m2\
-  1/1000000
+  BHKW_elektrische_Leistung__MW_elektrisch\
+  *1000*Verteilung_Investitionskosten_fuer_Heizkraftwerk___Euro__pro_kW\
+  /1000000
 ```
 
 ```{python}
@@ -3623,8 +3676,8 @@ round(Jahreswaermebedarf__Wohn_u_Nichtwohn_Heizg_u_WW___saniert__u_Verlustausgle
 ```{python}
 Investition_fuer_die_gesamte_Anlage___Euro__pro_a_pro_Kopf=\
   \
-  SUM(Jahresertrag_Flachkollektoren__Wuerzburg_bei_T_gleich_50_Grad_C__SUNEX_SA_AMP_2__kWh_pro_a_pro_m2\
-  9:D198)
+  SUM(Investitionskosten_Saisonspeicher__gesamt___Euro__pro_a_pro_Kopf\
+  :D198)
 ```
 
 ```{python}
@@ -3635,8 +3688,8 @@ round(Investition_fuer_die_gesamte_Anlage___Euro__pro_a_pro_Kopf, 1)
 ```{python}
 laufende_Kosten_E_Antrieb_der_Pumpen__Stromkosten___Euro__pro_a_pro_Kopf=\
   \
-  Jahresertrag_Flachkollektoren__Wuerzburg_bei_T_gleich_50_Grad_C__SUNEX_SA_AMP_2__kWh_pro_a_pro_m2\
-  3/Bevoelkerung__Personen
+  laufende_Kosten_E_Antrieb_der_Pumpen__Stromkosten___Euro__pro_a\
+  /Bevoelkerung__Personen
 ```
 
 ```{python}
@@ -3647,8 +3700,8 @@ round(laufende_Kosten_E_Antrieb_der_Pumpen__Stromkosten___Euro__pro_a_pro_Kopf, 
 ```{python}
 laufende_Kosten_Waermetauscher___Euro__pro_a_pro_Kopf=\
   \
-  Jahresertrag_Flachkollektoren__Wuerzburg_bei_T_gleich_50_Grad_C__SUNEX_SA_AMP_2__kWh_pro_a_pro_m2\
-  6/Bevoelkerung__Personen
+  laufende_Kosten_Waermetauscher_wechseln___Euro__pro_a\
+  /Bevoelkerung__Personen
 ```
 
 ```{python}
@@ -3659,8 +3712,8 @@ round(laufende_Kosten_Waermetauscher___Euro__pro_a_pro_Kopf, 1)
 ```{python}
 laufende_Kosten_Betrieb__Wartung___Euro__pro_a_pro_Kopf=\
   \
-  Jahresertrag_Flachkollektoren__Wuerzburg_bei_T_gleich_50_Grad_C__SUNEX_SA_AMP_2__kWh_pro_a_pro_m2\
-  7/Bevoelkerung__Personen
+  laufende_Kosten_Betrieb__Wartung___Euro__pro_a\
+  /Bevoelkerung__Personen
 ```
 
 ```{python}
@@ -3671,8 +3724,8 @@ round(laufende_Kosten_Betrieb__Wartung___Euro__pro_a_pro_Kopf, 1)
 ```{python}
 Investition_BHKW__ohne_Energiekosten____Euro_=\
   \
-  benoetigte_Endenergie_fuer_Heizung_u_Warmwasser_WW___sanierte_Gebaeude__kWh_pro_a_pro_m2\
-  6*1000000
+  Kosten_fuer_Blockheizkraftwerke_zur_Temperaturanhebung_in_der_dritten_Leitung__Millionen__Euro_\
+  *1000000
 ```
 
 ```{python}
@@ -3696,8 +3749,8 @@ laufende_Kosten_Energiekosten_BHKW___Euro__pro_a=\
   \
   (Waermebedarf_bis100_Grad_2017__Haushalte_Gewerbe_Industrie__u_Verlustausgleich__kWh_pro_a\
   -Jahreswaermebedarf__Wohn_u_Nichtwohn_Heizg_u_WW___saniert__u_Verlustausgleich_JWBwnhwsv__kWh_pro_a\
-  )*(100/(100-benoetigte_Endenergie_fuer_Heizung_u_Warmwasser_WW___sanierte_Gebaeude__kWh_pro_a_pro_m2\
-  4))*Gastarif___Euro__pro_kWh
+  )*(100/(100-Wirkungsgrad_BHKW__Prozent\
+  ))*Gastarif___Euro__pro_kWh
 ```
 
 ```{python}
@@ -3710,9 +3763,9 @@ laufende_Kosten_Ertrag_BHKW__Elektroenergie___Euro__pro_a=\
   \
   -(Waermebedarf_bis100_Grad_2017__Haushalte_Gewerbe_Industrie__u_Verlustausgleich__kWh_pro_a\
   -Jahreswaermebedarf__Wohn_u_Nichtwohn_Heizg_u_WW___saniert__u_Verlustausgleich_JWBwnhwsv__kWh_pro_a\
-  )*(benoetigte_Endenergie_fuer_Heizung_u_Warmwasser_WW___sanierte_Gebaeude__kWh_pro_a_pro_m2\
-  4/(100-benoetigte_Endenergie_fuer_Heizung_u_Warmwasser_WW___sanierte_Gebaeude__kWh_pro_a_pro_m2\
-  4))*Stromtarif__Einspeisung___Euro__pro_kWh
+  )*(Wirkungsgrad_BHKW__Prozent\
+  /(100-Wirkungsgrad_BHKW__Prozent\
+  ))*Stromtarif__Einspeisung___Euro__pro_kWh
 ```
 
 ```{python}
@@ -3723,8 +3776,8 @@ round(laufende_Kosten_Ertrag_BHKW__Elektroenergie___Euro__pro_a, 1)
 ```{python}
 Investition_fuer_die_gesamte_Anlage_mit_Nebenkosten___Euro__pro_a_pro_Kopf=\
   \
-  Anteil_an_Roehrenkollektoren__Prozent\
-  9/(1-Nebenkosten_der_gesamten_Anlage__Prozent\
+  Investition_fuer_die_gesamte_Anlage___Euro__pro_a_pro_Kopf\
+  /(1-Nebenkosten_der_gesamten_Anlage__Prozent\
   /100)
 ```
 
@@ -3736,8 +3789,8 @@ round(Investition_fuer_die_gesamte_Anlage_mit_Nebenkosten___Euro__pro_a_pro_Kopf
 ```{python}
 laufende_Kosten___Euro__pro_a_pro_Kopf=\
   \
-  SUM(Effizienznachlass_der_Kollektoren_im_langjaehrigen_Praxisbetrieb_auf__Prozent\
-  2:D206)
+  SUM(laufende_Kosten_E_Antrieb_der_Pumpen__Stromkosten___Euro__pro_a_pro_Kopf\
+  :D206)
 ```
 
 ```{python}
@@ -3748,8 +3801,8 @@ round(laufende_Kosten___Euro__pro_a_pro_Kopf, 1)
 ```{python}
 Investitionskosten_BHKW__ohne_Energiekosten____Euro__pro_a_pro_Kopf=\
   \
-  Jahresertrag_Flachkollektoren__Wuerzburg_bei_T_gleich_50_Grad_C__SUNEX_SA_AMP_2__kWh_pro_a_pro_m2\
-  0/Abschreibungsjahre_fuer_BHKW__ohne_Energiekosten__\
+  Investition_BHKW__ohne_Energiekosten____Euro_\
+  /Abschreibungsjahre_fuer_BHKW__ohne_Energiekosten__\
   /Bevoelkerung__Personen
 ```
 
@@ -3761,8 +3814,8 @@ round(Investitionskosten_BHKW__ohne_Energiekosten____Euro__pro_a_pro_Kopf, 1)
 ```{python}
 laufende_Kosten_Energiekosten_BHKW___Euro__pro_a_pro_Kopf=\
   \
-  Jahresertrag_Flachkollektoren__Wuerzburg_bei_T_gleich_50_Grad_C__SUNEX_SA_AMP_2__kWh_pro_a_pro_m2\
-  4/Bevoelkerung__Personen
+  laufende_Kosten_Energiekosten_BHKW___Euro__pro_a\
+  /Bevoelkerung__Personen
 ```
 
 ```{python}
@@ -3773,8 +3826,8 @@ round(laufende_Kosten_Energiekosten_BHKW___Euro__pro_a_pro_Kopf, 1)
 ```{python}
 laufende_Kosten_Ertrag_BHKW__Elektroenergie___Euro__pro_a_pro_Kopf=\
   \
-  Jahresertrag_Flachkollektoren__Wuerzburg_bei_T_gleich_50_Grad_C__SUNEX_SA_AMP_2__kWh_pro_a_pro_m2\
-  5/Bevoelkerung__Personen
+  laufende_Kosten_Ertrag_BHKW__Elektroenergie___Euro__pro_a\
+  /Bevoelkerung__Personen
 ```
 
 ```{python}

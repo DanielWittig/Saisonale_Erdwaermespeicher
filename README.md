@@ -2,7 +2,7 @@
 
 based on and supporting https://heliogaia.de
 
-Our [calculations](https://github.com/DanielWittig/Saisonale_Erdwaermespeicher/blob/Try_Quarto/notebooks/Kalkulation.md) on using soil based seasonal heat storage for municipalities reveal the potential of achieving about one third of the energy transformation at competitive cost. Therefore we encourage a timely pilot project.
+Our [calculations](https://github.com/DanielWittig/Saisonale_Erdwaermespeicher/blob/main/notebooks/Kalkulation.md) on using soil based seasonal heat storage for municipalities reveal the potential of achieving about one third of the energy transformation at competitive cost. Therefore we encourage a timely pilot project.
 
 At this stage most of the variable names and descriptions are in German. 
 
@@ -15,11 +15,11 @@ The aim of this github project is to reformulate in python, what was calculated 
 With that in mind, if there is something that you think we're missing or should change, open an issue and we'll talk!
 
 The recalculations are developed here:
-* coding in https://github.com/DanielWittig/Saisonale_Erdwaermespeicher/blob/Try_Quarto/notebooks/Kalkulation.qmd
-* output as github flavored markdown in https://github.com/DanielWittig/Saisonale_Erdwaermespeicher/blob/Try_Quarto/notebooks/Kalkulation.md
+* coding in https://github.com/DanielWittig/Saisonale_Erdwaermespeicher/blob/main/notebooks/Kalkulation.qmd
+* output as github flavored markdown in https://github.com/DanielWittig/Saisonale_Erdwaermespeicher/blob/main/notebooks/Kalkulation.md
 
 The code that helped with the migration from spreadsheet to python is developed here:
-https://github.com/DanielWittig/Saisonale_Erdwaermespeicher/blob/Try_Quarto/notebooks/Excel2Python_Migration.qmd
+https://github.com/DanielWittig/Saisonale_Erdwaermespeicher/blob/main/notebooks/Excel2Python_Migration.qmd
 
 # Tools
 
