@@ -1,59 +1,29 @@
-# Saisonale Erdwärmespeicher
+# Saisonale Erdwärmespeicher - Solar district heating 
 
-see: https://github.com/DanielWittig/Saisonale_Erdwaermespeicher/blob/Try_Quarto/notebooks/Wirtschaftlichkeit.md
+based on and supporting https://heliogaia.de
 
+Our [calculations](https://github.com/DanielWittig/Saisonale_Erdwaermespeicher/blob/Try_Quarto/notebooks/Kalkulation.md) on using soil based seasonal heat storage for municipalities reveal the potential of achieving about one third of the energy transformation at competitive cost. Therefore we encourage a timely pilot project.
 
-# About the repo template: Data Science Lifecycle Base Repo
+At this stage most of the variable names and descriptions are in German. 
 
-Use this repo as a template repository for data science projects using the Data Science Life Cycle Process. This repo is meant to serve as a launch off point. Our goal is to introduce only **minimum viable opinions** into the structure of this repo in order to make this repository/framework useful across a variety of data science projects and workflows. Therefore, we will tend to err to the side of omitting something if we're not confident that it's widely useful or think it's overly opinionated. That shouldn't stop you from forking this repo and adapting it to fit the needs of your project/team/organization.
+Feel free to join us in tackling global warming by local seasonal warming!
+
+# Background
+
+The aim of this github project is to reformulate in python, what was calculated in spreadsheets on heliogaia.de - allowing for easier reading, collaborating and scaling.
 
 With that in mind, if there is something that you think we're missing or should change, open an issue and we'll talk!
 
-## Get started.
+The recalculations are developed here:
+* coding in https://github.com/DanielWittig/Saisonale_Erdwaermespeicher/blob/Try_Quarto/notebooks/Kalkulation.qmd
+* output as github flavored markdown in https://github.com/DanielWittig/Saisonale_Erdwaermespeicher/blob/Try_Quarto/notebooks/Kalkulation.md
 
-The only manual step required is that you have to manually create the labels. The label names, descriptions, and color codes can be found in the [.github/labels.yaml](/.github/labels.yaml) file. For more information on creating labels, review the GitHub docs [here](https://help.github.com/en/github/managing-your-work-on-github/creating-a-label).
+The code that helped with the migration from spreadsheet to python is developed here:
+https://github.com/DanielWittig/Saisonale_Erdwaermespeicher/blob/Try_Quarto/notebooks/Excel2Python_Migration.qmd
 
-## Contributing
+# Tools
 
-Issues and suggestions for this template repo should be opened in the main [dslp repo](https://github.com/MicrosoftDSST/dslp/issues).
+* Quarto.org using Python and a bit of R in Rstudio
+* one convenient way is to run this on https://posit.cloud
 
-## Default Directory Structure
-
-```
-├── .cloud              # for storing cloud configuration files and templates (e.g. ARM, Terraform, etc)
-├── .github
-│   ├── ISSUE_TEMPLATE
-│   │   ├── Ask.md
-│   │   ├── Data.Aquisition.md
-│   │   ├── Data.Create.md
-│   │   ├── Experiment.md
-│   │   ├── Explore.md
-│   │   └── Model.md
-│   ├── labels.yaml
-│   └── workflows
-├── .gitignore
-├── README.md
-├── code
-│   ├── datasets        # code for creating or getting datasets
-│   ├── deployment      # code for deploying models
-│   ├── features        # code for creating features
-│   └── models          # code for building and training models
-├── data                # directory is for consistent data placement. contents are gitignored by default.
-│   ├── README.md
-│   ├── interim         # storing intermediate results (mostly for debugging)
-│   ├── processed       # storing transformed data used for reporting, modeling, etc
-│   └── raw             # storing raw data to use as inputs to rest of pipeline
-├── docs
-│   ├── code            # documenting everything in the code directory (could be sphinx project for example)
-│   ├── data            # documenting datasets, data profiles, behaviors, column definitions, etc
-│   ├── media           # storing images, videos, etc, needed for docs.
-│   ├── references      # for collecting and documenting external resources relevant to the project
-│   └── solution_architecture.md    # describe and diagram solution design and architecture
-├── environments
-├── notebooks
-├── pipelines           # for pipeline orchestrators i.e. AzureML Pipelines, Airflow, Luigi, etc.
-├── setup.py            # if using python, for finding all the packages inside of code.
-└── tests               # for testing your code, data, and outputs
-    ├── data_validation
-    └── unit
-```
+Created: 2024-01-25
