@@ -4,9 +4,22 @@ format: gfm
 editor: source
 ---
 
+## Readme
+
+For general remarks see the Readme.md [here](https://github.com/DanielWittig/Saisonale_Erdwaermespeicher).
+
+Choice of language: As this work is based on heliogaia.de which is written in German and as I hope, that a pilot project for "Saisonale Erwärmespeicher" will be started in Germany and thus has to use quite a lot of German data sources and variable names, I am using mostly the German language here.
+
+Sprachwahl: Da diese Arbeit auf heliogaia.de basiert und da ich hoffe, dass ein Pilotprojekt für Saisonale Wärmespeicher in Deutschland realisert wird, also viele deutsche Variablennamen verwenden wird, die auch zur Zeit noch im Entstehen sein sollten, verwende ich hier zunächst der Schnelligkeit halber die deutsche Sprache.
+
+Falls hier R chunks verwendet werden, sollten sie zwecks Sichtbarkeit auf Github mit dem Kommentar #r beginnen, ausser sie sind reine Variablenzuweisungen mit dem <- Zeichen. Sonstige chunks sind in Python geschrieben.
+
+
 ## Setup
 
-These are notes of my local installation. Additionally a setup on posit.cloud is documented [here] (https://github.com/DanielWittig/Saisonale_Erdwaermespeicher/blob/Try_Quarto/setup/Setup_posit_cloud.qmd).
+Das Setup, mit Quarto.org in RStudio zu arbeiten und flexibel R oder Python verwenden zu können, wurde gewählt, um inline Variablennamen im Text verwenden zu können und um den Python-Code transparent und kollaborativ mit git entwickeln zu können, was mit jupyter-Notebooks nicht möglich ist, da sie viele Meta-Informationen speichern und die diffs dadurch unübersichtlich werden.
+
+The following in this section are notes of my local installation. Additionally a setup on posit.cloud is documented [here] (https://github.com/DanielWittig/Saisonale_Erdwaermespeicher/blob/Try_Quarto/setup/Setup_posit_cloud.qmd).
 
 ### in Rstudio
 ```{r}
@@ -54,7 +67,7 @@ library(reticulate)
 ```
 
 ### Nutzung
-Um python in der Console zu verwenden schreibe dort: `repl_python()`
+Um python in der Console zu verwenden, schreibe dort: `repl_python()`
 
 
 ### Keyboard shortcuts
@@ -66,15 +79,6 @@ https://stackoverflow.com/questions/62408197/editing-keyboard-shortcut-to-produc
 
 see other Rstudio Shortcuts (searchable): *ctrl+shift+P*
 
-## Readme
-
-Choice of language: As this work is based on heliogaia.de which is written in German and as I hope, that a pilot project for "Saisonale Erwärmespeicher" will be started in Germany and thus has to use quite a lot of German data sources and variable names, I am using mostly the German language here.
-
-Sprachwahl: Da diese Arbeit auf heliogaia.de basiert und da ich hoffe, dass ein Pilotprojekt für Saisonale Wärmespeicher in Deutschland realisert wird, also viele deutsche Variablennamen verwenden wird, die auch zur Zeit noch im Entstehen sein sollten, verwende ich hier zunächst der Schnelligkeit halber die deutsche Sprache.
-
-Falls hier R chunks verwendet werden, sollten sie zwecks Sichtbarkeit auf Github mit dem Kommentar #r beginnen, ausser sie sind reine Variablenzuweisungen mit dem <- Zeichen. Sonstige chunks sind in Python geschrieben.
-
-Geldbetraege sind in Euro, sofern nicht anders vermerkt.
 
 ## Packages
 ```{r}

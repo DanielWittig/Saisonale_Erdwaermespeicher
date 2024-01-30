@@ -2,7 +2,7 @@
 
 based on and supporting https://heliogaia.de
 
-Our [calculations](https://github.com/DanielWittig/Saisonale_Erdwaermespeicher/blob/main/notebooks/Kalkulation.md) on using soil based seasonal heat storage for municipalities reveal the potential of achieving about one third of the energy transformation at competitive cost. Therefore we encourage a timely pilot project.
+Our [calculations](https://github.com/DanielWittig/Saisonale_Erdwaermespeicher/blob/main/notebooks/Kalkulation.md) on using soil based seasonal heat storage for municipalities reveal the potential of replacing about one third of todays energy consuption in Germany at competitive cost. Therefore we encourage a timely pilot project.
 
 At this stage most of the variable names and descriptions are in German. 
 
@@ -19,7 +19,7 @@ The recalculations are developed here:
 * output as github flavored markdown in https://github.com/DanielWittig/Saisonale_Erdwaermespeicher/blob/main/notebooks/Kalkulation.md
 
 The code that helped with the migration from spreadsheet to python is developed here:
-https://github.com/DanielWittig/Saisonale_Erdwaermespeicher/blob/main/notebooks/Excel2Python_Migration.qmd
+https://github.com/DanielWittig/Saisonale_Erdwaermespeicher/blob/main/notebooks/Excel2Python_Migrator.qmd
 
 # Tools
 
