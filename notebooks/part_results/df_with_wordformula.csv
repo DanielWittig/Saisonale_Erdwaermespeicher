@@ -430,7 +430,8 @@
   \
   0.216/((Geschwindigkeit_des_Waermetraegers_bei_Auslegungsleistung_in_UV__m_pro_s\
   /2)*Leitungsinnendurchmesser_Zweigabschnitt_2_bei_Auslegungsleistung__m\
-  /((1.5556*EXP(-0.0318393*Temperatur_Vorlauf__Unterverteilung_erdverlegt___Grad_C\
+  /((1.5556*np.exp(\
+  -0.0318393*Temperatur_Vorlauf__Unterverteilung_erdverlegt___Grad_C\
   )+0.2374))/10**\
   (-6))**\
   0.2*1/(Leitungsinnendurchmesser_Zweigabschnitt_2_bei_Auslegungsleistung__m\
@@ -444,7 +445,8 @@
   \
   0.216/((Geschwindigkeit_des_Waermetraegers_bei_Auslegungsleistung_in_UV__m_pro_s\
   /2)*Leitungsinnendurchmesser_Zweigabschnitt_1_bei_Auslegungsleistung__m\
-  /((1.5556*EXP(-0.0318393*Temperatur_Vorlauf__Unterverteilung_erdverlegt___Grad_C\
+  /((1.5556*np.exp(\
+  -0.0318393*Temperatur_Vorlauf__Unterverteilung_erdverlegt___Grad_C\
   )+0.2374))/10**\
   (-6))**\
   0.2*1/(Leitungsinnendurchmesser_Zweigabschnitt_1_bei_Auslegungsleistung__m\
@@ -662,7 +664,8 @@
   \
   0.216/(Geschwindigkeit_des_Waermetraegers_bei_Auslegungsleistung_in_UV__m_pro_s\
   *Leitungsinnendurchmesser_Zweigabschnitt_1_bei_Auslegungsleistung__m\
-  /((1.5556*EXP(-0.0318393*Temperatur_Vorlauf__Unterverteilung_erdverlegt___Grad_C\
+  /((1.5556*np.exp(\
+  -0.0318393*Temperatur_Vorlauf__Unterverteilung_erdverlegt___Grad_C\
   )+0.2374))/10**\
   (-6))**\
   0.2*1/(Leitungsinnendurchmesser_Zweigabschnitt_1_bei_Auslegungsleistung__m\
@@ -686,7 +689,8 @@
   \
   0.216/(Geschwindigkeit_des_Waermetraegers_bei_Auslegungsleistung_in_UV__m_pro_s\
   *Leitungsinnendurchmesser_Zweigabschnitt_2_bei_Auslegungsleistung__m\
-  /((1.5556*EXP(-0.0318393*Temperatur_Vorlauf__Unterverteilung_erdverlegt___Grad_C\
+  /((1.5556*np.exp(\
+  -0.0318393*Temperatur_Vorlauf__Unterverteilung_erdverlegt___Grad_C\
   )+0.2374))/10**\
   (-6))**\
   0.2*1/(Leitungsinnendurchmesser_Zweigabschnitt_2_bei_Auslegungsleistung__m\
@@ -876,7 +880,7 @@
   \
   mittlere_Zweiglaenge__Unterverteilung_erdverlegt__m\
   /2",u,C16,C,16,=B4/2,['B$4']
-162,e!V28,9,=(e!V13-e!V12)/2/30.44,"Variation der täglichen Globalstrahlung um dieses Mittel im Jahreslauf: ±, kWh/m²/d",Variation_der_taeglichen_Globalstrahlung_um_dieses_Mittel_im_Jahreslauf__±__kWh_pro_m2_pro_d,"=\
+162,e!V28,9,=(e!V13-e!V12)/2/30.44,"Variation der täglichen Globalstrahlung um dieses Mittel im Jahreslauf: ±, kWh/m²/d",Variation_der_taeglichen_Globalstrahlung_um_dieses_Mittel_im_Jahreslauf___plusminus___kWh_pro_m2_pro_d,"=\
   \
   (Globalstrahlung_im_Juni__langjaehriges_Mittel__Berlin___kWh_pro_m2\
   -Globalstrahlung_im_Dezember__langjaehriges_Mittel__Berlin___kWh_pro_m2\
@@ -1116,8 +1120,9 @@
 203,e!E4,8,=(e!V27+e!V28*SIN(2*PI()/365*e!A4))*e!V29/100*e!V9*e!V10/100,"beim Verbraucher verfügbare EE aus innerörtlichen Kollektoren, kWh/d/Kopf",beim_Verbraucher_verfuegbare_EE_aus_inneroertlichen_Kollektoren__kWh_pro_d_pro_Kopf,"=\
   \
   (Jahresmittelwert_der_taeglichen_Globalstrahlung__kWh_pro_m2_pro_d\
-  +Variation_der_taeglichen_Globalstrahlung_um_dieses_Mittel_im_Jahreslauf__±__kWh_pro_m2_pro_d\
-  *SIN(2*np.pi\
+  +Variation_der_taeglichen_Globalstrahlung_um_dieses_Mittel_im_Jahreslauf___plusminus___kWh_pro_m2_pro_d\
+  *np.sin(\
+  2*np.pi\
   /365*Tag_\
   ))*Gesamt_Wirkungsgrad_der_Kollektoren__Prozent\
   /100*inneroertliche_Dach__und_Fassadenflaechen_fuer_Kollektoren_pro_Kopf__m2_pro_Kopf\
@@ -1126,8 +1131,9 @@
 204,e!F4,8,=(e!V27+e!V28*SIN(2*PI()/365*e!A4))*e!V29/100*e!V11*(1-e!V18/100)*(1-e!V20/100),"beim Verbraucher verfügbare EE aus externen Kollektoren, kWh/d/Kopf",beim_Verbraucher_verfuegbare_EE_aus_externen_Kollektoren__kWh_pro_d_pro_Kopf,"=\
   \
   (Jahresmittelwert_der_taeglichen_Globalstrahlung__kWh_pro_m2_pro_d\
-  +Variation_der_taeglichen_Globalstrahlung_um_dieses_Mittel_im_Jahreslauf__±__kWh_pro_m2_pro_d\
-  *SIN(2*np.pi\
+  +Variation_der_taeglichen_Globalstrahlung_um_dieses_Mittel_im_Jahreslauf___plusminus___kWh_pro_m2_pro_d\
+  *np.sin(\
+  2*np.pi\
   /365*Tag_\
   ))*Gesamt_Wirkungsgrad_der_Kollektoren__Prozent\
   /100*ausserhalb_noetige_Brutto_Kollektorflaeche__ohne_Aufstellungsumgebung___m2_pro_Kopf\
@@ -1363,7 +1369,8 @@
   \
   Endenergie_Tagesverbrauch_fuer_Waerme_pro_Person__Jahresdurchschnitt__kWh_pro_d_pro_Kopf\
   -Endenergie_Tagesverbrauch_fuer_Waerme_pro_Person__Jahresdurchschnitt__kWh_pro_d_pro_Kopf\
-  *SIN(2*np.pi\
+  *np.sin(\
+  2*np.pi\
   /365*Tag_\
   )",e,C4,C,4,=V30-V30*SIN(2*PI()/365*A4),"['V$30', 'V$30', 'A4']"
 249,e!V15,7,=370,"Jahresertrag Flachkollektoren, Würzburg bei T=50°C: SUNEX S.A. AMP 2., kWh/a/m²",Jahresertrag_Flachkollektoren__Wuerzburg_bei_T_gleich_50_Grad_C__SUNEX_SA_AMP_2__kWh_pro_a_pro_m2,"=\

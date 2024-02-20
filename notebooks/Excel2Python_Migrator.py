@@ -1,102 +1,16 @@
----
-title: "Wirtschaftlichkeit Saisonaler Erdwärmespeicher"
-format: gfm
-editor: source
----
+# Migrate heliogaia.de calculations from Excel to Python
 
-## Readme
+# this is an extract for overview, but
+# the main development is done in Quarto in notebooks/Excel2Python_Migrator.qmd
 
-For general remarks see the Readme.md [here](https://github.com/DanielWittig/Saisonale_Erdwaermespeicher).
+# Es sollen zunächst die Heiz-Kosten pro Monat und Kopf mit einem 
+# Heliogaia-System für die Gemeinde Röbel nachvollzogen werden.
 
-Choice of language: As this work is based on heliogaia.de which is written in German and as I hope, that a pilot project for "Saisonale Erwärmespeicher" will be started in Germany and thus has to use quite a lot of German data sources and variable names, I am using mostly the German language here.
-
-Sprachwahl: Da diese Arbeit auf heliogaia.de basiert und da ich hoffe, dass ein Pilotprojekt für Saisonale Wärmespeicher in Deutschland realisert wird, also viele deutsche Variablennamen verwenden wird, die auch zur Zeit noch im Entstehen sein sollten, verwende ich hier zunächst der Schnelligkeit halber die deutsche Sprache.
-
-Falls hier R chunks verwendet werden, sollten sie zwecks Sichtbarkeit auf Github mit dem Kommentar #r beginnen, ausser sie sind reine Variablenzuweisungen mit dem <- Zeichen. Sonstige chunks sind in Python geschrieben.
-
-
-## Setup
-
-Das Setup, mit Quarto.org in RStudio zu arbeiten und flexibel R oder Python verwenden zu können, wurde gewählt, um inline Variablennamen im Text verwenden zu können und um den Python-Code transparent und kollaborativ mit git entwickeln zu können, was mit jupyter-Notebooks nicht möglich ist, da sie viele Meta-Informationen speichern und die diffs dadurch unübersichtlich werden.
-
-The following in this section are notes of my local installation. Additionally a setup on posit.cloud is documented [here] (https://github.com/DanielWittig/Saisonale_Erdwaermespeicher/blob/Try_Quarto/setup/Setup_posit_cloud.qmd).
-
-### in Rstudio
-```{r}
-# RStudio 23.12.0 on Linux Mint Debian Edition 6
-# install.packages('reticulate')
-# install python version = '3' #3.12 (that might have been through reticulate)
-
-#empty the R environment:
-rm(list = ls())
-
-library(reticulate)
-# reticulate::repl_python() #say yes to the creation of a virtual environment "r-reticulate"
-```
-
-### for python
-```{r install miniconda}
-
-# # try miniconda
-# # 2024-01-15--10:00:00
-# # load from https://docs.conda.io/projects/miniconda/en/latest/
-# mkdir -p ~/miniconda3
-# wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
-# shasum -a 256 ~/miniconda3/miniconda.sh
-# # result:
-# # c9ae82568e9665b1105117b4b1e499607d2a920f0aea6f94410e417a0eff1b9c
-# # compare to hash from https://docs.conda.io/projects/miniconda/en/latest/
-# # c9ae82568e9665b1105117b4b1e499607d2a920f0aea6f94410e417a0eff1b9c
-# # ok
-# # 
-# #FOR SECURITY IN ANOTHER TERMINAL AND NOT IN RSTUDIO, BECAUSE TRYING TO PREVENT MIXTURES WITH RETICULATE
-#    bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
-#    # clean up
-#    rm -rf ~/miniconda3/miniconda.sh
-#    # initialize: modify      /home/danielwittig/.bashrc
-#    ~/miniconda3/bin/conda init bash
-```
-
-```{r install python packages}
-## worked on 2024-01-16--11:12:48  in the terminal after installation of miniconda to my home folder and activation*
-# (base) danielwittig@Flugminzek:~$ conda install pandas
-# (base) danielwittig@Flugminzek:~$ conda install openpyxl
-# (base) danielwittig@Flugminzek:~$ conda install matplotlib seaborn
-
-## worked only temporarily, in Rstudio (maybe delete)
-# Anscheinend sollten die Python chunks schon im virtuellen environment 'r-reticulate' laufen. Es scheint aber etwas schiefzugehen, so dass das RETICULATE_PYTHON_FALLBACK environment genommen wird. Dort müssen dann natürlich auch die nötigen Pakete (Module) installiert sein.
-# library('reticulate')
-# py_install("pandas", envname = 'r-reticulate')
-# py_install("openpyxl", envname = 'r-reticulate')
-# py_install(c('matplotlib', 'seaborn'), envname = 'r-reticulate')
-```
-
-### Nutzung
-Um python in der Console zu verwenden, schreibe dort: `repl_python()`
-
-
-### Keyboard shortcuts
-
-insert python chunk shortcut
-created using:
-https://stackoverflow.com/questions/62408197/editing-keyboard-shortcut-to-produce-code-chunk-in-r-studio
-*ctrl+alt+P*
-
-see other Rstudio Shortcuts (searchable): *ctrl+shift+P*
-
-
-## Packages
-```{r}
-library(reticulate)
-library(tidyverse)
-library(ggplot2)
-library(usethis)
-# change the console to a python read-execute-print-loop (REPL):
-# repl_python()
-# reverse with 'quit'
-```
-
-```{python}
+# Vorerst nur:
+# Zielszenario, ohne Blockheizkraftwerk (BHKW), Menschen leben in sanierten Gebäuden mit durchschnittlich 80 kWh/a/m²
+# 
+# Erweiterungsmöglichkeit:
+# Übergangsszenario, mit BHKW, nicht alle Einwohner leben in sanierten Gebäuden, drei Fernwärmeleitungen nötig
 
 # first empty the Python environment
 Z_my_previous_python_variables =\ 
@@ -124,139 +38,24 @@ from openpyxl.utils import get_column_letter
 
 from openpyxl.utils import column_index_from_string
 #https://openpyxl.readthedocs.io/en/stable/api/openpyxl.utils.cell.html
-```
-
-## ---Start---------------
-```{r}
-# browseURL('https://heliogaia.de/endergebnisse.html')
-# browseURL('https://heliogaia.de/tabellen.html')
-# browseURL('/home/danielwittig/repos/Saisonale_Erdwaermespeicher/notebooks/_base')
-```
-
-
-
-## Kosten
-
-Es sollen zunächst die Heiz-Kosten pro Monat und Kopf mit einem Heliogaia-System für die Gemeinde Röbel nachvollzogen werden.
-
-### Eingrenzung
-
-Vorerst nur:
-
-Zielszenario, ohne Blockheizkraftwerk (BHKW), Menschen leben in sanierten Gebäuden mit durchschnittlich 80 kWh/a/m²
-
-Erweiterungsmöglichkeit:
-
-Übergangsszenario, mit BHKW, nicht alle Einwohner leben in sanierten Gebäuden, drei Fernwärmeleitungen nötig
-
-### Ausgangspunkt
-
-https://heliogaia.de/tabellen.html : in der Regel :
-
-* Blatt "e" simuliert eine zweijährige Wärmebilanz pro Person in Tagesschritten, einschließlich des Ladeverhaltens des Saisonspeichers. Die Parameter werden rechts in blaue Felder eingegeben. 
-* Blatt "t" berechnet daraus und aus weiteren Parametern das Gesamtergebnis. 
-* Blätter "h", "u" und "s" dienen zur Abschätzung von Hauptverteilung und Unterverteilung im Fernwärmenetz sowie zum Erfassen der Siedlungsparameter. 
-
-Zur Aufdeckung und Vermeidung systematischer Fehler und teils auch zur Aufwandsbegrenzung ist die Herangehensweise nicht in allen Tabellen analog. *ToDo: was differiert?*
-
-### Anleitung
-
-Definition sheetcell : Zelle mit sheet_name! davor
-Beispiel t!D210
-
-* Ziel:
-  * Die Heliogaia-Heizkosten von 61 EUR/a/Kopf für Röbel sollen nachgerechnet werden. Und, wenn möglich, weitere Endergebnisse.
-  * Der Wert 61 ergibt sich aus dem Jahreswert in Zelle t!D210 durch Division durch 12. 
-  * Alle Zellen, von denen Zelle t!D210 abhängt sollen incl. Formeln erfasst werden. 
-  * Dann wiederum die Formeln in diesen Zellen usw. bis zu den konstanten Eingabewerten.
-  * Damit sollen dann leichter lesbare, transparenter nderbare Formeln in Python oder R erstellt werden.
-* Vorgehen:
-  * Schreibe die Formel für t!D210 in Python mit sinnvollen Variablennamen auf.
-  * Schreibe alle sheetcells (z.B. t!D210) von denen t!D210 abhängt, im Abschnitt 'Arbeitspunkt' im chunk 'dedup' in step01, so dass sie dann im DataFrame dedup landen
-  * setze im Abschnitt 'from_step_corner' from_step auf 1, weil Du jetzt - ausgehend vom Step 1 - den Step02 berechnest
-  * lass alle chunks über der überschrift 'clipboard corner' laufen und nutze danach das immer auskommentierte to_clipboard aus den letzten Zeilen davon
-  * füge die Zwischenablage oben direkt unter list_of_steps=[] ein und setze überall statt XX den nächsten Step hin, jetzt also 02. 
-  * lösche das letzte Komma unten im 
-  * Nach jedem Einfügen müssen 
-    * ggf. vorhandene Zellbereiche (wo sinnvoll) in eine Liste von Sheetcells ausgeschrieben werden.
-    * der chunk, in den eingefügt wurde, laufen und darunter geschaut werden, ob Duplikate auftraten. Falls ja - oben entfernen.
-
-  * jetzt dasselbe mit from_step_corner = 2, um dann step03 einzufügen usw.
-
-
-
-Idee: mittels der ersten Spalte des DataFrames 'kosten' könnten später automatisiert die Variablennamen aus Excel eine Spalte weiter links ausgelesen werden und in brauchbare Variablennamen umgewandelt werden analog zu folgendem manuellen R-Codeschnipsel:
-
-```{r build_variabe_name_from_clipboard}
-# library('stringr')
-# library('clipr')
-# raw <- clipr::read_clip()
-# str_replace_all(raw, '[\\s:(),]', '_') %>%
-#   str_replace_all(., 'ä', 'ae') %>%
-#   str_replace_all(., 'ö', 'oe') %>%
-#   str_replace_all(., 'ü', 'ue') %>%
-#   str_replace_all(., 'Ä', 'Ae') %>%
-#   str_replace_all(., 'Ö', 'Oe') %>%
-#   str_replace_all(., 'U', 'Ue') %>%
-#   str_replace_all(., 'ß', 'ss') %>%
-#   str_replace_all(., '/', '_pro_') %>%
-#   str_replace_all(., 'm²', 'm2') %>%
-#   write_clip() #aim: usable for file names, can be marked quickly with double click
-```
-
-
-
-
-
+#```
 
 
 ### Beispielkommune Roebel
-
-#### Datei jahreslauf_roebel.xlsx'
-
-Abgespeichert von Heliogaia.de ca am 12.01.2024. 
-Die anderen Dateien am 18.01.2024 10:14-10:17 Uhr:
-
-* alternative_fuer_rietz_holzheizung.ods
-* alternative_fuer_rietz_holzheizung.xlsx
-* cottbus_rechentabelle.ods
-* cottbus_rechentabelle.xlsx
-* durchschnittshaus.ods
-* durchschnittshaus.xlsx
-* einheiten.xlsx
-* endrechnung.ods
-* endrechnung.xlsx
-* fachbegriffe_formelsymbole.xlsx
-* jahreslauf_berlin.ods
-* jahreslauf_berlin.xlsx
-* jahreslauf_rietz.ods
-* jahreslauf_rietz.xlsx
-* jahreslauf_roebel.ods
-* kosten_und_strombedarf_der_waermepumpe.ods
-* kosten_und_strombedarf_der_waermepumpe.xlsx
-* quellen.ods
-* standardhaus002.ods
-* standardhaus002.xlsx
-* waermeverlust_hauptverteilung_im_jahr002.ods
-* waermeverlust_hauptverteilung_im_jahr002.xlsx
-* zylindermodell007.ods
-* zylindermodell007.xlsx
-
-
-
+#### Datei jahreslauf_roebel.xlsx' von Heliogaia.de geladen ca. am 12.01.2024. 
 ##### Blatt e
-```{python}
-#| echo: false
 
-# saisonale Kurven
 sheet_e = pd.read_excel(
-  '_base/jahreslauf_roebel.xlsx'
+  'notebooks/_base/jahreslauf_roebel.xlsx'
   , sheet_name='e', header = 1)
 print(sheet_e.shape)
 
 kurven = sheet_e.iloc[1:732,:18]; kurven.head()
 einheiten = sheet_e.iloc[0,:18]
 original = kurven.copy()
+
+# pd.DataFrame(list(original)).to_clipboard(header=False, index=False)
+# pd.DataFrame(list(einheiten)).to_clipboard(header=False, index=False)
 
 #make_var_name
 def make_var_name(input_string):
@@ -285,6 +84,9 @@ def make_var_name(input_string):
   inter = re.sub('€', '_Euro_', inter)
   inter = re.sub('±', '_plusminus_', inter)
   return inter
+
+#test cases
+make_var_name('hi;')
 
 new_column_names = [make_var_name(col) for col in list(original)]
 
@@ -319,28 +121,12 @@ for i, col in enumerate(new_column_names[1:]):
   sns.scatterplot(x='Tag', y=col, data=kurven, ax=axs[i])
   axs[i].set_title(titles[i])
 fig.tight_layout()
-```
+#```
 
 
 ##### Blatt t
-```{python}
-current_sheet = 't'
-```
 
-
-###### Arbeitspunkt ++++++++
-
-Der Arbeitspunkt ist mit seinem Gefolge (bis 'build calculation' und 'rest') durch alle Steps von unten bis hier oben gewandert, während die steps aufgebaut wurden.
-
-```{r}
-source("~/Spaces/Raumschiff/essentielle-Backups/Script_Backupper.R") # vor sheet umbau 2024-01-18--16:25:45
-# edit_file("~/Spaces/Raumschiff/essentielle-Backups/Script_Backupper.R")
-# browseURL("~/Spaces/Raumschiff/essentielle-Backups/Saisonale_Erdwaermespeicher")
-
-```
-.
-
-```{python dedup}
+#```{python dedup}
 list_of_steps = [] 
 
 
@@ -849,13 +635,6 @@ step01.loc[:, 'step'] = 1
 list_of_steps = list_of_steps + [step01]
 
 
-# step00 = pd.DataFrame({'sheetcell': [
-#   't!D210'
-#   ]})
-# step00.loc[:, 'step'] = 0
-# list_of_steps = list_of_steps + [step00]
-
-
 dedup = pd.concat(list_of_steps, axis=0)
 dedup = dedup.reset_index(drop=True)
 
@@ -866,7 +645,7 @@ dedup.loc[:, 'sheetcell'] = dedup.loc[:, 'sheetcell'].str.replace(r'$', '', rege
 pure_dedup = dedup.copy()
 
 ## merge old dna
-old_dna = pd.read_csv('part_results/workbook_dna.csv')
+old_dna = pd.read_csv('notebooks/part_results/workbook_dna.csv')
 dedup = dedup.merge(old_dna, on='sheetcell', how='left')
 dedup = dedup.loc[:, ['sheetcell', 'step_x', 'sheetformula']]
 dedup.columns = ['sheetcell', 'step', 'sheetformula'] #rename step_x
@@ -878,14 +657,14 @@ if dedup.loc[:,'sheetcell'].duplicated().sum() > 0:
   )
 else: print('OK, no duplicates!')
 
-```
+#```
 
 
 
 
 ###### dedup_check --
 
-```{python formulator - separate cells and sheets and delete dollar sign}
+#```{python formulator - separate cells and sheets and delete dollar sign}
 formulator = dedup.copy()
 
 # extract sheet
@@ -923,15 +702,15 @@ formulator.loc[:, 'row'] = \
   .str.extract(r'^[A-Z]{1,}(\d{1,})', expand=False)
 formulator['row'].value_counts() #ok
 
-```
+#```
 
 
-```{python formulator  add formulas}
+#```{python formulator  add formulas}
 # webbrowser.open('https://openpyxl.readthedocs.io/en/stable/api/openpyxl.workbook.html')
 
 # load_workbook
-wbf_workbook = load_workbook('_base/jahreslauf_roebel.xlsx') #workbook containing formulas incl constants
-wbv_workbook_values = load_workbook('_base/jahreslauf_roebel.xlsx', data_only=True)
+wbf_workbook = load_workbook('notebooks/_base/jahreslauf_roebel.xlsx') #workbook containing formulas incl constants
+wbv_workbook_values = load_workbook('notebooks/_base/jahreslauf_roebel.xlsx', data_only=True)
 
 # add formulas
 for i in formulator.index:
@@ -943,17 +722,19 @@ for i in formulator.index:
     formulator.loc[i, 'formula'] =\
     wbf_workbook[formulator.loc[i,'sheet']][formulator.loc[i,'cell']].internal_value
 
-# using strings above here will silence the FutureWarning, but alter the subsequent calculations, which would have to be tested thoroughly 2024-01-25
+# using strings above here will silence the FutureWarning, 
+# but alter the subsequent calculations, which would have to be 
+# tested thoroughly 2024-01-25
 
 # formulator.iloc[75:, :]
 
 # r.View(formulator, 'formulator')
 
-```
+#```
 
 ###### regex
 
-```{python formulator - regex for }
+#```{python formulator - regex for }
 
 # from re import findall
 # todo replace {0,1} where possible in the below regex
@@ -964,9 +745,9 @@ regex_cell_extraction = r'\b([A-Za-z]{0,}\!{0,1}\${0,1}[A-Z]{1,2}\${0,1}\d{1,}\:
 # formulator.loc[[0, 9, 35, 10, 67, 80, 97],'formula']\
   # .str.findall(regex_cell_extraction)
 
-```
+#```
 
-```{python formulator  whole check}
+#```{python formulator  whole check}
 formulator.loc[:,'next_cells'] = \
   formulator.loc[:,'formula']\
     .str.findall(regex_cell_extraction)
@@ -984,11 +765,11 @@ formulator.loc[:,'next_cells'] = \
 # formulator.loc[11,'next_cells']
 # formulator.head(6)
 # r.View(formulator, 'formulator')
-```
+#```
 
 ###### from_step corner
 
-```{python clipboarder}
+#```{python clipboarder}
 from_step=16
 mask_for_clipboard = (formulator.loc[:,'step']==from_step)\
   &(~formulator.loc[:,'next_cells'].isna())
@@ -1046,11 +827,11 @@ new_for_dedup.loc[:, 'influencer_cell'] = \
 # # sum(mask_ranges)
 # new_for_dedup.loc[mask_ranges, 'cell']
 
-```
+#```
 
 
 
-```{python  staff formulas with sheet prefix}
+#```{python  staff formulas with sheet prefix}
 
 #done this way because replacing parts of a regex match seems difficult:
 # https://stackoverflow.com/questions/4489074/python-regular-expression-replacing-part-of-a-matched-string
@@ -1080,16 +861,11 @@ for u in unique_sheetcells:
 
 # r.View(new_for_dedup, 'new_for_dedup')
 
-#todo remove test code
-# x=pd.DataFrame({'a':[1,2,2], 'b':[4,5,6]})
-# x
-# mask_odd = x.loc[:,'a']==2
-# x.loc[mask_odd, 'a'] = 9
-# x
-```
+
+#```
 
 
-```{python  merge to complete the from_step in the dedup chunk above}
+#```{python  merge to complete the from_step in the dedup chunk above}
 #unique
 sheetformulas_for_merge = new_for_dedup.drop_duplicates('sheetcell')
 
@@ -1104,9 +880,6 @@ new_dna = pure_dedup.merge(
 # run only for from_step==1 when workbook_dna.csv is no yet present:
 # old_dna = new_dna.copy()
 
-#check, why new_dna has 304 rows and old_dna only 288
-# mask_overnew = ~new_dna.loc[:,'sheetcell'].isin(old_dna.loc[:,'sheetcell'])
-# new_dna.loc[mask_overnew,'sheetcell']
 
 #update dna
 old_dna.update(new_dna)
@@ -1114,12 +887,12 @@ old_dna.update(new_dna)
 updated_dna = old_dna.loc[:,['sheetcell', 'step', 'sheetformula']]
 
 # save dna
-updated_dna.to_csv('part_results/workbook_dna.csv')
+updated_dna.to_csv('notebooks/part_results/workbook_dna.csv')
 
-```
+#```
 
 
-```{python  clipboard to paste next step in the dedup chunk above}
+#```{python  clipboard to paste next step in the dedup chunk above}
 
 
 # deduplication
@@ -1144,15 +917,6 @@ new_for_check = new_for_dedup.loc[mask_new,:]
 
 # new_for_check.to_clipboard(index=False, header=False)
 
-# # check for missing cells in manual parts (intermezzo)
-# mask_missing = ~new_for_check.loc[:,'sheetcell'].isin(step05.loc[:,'sheetcell'])
-# # mask_missing = ~new_for_check.loc[:,'sheetcell'].isin(step04.loc[:,'sheetcell'])
-# # mask_missing = ~new_for_check.loc[:,'sheetcell'].isin(step03.loc[:,'sheetcell'])
-# # mask_missing = ~new_for_check.loc[:,'sheetcell'].isin(step02.loc[:,'sheetcell'])
-# sum(mask_missing)
-# new_for_check.loc[mask_missing,'sheetcell']
-
-
 new_for_check = new_for_check.drop_duplicates('influencer_sheetcell')
 
 # prepare for clipboard
@@ -1171,47 +935,13 @@ for_clipboard.append("list_of_steps = list_of_steps + [stepXX]")
 # r.View(formulator, 'formulator')
 # r.View(dna, 'dna')
 # r.View(for_clipboard, 'for_clipboard')
-```
+#```
 
 ###### clipboard corner
 
-
-####### which cell ranges are most frequent?
-
-```{r cell map 1}
-# # live eda
-# # esquisse::esquisser(py$formulator)
-# 
-# # library(tidyverse)
-# library(magrittr)
-# f <- py$formulator
-# # which cell ranges are most frequent?
-# 
-# ggplot(f) +
-#   aes(x = column, y = row, fill = sheet) +
-#   geom_tile() +
-#   scale_fill_hue(direction = 1) +
-#   theme_minimal()
-
-```
-
-
-####### evolution by step (nice to see)
-
-```{r cell map 2}
-# 
-# ggplot(f) +
-#   aes(x = column, y = row, fill = sheet) +
-#   geom_tile() +
-#   scale_fill_hue(direction = 1) +
-#   theme_minimal() +
-#   facet_wrap(vars(step))
-
-```
-
 ###### get variable description
 
-```{python   get variable description}
+#```{python   get variable description}
 #todo remove test code (2 lines):
 # keeper = formulator.copy()
 # formulator = keeper.copy()
@@ -1393,29 +1123,12 @@ formulator.insert(4, 'var_name', tempcol.apply(make_var_name))
 
 # save formulator
 # formulator.to_csv('part_results/formulator.csv')
-```
+#```
 
-
-```{python  checks}
-#checks
-# get_var_description('h!E21')
-# get_var_description('t!D99')
-# new_for_dedup
-# formulator
-# #debugger:
-# for i in formulator.loc[:, 'sheetcell']:
-#   print(i)
-#   get_var_description(i)
-#
-# formulator.loc[:, 'sheetcell'][1]
-# get_var_description(formulator.loc[:, 'sheetcell'][1])
-# get_var_description('e!E4')
-# r.View(new_for_dedup, 'new_for_dedup')
-```
 
 ###### formula factory
 
-```{python  formula factory}
+#```{python  formula factory}
 
 # baseline = pd.read_csv('part_results/formulator.csv', index_col = [0])
 baseline = formulator.copy()
@@ -1481,16 +1194,16 @@ df.loc[:,'wordformula'] = df.loc[:,'wordformula'].str.replace(r'\\\s+$', '', reg
 #save df
 df.to_csv('part_results/df_with_wordformula.csv')
 
-```
+#```
 
 
 ###### build calculation
-```{python}
+#```{python}
 #bis zu welcher Zeile in 'geordnet':
 limit = 400
 
 
-constructor = pd.read_csv('part_results/df_with_wordformula.csv')
+constructor = pd.read_csv('notebooks/part_results/df_with_wordformula.csv')
 #remove dollar sign
 constructor['next_cells'] = constructor['next_cells'].str.replace('$', '')
 #only what is not an input_value
@@ -1505,7 +1218,7 @@ constructor = constructor.reset_index(drop=True)
 # ordner = constructor.loc[:,['sheetcell', 'sheetformula', 'var_name']]
 # ordner.to_csv('part_results/ordner.csv')
 #
-ordner = pd.read_csv('part_results/ordner.csv').loc[:,['sheetcell']]
+ordner = pd.read_csv('notebooks/part_results/ordner.csv').loc[:,['sheetcell']]
 geordnet = ordner.merge(constructor, on='sheetcell', how='left')
 #
 mask_no_var_name = geordnet['var_name'].isna()
@@ -1758,7 +1471,7 @@ for i in range(5):
         # exec('print(' + geordnet.loc[i,'var_name'] +')')
         order.append(i)
       else:
-        dummy=0
+        pass
         # print(i)
     except NameError:
       pass
@@ -1773,7 +1486,6 @@ for i in range(5):
   print(message)
   messages.append(message)
 
-# journal
 for i in messages:
   print(i)
 
@@ -1867,8 +1579,6 @@ chunk_start = '\n```{python}\n'
 chunk_end = '\n```\n'
 build = chunk_start
 build = build + 'import numpy as np' + '\n'
-build = build + 'import pandas as pd' + '\n'
-build = build + 'import re' + '\n'
 build = build + 'import pickle' + '\n'
 build = build + 'import pprint' + '\n'
 build = build + '\n'
@@ -1885,15 +1595,13 @@ if len(order) == len(geordnet):
     build = build + chunk_end
     build = build + chunk_start
     build = build\
-      + str(geordnet.loc[i, 'var_name']) +\
-      str(geordnet.loc[i, 'wordformula'])
+      + str(geordnet.loc[i, 'var_name'])\
+      + str(geordnet.loc[i, 'wordformula'])
     build = build + chunk_end
     build = build + chunk_start
     build = build + '#| echo: false\n'
     build = build\
       +'round(' + geordnet.loc[i, 'var_name'] + ', 1)'
-else:
-  print('Error: order and geordnet differ in length')
 build = build + chunk_end
 
 
@@ -1910,7 +1618,7 @@ with open("Kalkulation_raw.qmd", "w") as text_file:
     print(myfstring, file=text_file)
 
 
-r.edit_file('Kalkulation_raw.qmd',)
+# r.edit_file('Kalkulation_raw.qmd',)
 # df.loc[:,['var_name', 'wordformula']].to_clipboard(header=False, index=False)
 
 # #skipped trial to remove duplicates in var_name
@@ -1933,377 +1641,5 @@ r.edit_file('Kalkulation_raw.qmd',)
 # 
 # r.View(zeitlauf, 'zeitlauf')
 
-```
-The freshly built calculation in Kalkulation_raw.qmd was manually adapted to contain the data frame 'kurven' on 2024-02-20 + the final calculation and concluding sentences in r and saved as Kalkulation.qmd - as a starting point for further development.
+#```
 
-###### rest - todo: delete
-
-```{python }
-#detect the remaining wordformulas, that should be edited manually
-# (for example under corrections_to_geordnet, manually in Kalkulation.qmd or elsewhere appropriate)
-mask_rest = df.loc[:, 'wordformula'].str.contains(r'\!')
-rest = df.loc[mask_rest,['sheetcell','step', 'wordformula', 'next_cells']]
-r.View(rest, 'rest')
-# rest.to_csv('rest_temp.csv')
-# df.to_csv('df_temp.csv')
-```
-
-
-
-###### stepXX
-o expand ranges
-o dedup
-###### step16v- last step
-v expand ranges
-v dedup
-###### step15v
-v expand ranges
-v dedup
-###### step14v
-v expand ranges
-v dedup
-###### step13v
-v dedup
-v expand ranges
-###### step12v
-v dedup
-v expand ranges
-###### step11v
-v dedup
-v expand ranges
-###### step10v
-v dedup
-v expand ranges
-###### step09v
-v dedup
-v expand ranges
-###### step08
-v dedup
-###### step07
-v dedup
-###### step06
-v dedup
-###### step05
-...
-###### step04
-...
-###### step03
-...
-###### step02
-...
-###### step01
-
-```{r bezuege01}
-# D200=D199/(1-D37/100)
-# D207=SUM(D202:D206)
-# D198=D180/F180/E3
-# D203=D184/E3
-# D204=D185/E3
-```
-
-```{r raw01}
-# D200
-# D207
-# D198
-# D203
-# D204
-```
-
-###### step00
-
-```{r bezuege00}
-# D210=D200+D207-D198-D203-D204
-```
-
-```{r raw00}
-# D210
-```
-
-## Bereits eingearbeitet in Kalkulator
-
-### Vorletzter Schritt
-
-Im nächsten chunk wurden feste Werte eingegeben aus den entsprechenden Zellen, während die Vorgeschichte der Berechnung noch implementiert wurde.
-
-```{r}
-#€/a/Kopf		brutto
-Investition_fuer_die_gesamte_Anlage_mit_Nebenkosten <- 640 # D200
-
-#€/a/Kopf
-laufende_Kosten_pro_a_pro_Kopf <- 319 # D207
-
-#€/a/Kopf
-Investitionskosten_pro_a_pro_Kopf_BHKW__ohne_Energiekosten_ <- 23.9 # D198
-
-#€/a/Kopf
-laufende_Kosten_pro_a_pro_Kopf_Energiekosten_BHKW <- 340 # D203
-
-#€/a/Kopf
-laufende_Kosten_pro_a_pro_Kopf_Ertrag_BHKW__Elektroenergie <- -133 # D204
-```
-
-Summe:
-```{r}
-#r 
-Gebaeudeenergiekosten_proKopf_proJahr_ohne_Kapitalkosten_und_Foerdermittel <- 
-  sum(c(
-      Investition_fuer_die_gesamte_Anlage_mit_Nebenkosten
-    ,+laufende_Kosten_pro_a_pro_Kopf
-    ,-Investitionskosten_pro_a_pro_Kopf_BHKW__ohne_Energiekosten_
-    ,-laufende_Kosten_pro_a_pro_Kopf_Energiekosten_BHKW
-    ,-laufende_Kosten_pro_a_pro_Kopf_Ertrag_BHKW__Elektroenergie
-  ))
-
-# Gebaeudeenergiekosten_proKopf_proJahr_ohne_Kapitalkosten_und_Foerdermittel =728
-round(
-  Gebaeudeenergiekosten_proKopf_proJahr_ohne_Kapitalkosten_und_Foerdermittel
-  ,1
-)
-
-# mögliche Nebenrechnung:
-# bei eingepreistem Fremdenergieeinsatz von nur noch	2.16%
-```
-
-
-
-Umrechnung auf monatlich
-```{r}
-#Quelldatei: endrechnung.xlsx
-#€/Monat/Kopf
-Gebaeudeenergiekosten_proKopf_proMon_ohne_Kapitalkosten_und_Foerdermittel <-
-  1/12 *
-  Gebaeudeenergiekosten_proKopf_proJahr_ohne_Kapitalkosten_und_Foerdermittel
-
-round(
-  Gebaeudeenergiekosten_proKopf_proMon_ohne_Kapitalkosten_und_Foerdermittel
-  ,0
-)
-```
-
-
-
-### Endergebnis
-
-```{r}
-min_Anschliesser_count <- 5000
-
-#km
-max_Einzugsradius_km <- 6
-
-#€/Monat/Kopf
-# Gebaeudeenergiekosten_proKopf_proMon_ohne_Kapitalkosten_und_Foerdermittel #61
-# nur Roebel
-
-#m
-max_Bohrtiefe <- '__ToDo__' # ToDo
-
-#m/s
-min_Wasserdurchlaessigkeit <- '__ToDo__' #ToDo
-
-#€/Monat/Kopf
-bisherige_Gebaeudeenergiekosten_pPpM <- 65
-```
-
-
-Eine Kommunale Solarheizung mit saisonalem Erwärmespeicher, Solarthermie und Wärmenetz lohnt sich überall dort,
-wo mindestens `r min_Anschliesser_count` Anschließer auf einem Radius von weniger als `r max_Einzugsradius_km` Kilomentern teilnehmen und der Boden bis in `r max_Bohrtiefe` m Tiefe mindestens einen Wasserdurchlässigkeitswert von `r min_Wasserdurchlaessigkeit` m/s hat. ([Quelle](https://heliogaia.de/endergebnisse.html))
-
-Hintergrund:
-
-Wegen ihrer annähernd gleichen Wichtung *ToDo: welche Wichtung?* liefert die Mittlung der gefundenen Zahlen Anhaltspunkte für den Bedarf bei einem bundesweiten Ausbau der Heliogaia-Netze zur Finanzierung einen laufenden Betrag von `r Gebaeudeenergiekosten_proKopf_proMon_ohne_Kapitalkosten_und_Foerdermittel` € pro Person und Monat ohne Berücksichtigung von Kapitalkosten und Fördermitteln.
-
-Bisher wurden in Deutschland jährlich 65 Milliarden Euro für Gebäudeenergie ausgegeben [Dena](https://heliogaia.de/9254_Gebaeudereport_dena_kompakt_2018.pdf), S.7, das sind monatlich ca. `r bisherige_Gebaeudeenergiekosten_pPpM`€ pro Kopf. 
-
-## ---Anhang------------
-
-## Tests
-
-#### Basics (add above)
-
-##### readout excel
-https://python-tools-for-excel.readthedocs.io/en/latest/software_calculation.html
-
-https://github.com/vinci1it2000/formulas #202311
-compiles Excel workbooks to python and executes without using the Excel COM server. Hence, Excel is not needed.
-
-difficult to install formulas 2024-01-17
-
-```{python try openpyxl, successful}
-# from openpyxl import load_workbook
-# wb = load_workbook('_base/jahreslauf_roebel.xlsx')
-# type(wb)
-# sheet_ranges = wb['range names']
-# ws = wb.active
-# x = ws['A1']
-# x.internal_value #'Szenario für Röbel und Umgebung'
-# x.col_idx #1
-# x.column #1
-# x.column_letter #'A'
-# x.row #1
-# # numeric adressing:
-# ws.cell(1,1).internal_value
-# 
-# # value or formula?
-# y = ws['F3']
-# y.internal_value #'=s!Q32/1000000'
-# y.value
-# 
-# #try to read values (v)
-# vb = load_workbook('_base/jahreslauf_roebel.xlsx', data_only=True)
-# vws = vb.active
-# vws['A1'].internal_value #roebel...
-# b = vws['F3']
-# b.internal_value #8.1 :)
-# b.value
-# 
-# # difference between cell.value and cell.internal_value
-# # - cell.value #get or set the value held in the cell
-# # - cell.internal_value #Always returns the value for excel.
-# # https://openpyxl.readthedocs.io/en/stable/api/openpyxl.cell.cell.html?highlight=internal_value#openpyxl.cell.cell.Cell.internal_value
-# 
-# # test, ob Tausendertrennzeichen ignoriert werden
-# vws['D7'].internal_value #7518 #ok, ja :)
-# 
-# # DataFrame from sheet
-# mdf = pd.DataFrame(ws.values)
-# print(mdf.iloc[0,0]) #F3
-# print(mdf.iloc[0,2]) #F3
-# print(mdf.iloc[2,5]) #F3 #attention: zero-based #fazit: gives formula
-# #values instead of formulae:
-# mdv = pd.DataFrame(vws.values)
-# print(mdv.iloc[2,5]) #F3 #fazit: gives value
-# 
-# # also possible: dataframe_to_rows
-# from openpyxl.utils.dataframe import dataframe_to_rows
-# wb = Workbook()
-# ws = wb.active
-# for r in dataframe_to_rows(df, index=True, header=True):
-#     ws.append(r)
-#     
-```
-
-
-##### Zellbezüge in Excel automatisch darstellen
-
-Die Installation fügte sich nicht ins conda Schema.
-
-Der Graph berechnete ca. 30 Min.
-
-```{python}
-import pandas as pd
-```
-
-
-```{python}
-#%matplotlib inline
-# import basics
-# from pycel import ExcelCompiler
-# from IPython.display import FileLink
-# import matplotlib.pyplot as plt
-```
-
-
-##### Darstellung der chunks mit Grundrechenarten sieht mit r chunks besser aus
-
-2024-01-14: Warum werden in python chunks manche Variablen vom gfm Markdown orange angezeigt? Siehe hier:
-
-```{python}
-#€/a/Kopf		brutto
-Investition_fuer_die_gesamte_Anlage_mit_Nebenkosten = 640 # D200
-
-#€/a/Kopf
-laufende_Kosten_pro_a_pro_Kopf = 319 # D207
-
-#€/a/Kopf
-Investitionskosten_pro_a_pro_Kopf_BHKW__ohne_Energiekosten_ = 23.9 # D198
-
-#€/a/Kopf
-laufende_Kosten_pro_a_pro_Kopf_Energiekosten_BHKW = 340 # D203
-
-#€/a/Kopf
-laufende_Kosten_pro_a_pro_Kopf_Ertrag_BHKW__Elektroenergie = -133 # D204
-```
-
-
-```{r}
-library(reticulate)
-#r 
-# Formatierungstest: werden lange Variablennamen in r oder python im github markdown umgebrochen?
-test1 <- 
-  py$Investition_fuer_die_gesamte_Anlage_mit_Nebenkosten +
-  py$laufende_Kosten_pro_a_pro_Kopf -
-  py$Investitionskosten_pro_a_pro_Kopf_BHKW__ohne_Energiekosten_ -
-  py$laufende_Kosten_pro_a_pro_Kopf_Energiekosten_BHKW -
-  py$laufende_Kosten_pro_a_pro_Kopf_Ertrag_BHKW__Elektroenergie
-
-```
-
-
-Hier auch: 
-
-```{python}
-#Quellzelle: Blatt t: D210
-#€/a/Kopf
-test2 =\
-Investition_fuer_die_gesamte_Anlage_mit_Nebenkosten\
-+laufende_Kosten_pro_a_pro_Kopf\
--Investitionskosten_pro_a_pro_Kopf_BHKW__ohne_Energiekosten_\
--laufende_Kosten_pro_a_pro_Kopf_Energiekosten_BHKW\
--laufende_Kosten_pro_a_pro_Kopf_Ertrag_BHKW__Elektroenergie
-
-```
-
-Fazit 2024-01-14: Chunks mit Grundrechenarten besser als R chunks schreiben.
-
-##### Variablen inline im Markdown verwenden
-```{python}
-min_Anschliesser_count = 5000
-max_Einzugsradius_km = 6
-```
-
-
-Eine Kommunale Solarheizung mit saisonalem Erwärmespeicher, Solarthermie und Wärmenetz lohnt sich überall dort,
-wo mindestens `r py$min_Anschliesser_count` Anschließer auf einem Radius von weniger als `r py$max_Einzugsradius_km` Kilomentern teilnehmen. ([Quelle](https://heliogaia.de/endergebnisse.html))
-
-##### Diagramme anzeigen
-
-```{python mypychunk1}
-#py
-# import pandas as pd
-# import matplotlib.pyplot as plt
-#version from 2024-01-11
-df = pd.read_excel(
-  '_base/jahreslauf_roebel.xlsx'
-  , sheet_name='e', header = 1)
-print(df.shape)
-mypyvar0 = df.shape[0]
-df.head(7)
-df.loc[:732,'Tag'].hist()
-```
-OK, das Diagramm wird in den Outputs angezeigt. (Nur derzeit nicht in RStudio unter dem chunk - warum?)
-
-```{r myrchunk1}
-#r
-myrvar= 1
-```
-
-
-* now let's include a python variable here: `r py$mypyvar0` - wow, so inline!
-* now let's include an r variable here: `r myrvar` - wow, so inline again! 
-
-#### if needed
-
-
-```{python}
-# from IPython.display import Markdown as md
-# 
-# fr=2 #GHz
-# 
-# md("Good Morning! This yields $f_r = %i$ GHz and $Z_p = %f$ mm."%(fr, 3.45))
-```
-
-
-## Thanks to
-
-https://nrennie.rbind.io/blog/combining-r-and-python-with-reticulate-and-quarto/
-https://stackoverflow.com/questions/62408197/editing-keyboard-shortcut-to-produce-code-chunk-in-r-studio
