@@ -1,8 +1,17 @@
 # Wirtschaftlichkeit Saisonaler Erdwärmespeicher
 
 
+# Aktueller Arbeitsstand
+
 Hier entsteht gerade die Kette der Rechnungen in Python, als deren
-Ergebnis die 61 EUR/a/Kopf Heizkosten erwartet werden.
+Ergebnis die 61 EUR/a/Kopf Heizkosten erwartet werden. Diese Zahl wurde
+bereits erfolgreich berechnet, es wurden unterwegs aber Tabellen aus
+Excel eingelesen, die noch in Python aufgebaut werden sollen, z.B. als
+Ersatz für das DataFrame ‘kurven’ das den Jahreslauf enthält.
+
+Diese Datei wurde ursprünglich (vor 2024-03-22) automatisiert via
+Excel2Python_Migrator.qmd erzeugt. Jetzt ist sie zur manuellen
+Bearbeitung freigegeben.
 
 ``` r
 library(reticulate)
@@ -26,6 +35,7 @@ import pandas as pd
 import re
 import pickle
 import pprint
+from datetime import datetime, timedelta, date
 
 # saisonale Kurven
 sheet_e = pd.read_excel(
@@ -994,6 +1004,8 @@ Verteilung_mittlere_Anzahl_der_Grundstuecke_an_einem_Unterverteilungszweig__Grun
 
     6.5
 
+# Beginn Jahreslauf-Berechnung
+
 ``` python
 Endenergie__EE__Verbrauch_fuer_Heizung_u_Warmwasser__kWh_pro_d_pro_Kopf=\
   \
@@ -1006,6 +1018,56 @@ Endenergie__EE__Verbrauch_fuer_Heizung_u_Warmwasser__kWh_pro_d_pro_Kopf=\
 ```
 
     16.2
+
+``` python
+# aim: generate a replacement for kurven, the data frame of curves over 2 years
+# idea: generate a DataFrame called 'curves'
+
+# columns of original 'kurven' (should be replaced by the full name version incl. unit):
+# v Tag
+# v Datum
+# v Endenergie__EE__Verbrauch__fuer_Heizung_u_Warmwasser
+# Endenergie_Direktbezug_aus_Kollektoren__am_Saisonspeicher_vorbei
+# beim_Verbraucher_verfuegbare_EE_aus_inneroertlichen_Kollektoren
+# beim_Verbraucher_verfuegbare_EE_aus__externen___Kollektoren
+# sofort_verbrauchter_Anteil_des_inneroertlichen_Kollektorgewinns_
+# sofort_verbrauchter_Anteil_des_externen_Kollektorgewinns__als_Fernwaerme_
+# am_Saisonspeicher_verfuegbare_Waerme_aus_inneroertlichen_Kollektoren
+# am_Saisonspeicher_verfuegbare_Waerme_aus_externen_Kollektoren
+# Deckungsgrad__allein_aus_inneroertlichen_Kollektoren
+# Fernwaermebezug_aus_externem_Kollektorfeld
+# Fernwaermebezug_aus_Saisonspeicher
+# Saisonspeicher_Belastung
+# Fernwaerme_Bezug
+# Speicher_laden
+# Speicher_Iinhalt
+# Speicher_Temperatur
+
+curves = pd.DataFrame({'Tag': range(731+1)})
+curves['Datum'] = pd.Period('2019-03-21', freq='D') + curves['Tag']
+curves['Datum'] = curves['Datum'].astype('str') # for View
+curves['Endenergie__EE__Verbrauch_fuer_Heizung_u_Warmwasser__kWh_pro_d_pro_Kopf']=\
+  \
+  Endenergie_Tagesverbrauch_fuer_Waerme_pro_Person__Jahresdurchschnitt__kWh_pro_d_pro_Kopf\
+  -Endenergie_Tagesverbrauch_fuer_Waerme_pro_Person__Jahresdurchschnitt__kWh_pro_d_pro_Kopf\
+  *np.sin(\
+  2*np.pi\
+  /365*curves['Tag']\
+  )
+# to be continued with Endenergie_Direktbezug_aus_Kollektoren__am_Saisonspeicher_vorbei__kWh_pro_d_pro_Kopf
+
+# View(curves)
+curves.head()
+```
+
+       Tag  ... Endenergie__EE__Verbrauch_fuer_Heizung_u_Warmwasser__kWh_pro_d_pro_Kopf
+    0    0  ...                                          16.177430                     
+    1    1  ...                                          15.898962                     
+    2    2  ...                                          15.620577                     
+    3    3  ...                                          15.342356                     
+    4    4  ...                                          15.064383                     
+
+    [5 rows x 3 columns]
 
 ``` python
 als_SpeicherDurchmesser_ergibt_sich_nach_der_Vorgabe_der_Tiefe_in_D105___m=\
@@ -3282,7 +3344,7 @@ round(
 
     [1] 61
 
-### Endergebnis
+# Endergebnis
 
 ``` r
 min_Anschliesser_count <- 5000 #ToDo: calculate this
