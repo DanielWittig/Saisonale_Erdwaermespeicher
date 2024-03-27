@@ -4,10 +4,12 @@
 # Aktueller Arbeitsstand
 
 Hier entsteht gerade die Kette der Rechnungen in Python, als deren
-Ergebnis die 61 EUR/a/Kopf Heizkosten erwartet werden. Diese Zahl wurde
-bereits erfolgreich berechnet, es wurden unterwegs aber Tabellen aus
-Excel eingelesen, die noch in Python aufgebaut werden sollen, z.B. als
-Ersatz für das DataFrame ‘kurven’ das den Jahreslauf enthält.
+Ergebnis 61 EUR/a/Kopf Heizkosten erwartet werden. Update: Diese Zahl
+wurde bereits erfolgreich berechnet, es wurden unterwegs aber Tabellen
+aus Excel eingelesen, die noch in Python aufgebaut werden sollen, z.B.
+als Ersatz für das DataFrame ‘kurven’ das den Jahreslauf enthält.
+
+Aktueller Arbeitspunkt ist markiert mit: \#dfcurves
 
 Diese Datei wurde ursprünglich (vor 2024-03-22) automatisiert via
 Excel2Python_Migrator.qmd erzeugt. Jetzt ist sie zur manuellen
@@ -35,7 +37,6 @@ import pandas as pd
 import re
 import pickle
 import pprint
-from datetime import datetime, timedelta, date
 
 # saisonale Kurven
 sheet_e = pd.read_excel(
@@ -942,7 +943,28 @@ Verteilung_mittlere_Seitenlaenge_des_einem_Gebaeude_zugeordneten_Flaechenstuecke
 
     77.6
 
+# Startpunkt Jahreslauf-Berechnung
+
+aim: generate a replacement for kurven, the data frame of curves over 2
+years
+
+idea: generate a DataFrame called ‘curves’
+
+nota bene: the calculations for its columns are distributed somewhere
+among the following chunks.
+
 ``` python
+
+# generate data frame for 2 year curves
+curves = pd.DataFrame({'Tag': range(731+1)})
+curves['Datum'] = pd.Period('2019-03-21', freq='D') + curves['Tag']
+curves['Datum'] = curves['Datum'].astype('str') # for View
+```
+
+## Jahreslauf: beim_Verbraucher_verfuegbare_EE_aus_inneroertlichen_Kollektoren\_\_kWh_pro_d_pro_Kopf
+
+``` python
+#todo delete this, when data frame 'curves' is working
 beim_Verbraucher_verfuegbare_EE_aus_inneroertlichen_Kollektoren__kWh_pro_d_pro_Kopf=\
   \
   (Jahresmittelwert_der_taeglichen_Globalstrahlung__kWh_pro_m2_pro_d\
@@ -959,6 +981,62 @@ beim_Verbraucher_verfuegbare_EE_aus_inneroertlichen_Kollektoren__kWh_pro_d_pro_K
     0.0
 
 ``` python
+#dfcurves (current working point)
+#todo delete this, when data frame 'curves' is working
+
+# columns of original 'kurven' (and their full name version incl. unit, being put into calculation order):
+# v Tag
+# v Datum
+# v Endenergie__EE__Verbrauch__fuer_Heizung_u_Warmwasser
+# v Endenergie__EE__Verbrauch_fuer_Heizung_u_Warmwasser__kWh_pro_d_pro_Kopf
+# v beim_Verbraucher_verfuegbare_EE_aus__externen___Kollektoren
+# v beim_Verbraucher_verfuegbare_EE_aus_externen_Kollektoren__kWh_pro_d_pro_Kopf
+
+# v beim_Verbraucher_verfuegbare_EE_aus_inneroertlichen_Kollektoren
+# v beim_Verbraucher_verfuegbare_EE_aus_inneroertlichen_Kollektoren__kWh_pro_d_pro_Kopf
+
+# v Endenergie_Direktbezug_aus_Kollektoren__am_Saisonspeicher_vorbei
+# v Endenergie_Direktbezug_aus_Kollektoren__am_Saisonspeicher_vorbei__kWh_pro_d_pro_Kopf
+
+# sofort_verbrauchter_Anteil_des_inneroertlichen_Kollektorgewinns_
+# sofort_verbrauchter_Anteil_des_externen_Kollektorgewinns__als_Fernwaerme_
+# am_Saisonspeicher_verfuegbare_Waerme_aus_inneroertlichen_Kollektoren
+# am_Saisonspeicher_verfuegbare_Waerme_aus_externen_Kollektoren
+# Deckungsgrad__allein_aus_inneroertlichen_Kollektoren
+# Fernwaermebezug_aus_externem_Kollektorfeld
+# Fernwaermebezug_aus_Saisonspeicher
+# Saisonspeicher_Belastung
+# Fernwaerme_Bezug
+# Speicher_laden
+# Speicher_Iinhalt
+# Speicher_Temperatur
+
+curves['beim_Verbraucher_verfuegbare_EE_aus_inneroertlichen_Kollektoren__kWh_pro_d_pro_Kopf']=\
+  \
+  (Jahresmittelwert_der_taeglichen_Globalstrahlung__kWh_pro_m2_pro_d\
+  +Variation_der_taeglichen_Globalstrahlung_um_dieses_Mittel_im_Jahreslauf___plusminus___kWh_pro_m2_pro_d\
+  *np.sin(\
+  2*np.pi\
+  /365*curves['Tag']\
+  ))*Gesamt_Wirkungsgrad_der_Kollektoren__Prozent\
+  /100*inneroertliche_Dach__und_Fassadenflaechen_fuer_Kollektoren_pro_Kopf__m2_pro_Kopf\
+  *dazu_die_moegliche_Ausnutzung_dieser_inneroertlichen_Flaechen_fuer_Kollektoren__Prozent\
+  /100
+  
+curves['beim_Verbraucher_verfuegbare_EE_aus_inneroertlichen_Kollektoren__kWh_pro_d_pro_Kopf'].head()
+```
+
+    0    0.0
+    1    0.0
+    2    0.0
+    3    0.0
+    4    0.0
+    Name: beim_Verbraucher_verfuegbare_EE_aus_inneroertlichen_Kollektoren__kWh_pro_d_pro_Kopf, dtype: float64
+
+## Jahreslauf: beim_Verbraucher_verfuegbare_EE_aus_externen_Kollektoren\_\_kWh_pro_d_pro_Kopf
+
+``` python
+#todo delete this, when data frame 'curves' is working
 beim_Verbraucher_verfuegbare_EE_aus_externen_Kollektoren__kWh_pro_d_pro_Kopf=\
   \
   (Jahresmittelwert_der_taeglichen_Globalstrahlung__kWh_pro_m2_pro_d\
@@ -974,6 +1052,30 @@ beim_Verbraucher_verfuegbare_EE_aus_externen_Kollektoren__kWh_pro_d_pro_Kopf=\
 ```
 
     19.3
+
+``` python
+curves['beim_Verbraucher_verfuegbare_EE_aus_externen_Kollektoren__kWh_pro_d_pro_Kopf']=\
+  \
+  (Jahresmittelwert_der_taeglichen_Globalstrahlung__kWh_pro_m2_pro_d\
+  +Variation_der_taeglichen_Globalstrahlung_um_dieses_Mittel_im_Jahreslauf___plusminus___kWh_pro_m2_pro_d\
+  *np.sin(\
+  2*np.pi\
+  /365*curves['Tag']\
+  ))*Gesamt_Wirkungsgrad_der_Kollektoren__Prozent\
+  /100*ausserhalb_noetige_Brutto_Kollektorflaeche__ohne_Aufstellungsumgebung___m2_pro_Kopf\
+  *(1-Transport__und_Verschattungsverluste_im_ausserstaedtischen_Kollektorfeld___Prozent\
+  /100)*(1-Transportverluste_Fernheizung__Prozent\
+  /100)
+  
+curves['beim_Verbraucher_verfuegbare_EE_aus_externen_Kollektoren__kWh_pro_d_pro_Kopf'].head()
+```
+
+    0    19.263517
+    1    19.543502
+    2    19.823404
+    3    20.103141
+    4    20.382628
+    Name: beim_Verbraucher_verfuegbare_EE_aus_externen_Kollektoren__kWh_pro_d_pro_Kopf, dtype: float64
 
 ``` python
 Endenergie_Tagesverbrauch_fuer_Waerme_pro_Person__Jahresdurchschnitt__kWh_pro_d_pro_Kopf=\
@@ -1004,9 +1106,10 @@ Verteilung_mittlere_Anzahl_der_Grundstuecke_an_einem_Unterverteilungszweig__Grun
 
     6.5
 
-# Beginn Jahreslauf-Berechnung
+## Jahreslauf: Endenergie\_\_EE\_\_Verbrauch_fuer_Heizung_u_Warmwasser\_\_kWh_pro_d_pro_Kopf
 
 ``` python
+#todo delete this, when data frame 'curves' is working
 Endenergie__EE__Verbrauch_fuer_Heizung_u_Warmwasser__kWh_pro_d_pro_Kopf=\
   \
   Endenergie_Tagesverbrauch_fuer_Waerme_pro_Person__Jahresdurchschnitt__kWh_pro_d_pro_Kopf\
@@ -1020,32 +1123,6 @@ Endenergie__EE__Verbrauch_fuer_Heizung_u_Warmwasser__kWh_pro_d_pro_Kopf=\
     16.2
 
 ``` python
-# aim: generate a replacement for kurven, the data frame of curves over 2 years
-# idea: generate a DataFrame called 'curves'
-
-# columns of original 'kurven' (should be replaced by the full name version incl. unit):
-# v Tag
-# v Datum
-# v Endenergie__EE__Verbrauch__fuer_Heizung_u_Warmwasser
-# Endenergie_Direktbezug_aus_Kollektoren__am_Saisonspeicher_vorbei
-# beim_Verbraucher_verfuegbare_EE_aus_inneroertlichen_Kollektoren
-# beim_Verbraucher_verfuegbare_EE_aus__externen___Kollektoren
-# sofort_verbrauchter_Anteil_des_inneroertlichen_Kollektorgewinns_
-# sofort_verbrauchter_Anteil_des_externen_Kollektorgewinns__als_Fernwaerme_
-# am_Saisonspeicher_verfuegbare_Waerme_aus_inneroertlichen_Kollektoren
-# am_Saisonspeicher_verfuegbare_Waerme_aus_externen_Kollektoren
-# Deckungsgrad__allein_aus_inneroertlichen_Kollektoren
-# Fernwaermebezug_aus_externem_Kollektorfeld
-# Fernwaermebezug_aus_Saisonspeicher
-# Saisonspeicher_Belastung
-# Fernwaerme_Bezug
-# Speicher_laden
-# Speicher_Iinhalt
-# Speicher_Temperatur
-
-curves = pd.DataFrame({'Tag': range(731+1)})
-curves['Datum'] = pd.Period('2019-03-21', freq='D') + curves['Tag']
-curves['Datum'] = curves['Datum'].astype('str') # for View
 curves['Endenergie__EE__Verbrauch_fuer_Heizung_u_Warmwasser__kWh_pro_d_pro_Kopf']=\
   \
   Endenergie_Tagesverbrauch_fuer_Waerme_pro_Person__Jahresdurchschnitt__kWh_pro_d_pro_Kopf\
@@ -1054,7 +1131,6 @@ curves['Endenergie__EE__Verbrauch_fuer_Heizung_u_Warmwasser__kWh_pro_d_pro_Kopf'
   2*np.pi\
   /365*curves['Tag']\
   )
-# to be continued with Endenergie_Direktbezug_aus_Kollektoren__am_Saisonspeicher_vorbei__kWh_pro_d_pro_Kopf
 
 # View(curves)
 curves.head()
@@ -1067,7 +1143,7 @@ curves.head()
     3    3  ...                                          15.342356                     
     4    4  ...                                          15.064383                     
 
-    [5 rows x 3 columns]
+    [5 rows x 5 columns]
 
 ``` python
 als_SpeicherDurchmesser_ergibt_sich_nach_der_Vorgabe_der_Tiefe_in_D105___m=\
@@ -1804,7 +1880,10 @@ Kollektorflaeche_brutto_pro_Kopf__m2_pro_Kopf=\
 
     25.1
 
+## Jahreslauf: Endenergie_Direktbezug_aus_Kollektoren\_\_am_Saisonspeicher_vorbei\_\_kWh_pro_d_pro_Kopf
+
 ``` python
+#todo delete this, when data frame 'curves' is working
 Endenergie_Direktbezug_aus_Kollektoren__am_Saisonspeicher_vorbei__kWh_pro_d_pro_Kopf=\
   \
     Endenergie__EE__Verbrauch_fuer_Heizung_u_Warmwasser__kWh_pro_d_pro_Kopf \
@@ -1816,6 +1895,34 @@ Endenergie_Direktbezug_aus_Kollektoren__am_Saisonspeicher_vorbei__kWh_pro_d_pro_
 ```
 
     16.2
+
+``` python
+#solution min over 2 columns rowwise
+# df = pd.DataFrame({'x':[10,2,3], 'y':[1,20,30]})
+# df['z'] = df[['x','y']].min(axis=1)
+# df
+
+# auxiliary sum
+curves['beim_Verbraucher_verfuegbare_EE_GESAMT__kWh_pro_d_pro_Kopf']=\
+  \
+  curves[  'beim_Verbraucher_verfuegbare_EE_aus_inneroertlichen_Kollektoren__kWh_pro_d_pro_Kopf']\
+  + curves['beim_Verbraucher_verfuegbare_EE_aus_externen_Kollektoren__kWh_pro_d_pro_Kopf']
+
+# take the minimum
+curves['Endenergie_Direktbezug_aus_Kollektoren__am_Saisonspeicher_vorbei__kWh_pro_d_pro_Kopf']=\
+  \
+  curves[['Endenergie__EE__Verbrauch_fuer_Heizung_u_Warmwasser__kWh_pro_d_pro_Kopf'\
+  ,'beim_Verbraucher_verfuegbare_EE_GESAMT__kWh_pro_d_pro_Kopf']].min(axis=1)
+
+curves['Endenergie_Direktbezug_aus_Kollektoren__am_Saisonspeicher_vorbei__kWh_pro_d_pro_Kopf'].head()
+```
+
+    0    16.177430
+    1    15.898962
+    2    15.620577
+    3    15.342356
+    4    15.064383
+    Name: Endenergie_Direktbezug_aus_Kollektoren__am_Saisonspeicher_vorbei__kWh_pro_d_pro_Kopf, dtype: float64
 
 ``` python
 Kollektorflaeche_brutto__extern_noetig__m2_pro_Kopf=\
